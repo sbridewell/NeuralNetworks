@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".github/copilot-instructions.md" />
+  </Folder>
+  <Project Path="NeuralNetworks.ConsoleApp/NeuralNetworks.ConsoleApp.csproj" />
+  <Project Path="NeuralNetworks.Test/NeuralNetworks.Test.csproj" Id="d2cf9799-c94f-4395-9572-4c295bc16ed4" />
+  <Project Path="NeuralNetworks.WinForms/NeuralNetworks.WinForms.csproj" Id="8e1087c6-4c24-4d99-a319-74e70a012888" />
+  <Project Path="NeuralNetworks/NeuralNetworks.csproj" />
+</Solution>
