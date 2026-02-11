@@ -42,9 +42,6 @@ namespace Sde.NeuralNetworks.Test.ActivationFunctionProviders
             var fPlus = provider.CalculateActivation(input + h);
             var fMinus = provider.CalculateActivation(input - h);
             var expectedGradient = (fPlus - fMinus) / (2.0 * h);
-            //expectedGradient.Should().NotBe(double.NaN, $"{providerName} produced NaN at input={input}.");
-            //expectedGradient.Should().NotBe(double.PositiveInfinity, $"{providerName} produced +Infinity at input={input}.");
-            //expectedGradient.Should().NotBe(double.NegativeInfinity, $"{providerName} produced -Infinity at input={input}.");
             if (double.IsNaN(expectedGradient))
             {
                 Assert.Skip($"Test setup error - {providerName} produced NaN at input={input}.");

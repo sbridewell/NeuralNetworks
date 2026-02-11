@@ -279,7 +279,7 @@ namespace Sde.NeuralNetworks.MsdnMagazine
         [SuppressMessage(
             "Blocker Code Smell",
             "S2368:Public methods should not have multidimensional array parameters",
-            Justification = "Ass per design")]
+            Justification = "As per design")]
         public double[] Train(
             double[][] trainData,
             int maxEpochs,
@@ -292,7 +292,7 @@ namespace Sde.NeuralNetworks.MsdnMagazine
             double[] outputBiasGradients = new double[this.numberOfOutputs];                   // output bias gradients
 
             double[][] inputToHiddenGradients = MakeMatrix(this.numberOfInputs, this.numberOfHiddenNodes, 0.0);  // input-to-hidden weight gradients
-            double[] hiddenBiasGraddients = new double[this.numberOfHiddenNodes];                   // hidden bias gradients
+            double[] hiddenBiasGradients = new double[this.numberOfHiddenNodes];                   // hidden bias gradients
 
             double[] outputSignals = new double[this.numberOfOutputs];                  // local gradient output signals - gradients w/o associated input terms
             double[] hiddenSignals = new double[this.numberOfHiddenNodes];                  // local gradient hidden node signals
@@ -386,7 +386,7 @@ namespace Sde.NeuralNetworks.MsdnMagazine
                     // 4b. compute hidden node bias gradients
                     for (var hidden = 0; hidden < this.numberOfHiddenNodes; ++hidden)
                     {
-                        hiddenBiasGraddients[hidden] = hiddenSignals[hidden] * 1.0; // dummy 1.0 input
+                        hiddenBiasGradients[hidden] = hiddenSignals[hidden] * 1.0; // dummy 1.0 input
                     }
 
                     // == update weights and biases
@@ -406,7 +406,7 @@ namespace Sde.NeuralNetworks.MsdnMagazine
                     // update hidden biases
                     for (var hidden = 0; hidden < this.numberOfHiddenNodes; ++hidden)
                     {
-                        var delta = hiddenBiasGraddients[hidden] * learnRate;
+                        var delta = hiddenBiasGradients[hidden] * learnRate;
                         this.hiddenLayerBiases[hidden] += delta;
                         this.hiddenLayerBiases[hidden] += hPrevBiasesDelta[hidden] * momentum;
                         hPrevBiasesDelta[hidden] = delta;
