@@ -19,14 +19,14 @@ namespace Sde.NeuralNetworks.WinForms
         public TestResultsGrid()
         {
             this.InitializeComponent();
-            this.Network = new NeuralNetworkSingleHiddenLayer();
+            this.Network = new NeuralNetwork();
         }
 
         /// <summary>
         /// Gets or sets the neural network whose test results are being displayed in the grid.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public INeuralNetworkSingleHiddenLayer Network { get; set; }
+        public INeuralNetwork Network { get; set; }
 
         /// <summary>
         /// Populates the grid with the results of testing the neural network on the provided test inputs and expected outputs.

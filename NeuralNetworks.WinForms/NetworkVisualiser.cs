@@ -27,7 +27,7 @@ namespace Sde.NeuralNetworks.WinForms
         /// Gets or sets the network to visualise.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public INeuralNetworkSingleHiddenLayer? Network { get; set; }
+        public INeuralNetwork? Network { get; set; }
 
         /// <inheritdoc/>
         protected override void OnPaint(PaintEventArgs e)

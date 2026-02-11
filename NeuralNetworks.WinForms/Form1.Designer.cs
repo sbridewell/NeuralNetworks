@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
             splitContainer1 = new SplitContainer();
             progressBar1 = new ProgressBar();
             numericUpDownNeuronsPerHiddenLayer = new NumericUpDown();
@@ -75,6 +75,8 @@
             statusBarToolStripMenuItem = new ToolStripMenuItem();
             saveFileDialog1 = new SaveFileDialog();
             openFileDialog1 = new OpenFileDialog();
+            label6 = new Label();
+            numericUpDown1 = new NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -101,6 +103,7 @@
             ((System.ComponentModel.ISupportInitialize)dataGridViewInputs).BeginInit();
             statusStrip1.SuspendLayout();
             menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             SuspendLayout();
             // 
             // splitContainer1
@@ -113,6 +116,8 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(numericUpDown1);
+            splitContainer1.Panel1.Controls.Add(label6);
             splitContainer1.Panel1.Controls.Add(progressBar1);
             splitContainer1.Panel1.Controls.Add(numericUpDownNeuronsPerHiddenLayer);
             splitContainer1.Panel1.Controls.Add(label5);
@@ -142,7 +147,7 @@
             // numericUpDownNeuronsPerHiddenLayer
             // 
             numericUpDownNeuronsPerHiddenLayer.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            numericUpDownNeuronsPerHiddenLayer.Location = new Point(759, 6);
+            numericUpDownNeuronsPerHiddenLayer.Location = new Point(885, 6);
             numericUpDownNeuronsPerHiddenLayer.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericUpDownNeuronsPerHiddenLayer.Name = "numericUpDownNeuronsPerHiddenLayer";
             numericUpDownNeuronsPerHiddenLayer.Size = new Size(46, 33);
@@ -154,7 +159,7 @@
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label5.Location = new Point(582, 10);
+            label5.Location = new Point(708, 10);
             label5.Name = "label5";
             label5.Size = new Size(175, 25);
             label5.TabIndex = 13;
@@ -164,7 +169,7 @@
             // 
             buttonStop.BackColor = Color.FromArgb(255, 128, 128);
             buttonStop.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonStop.Location = new Point(946, 5);
+            buttonStop.Location = new Point(1072, 5);
             buttonStop.Name = "buttonStop";
             buttonStop.Size = new Size(133, 37);
             buttonStop.TabIndex = 12;
@@ -176,7 +181,7 @@
             // 
             buttonGo.BackColor = Color.FromArgb(0, 192, 0);
             buttonGo.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonGo.Location = new Point(811, 3);
+            buttonGo.Location = new Point(937, 3);
             buttonGo.Name = "buttonGo";
             buttonGo.Size = new Size(129, 39);
             buttonGo.TabIndex = 5;
@@ -191,7 +196,7 @@
             numericUpDownLearningRate.Increment = new decimal(new int[] { 1, 0, 0, 196608 });
             numericUpDownLearningRate.Location = new Point(456, 6);
             numericUpDownLearningRate.Name = "numericUpDownLearningRate";
-            numericUpDownLearningRate.Size = new Size(120, 33);
+            numericUpDownLearningRate.Size = new Size(70, 33);
             numericUpDownLearningRate.TabIndex = 2;
             numericUpDownLearningRate.Value = new decimal(new int[] { 1, 0, 0, 196608 });
             // 
@@ -199,7 +204,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label2.Location = new Point(326, 10);
+            label2.Location = new Point(326, 8);
             label2.Name = "label2";
             label2.Size = new Size(124, 25);
             label2.TabIndex = 2;
@@ -282,7 +287,7 @@
             tabPageOutputLayer.Location = new Point(4, 37);
             tabPageOutputLayer.Name = "tabPageOutputLayer";
             tabPageOutputLayer.Padding = new Padding(3);
-            tabPageOutputLayer.Size = new Size(603, 462);
+            tabPageOutputLayer.Size = new Size(599, 458);
             tabPageOutputLayer.TabIndex = 1;
             tabPageOutputLayer.Text = "Output layer";
             tabPageOutputLayer.UseVisualStyleBackColor = true;
@@ -292,7 +297,7 @@
             activationFunctionProviderControlOutput.Dock = DockStyle.Fill;
             activationFunctionProviderControlOutput.Location = new Point(3, 3);
             activationFunctionProviderControlOutput.Name = "activationFunctionProviderControlOutput";
-            activationFunctionProviderControlOutput.Size = new Size(597, 456);
+            activationFunctionProviderControlOutput.Size = new Size(593, 452);
             activationFunctionProviderControlOutput.TabIndex = 0;
             // 
             // tabControlVisualisation
@@ -337,24 +342,24 @@
             tabPageErrors.Controls.Add(chartErrors);
             tabPageErrors.Location = new Point(4, 37);
             tabPageErrors.Name = "tabPageErrors";
-            tabPageErrors.Size = new Size(599, 462);
+            tabPageErrors.Size = new Size(595, 458);
             tabPageErrors.TabIndex = 2;
             tabPageErrors.Text = "Errors";
             tabPageErrors.UseVisualStyleBackColor = true;
             // 
             // chartErrors
             // 
-            chartArea2.Name = "ChartArea1";
-            chartErrors.ChartAreas.Add(chartArea2);
+            chartArea4.Name = "ChartArea1";
+            chartErrors.ChartAreas.Add(chartArea4);
             chartErrors.Dock = DockStyle.Fill;
             chartErrors.Location = new Point(0, 0);
             chartErrors.Name = "chartErrors";
             chartErrors.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Name = "Series1";
-            chartErrors.Series.Add(series2);
-            chartErrors.Size = new Size(599, 462);
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series4.Name = "Series1";
+            chartErrors.Series.Add(series4);
+            chartErrors.Size = new Size(595, 458);
             chartErrors.SuppressExceptions = true;
             chartErrors.TabIndex = 18;
             chartErrors.Text = "chart1";
@@ -365,7 +370,7 @@
             tabPageTestResults.Location = new Point(4, 37);
             tabPageTestResults.Name = "tabPageTestResults";
             tabPageTestResults.Padding = new Padding(3);
-            tabPageTestResults.Size = new Size(599, 462);
+            tabPageTestResults.Size = new Size(595, 458);
             tabPageTestResults.TabIndex = 1;
             tabPageTestResults.Text = "Test results";
             tabPageTestResults.UseVisualStyleBackColor = true;
@@ -376,7 +381,7 @@
             testResultsGrid1.Dock = DockStyle.Fill;
             testResultsGrid1.Location = new Point(3, 3);
             testResultsGrid1.Name = "testResultsGrid1";
-            testResultsGrid1.Size = new Size(593, 456);
+            testResultsGrid1.Size = new Size(589, 452);
             testResultsGrid1.TabIndex = 0;
             // 
             // tabPageJson
@@ -384,7 +389,7 @@
             tabPageJson.Controls.Add(textBoxJson);
             tabPageJson.Location = new Point(4, 37);
             tabPageJson.Name = "tabPageJson";
-            tabPageJson.Size = new Size(599, 462);
+            tabPageJson.Size = new Size(595, 458);
             tabPageJson.TabIndex = 3;
             tabPageJson.Text = "JSON";
             tabPageJson.UseVisualStyleBackColor = true;
@@ -398,7 +403,7 @@
             textBoxJson.Name = "textBoxJson";
             textBoxJson.ReadOnly = true;
             textBoxJson.ScrollBars = ScrollBars.Vertical;
-            textBoxJson.Size = new Size(599, 462);
+            textBoxJson.Size = new Size(595, 458);
             textBoxJson.TabIndex = 0;
             // 
             // tabPagePredict
@@ -411,7 +416,7 @@
             tabPagePredict.Location = new Point(4, 37);
             tabPagePredict.Name = "tabPagePredict";
             tabPagePredict.Padding = new Padding(3);
-            tabPagePredict.Size = new Size(599, 462);
+            tabPagePredict.Size = new Size(595, 458);
             tabPagePredict.TabIndex = 4;
             tabPagePredict.Text = "Predict";
             tabPagePredict.UseVisualStyleBackColor = true;
@@ -587,6 +592,28 @@
             openFileDialog1.SupportMultiDottedExtensions = true;
             openFileDialog1.Title = "Browse for trained network file";
             // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label6.Location = new Point(534, 10);
+            label6.Name = "label6";
+            label6.Size = new Size(110, 25);
+            label6.TabIndex = 16;
+            label6.Text = "Momentum";
+            // 
+            // numericUpDown1
+            // 
+            numericUpDown1.DecimalPlaces = 2;
+            numericUpDown1.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            numericUpDown1.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
+            numericUpDown1.Location = new Point(640, 6);
+            numericUpDown1.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDown1.Name = "numericUpDown1";
+            numericUpDown1.Size = new Size(62, 33);
+            numericUpDown1.TabIndex = 17;
+            numericUpDown1.Value = new decimal(new int[] { 5, 0, 0, 65536 });
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -627,6 +654,7 @@
             statusStrip1.PerformLayout();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -678,5 +706,7 @@
         private Button buttonPredict;
         private SaveFileDialog saveFileDialog1;
         private OpenFileDialog openFileDialog1;
+        private Label label6;
+        private NumericUpDown numericUpDown1;
     }
 }

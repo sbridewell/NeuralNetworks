@@ -31,7 +31,8 @@ namespace Sde.NeuralNetworks.WinForms
         {
             this.InitializeComponent();
 
-            this.Network = new NeuralNetworkSingleHiddenLayer();
+            this.Network = new NeuralNetwork();
+            this.Network.Momentum = 0.9;
             this.Network.InputSize = 1;
             this.Network.HiddenSize = (int)this.numericUpDownNeuronsPerHiddenLayer.Value;
             this.Network.OutputSize = 1;
@@ -45,7 +46,7 @@ namespace Sde.NeuralNetworks.WinForms
             this.testResultsGrid1.Network = this.Network;
         }
 
-        private INeuralNetworkSingleHiddenLayer Network { get; }
+        private INeuralNetwork Network { get; }
 
         #region button click event handlers
 
