@@ -189,8 +189,14 @@ namespace Sde.NeuralNetworks.Quadratics
         /// <returns>Array of normalised values.</returns>
         private static double[] NormaliseInputs(double[] input)
         {
-            var maxAbs = Math.Max(1.0, Math.Max(Math.Abs(input[0]), Math.Max(Math.Abs(input[1]), Math.Abs(input[2]))));
-            return new[] { input[0] / maxAbs, input[1] / maxAbs, input[2] / maxAbs };
+            var maxAbs = Math.Max(1.0, input.Max(i => Math.Abs(i)));
+            var normalised = new double[input.Length];
+            for (var i = 0; i < input.Length; i++)
+            {
+                normalised[i] = input[i] / maxAbs;
+            }
+
+            return normalised;
         }
 
         /// <summary>

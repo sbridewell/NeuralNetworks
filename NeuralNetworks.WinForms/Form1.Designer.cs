@@ -28,9 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             splitContainer1 = new SplitContainer();
+            comboBoxDataProvider = new ComboBox();
+            numericUpDownMomentum = new NumericUpDown();
+            label6 = new Label();
             progressBar1 = new ProgressBar();
             numericUpDownNeuronsPerHiddenLayer = new NumericUpDown();
             label5 = new Label();
@@ -75,12 +78,12 @@
             statusBarToolStripMenuItem = new ToolStripMenuItem();
             saveFileDialog1 = new SaveFileDialog();
             openFileDialog1 = new OpenFileDialog();
-            label6 = new Label();
-            numericUpDown1 = new NumericUpDown();
+            label7 = new Label();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownMomentum).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownNeuronsPerHiddenLayer).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownLearningRate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownNumberOfIterations).BeginInit();
@@ -103,7 +106,6 @@
             ((System.ComponentModel.ISupportInitialize)dataGridViewInputs).BeginInit();
             statusStrip1.SuspendLayout();
             menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             SuspendLayout();
             // 
             // splitContainer1
@@ -116,7 +118,9 @@
             // 
             // splitContainer1.Panel1
             // 
-            splitContainer1.Panel1.Controls.Add(numericUpDown1);
+            splitContainer1.Panel1.Controls.Add(label7);
+            splitContainer1.Panel1.Controls.Add(comboBoxDataProvider);
+            splitContainer1.Panel1.Controls.Add(numericUpDownMomentum);
             splitContainer1.Panel1.Controls.Add(label6);
             splitContainer1.Panel1.Controls.Add(progressBar1);
             splitContainer1.Panel1.Controls.Add(numericUpDownNeuronsPerHiddenLayer);
@@ -131,16 +135,49 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(symmericSplitContainer1);
-            splitContainer1.Size = new Size(1222, 583);
-            splitContainer1.SplitterDistance = 76;
+            splitContainer1.Size = new Size(1165, 583);
+            splitContainer1.SplitterDistance = 102;
             splitContainer1.TabIndex = 0;
+            // 
+            // comboBoxDataProvider
+            // 
+            comboBoxDataProvider.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            comboBoxDataProvider.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxDataProvider.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            comboBoxDataProvider.FormattingEnabled = true;
+            comboBoxDataProvider.Location = new Point(166, 38);
+            comboBoxDataProvider.Name = "comboBoxDataProvider";
+            comboBoxDataProvider.Size = new Size(997, 33);
+            comboBoxDataProvider.TabIndex = 18;
+            // 
+            // numericUpDownMomentum
+            // 
+            numericUpDownMomentum.DecimalPlaces = 2;
+            numericUpDownMomentum.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            numericUpDownMomentum.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
+            numericUpDownMomentum.Location = new Point(640, 6);
+            numericUpDownMomentum.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericUpDownMomentum.Name = "numericUpDownMomentum";
+            numericUpDownMomentum.Size = new Size(62, 33);
+            numericUpDownMomentum.TabIndex = 17;
+            numericUpDownMomentum.Value = new decimal(new int[] { 5, 0, 0, 65536 });
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label6.Location = new Point(534, 10);
+            label6.Name = "label6";
+            label6.Size = new Size(110, 25);
+            label6.TabIndex = 16;
+            label6.Text = "Momentum";
             // 
             // progressBar1
             // 
             progressBar1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            progressBar1.Location = new Point(4, 44);
+            progressBar1.Location = new Point(3, 76);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(1214, 23);
+            progressBar1.Size = new Size(1157, 23);
             progressBar1.Style = ProgressBarStyle.Continuous;
             progressBar1.TabIndex = 15;
             // 
@@ -214,7 +251,7 @@
             // 
             numericUpDownNumberOfIterations.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             numericUpDownNumberOfIterations.Location = new Point(200, 6);
-            numericUpDownNumberOfIterations.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numericUpDownNumberOfIterations.Maximum = new decimal(new int[] { 100000, 0, 0, 0 });
             numericUpDownNumberOfIterations.Name = "numericUpDownNumberOfIterations";
             numericUpDownNumberOfIterations.Size = new Size(120, 33);
             numericUpDownNumberOfIterations.TabIndex = 1;
@@ -245,8 +282,8 @@
             // symmericSplitContainer1.Panel2
             // 
             symmericSplitContainer1.Panel2.Controls.Add(tabControlVisualisation);
-            symmericSplitContainer1.Size = new Size(1222, 503);
-            symmericSplitContainer1.SplitterDistance = 611;
+            symmericSplitContainer1.Size = new Size(1165, 477);
+            symmericSplitContainer1.SplitterDistance = 582;
             symmericSplitContainer1.TabIndex = 19;
             // 
             // tabControlFunctions
@@ -259,7 +296,7 @@
             tabControlFunctions.Location = new Point(0, 0);
             tabControlFunctions.Name = "tabControlFunctions";
             tabControlFunctions.SelectedIndex = 0;
-            tabControlFunctions.Size = new Size(607, 499);
+            tabControlFunctions.Size = new Size(578, 473);
             tabControlFunctions.TabIndex = 17;
             // 
             // tabPageHiddenLayer
@@ -268,7 +305,7 @@
             tabPageHiddenLayer.Location = new Point(4, 37);
             tabPageHiddenLayer.Name = "tabPageHiddenLayer";
             tabPageHiddenLayer.Padding = new Padding(3);
-            tabPageHiddenLayer.Size = new Size(599, 458);
+            tabPageHiddenLayer.Size = new Size(570, 432);
             tabPageHiddenLayer.TabIndex = 0;
             tabPageHiddenLayer.Text = "Hidden layer 1";
             tabPageHiddenLayer.UseVisualStyleBackColor = true;
@@ -278,7 +315,7 @@
             activationFunctionProviderControlHidden1.Dock = DockStyle.Fill;
             activationFunctionProviderControlHidden1.Location = new Point(3, 3);
             activationFunctionProviderControlHidden1.Name = "activationFunctionProviderControlHidden1";
-            activationFunctionProviderControlHidden1.Size = new Size(593, 452);
+            activationFunctionProviderControlHidden1.Size = new Size(564, 426);
             activationFunctionProviderControlHidden1.TabIndex = 1;
             // 
             // tabPageOutputLayer
@@ -287,7 +324,7 @@
             tabPageOutputLayer.Location = new Point(4, 37);
             tabPageOutputLayer.Name = "tabPageOutputLayer";
             tabPageOutputLayer.Padding = new Padding(3);
-            tabPageOutputLayer.Size = new Size(599, 458);
+            tabPageOutputLayer.Size = new Size(570, 432);
             tabPageOutputLayer.TabIndex = 1;
             tabPageOutputLayer.Text = "Output layer";
             tabPageOutputLayer.UseVisualStyleBackColor = true;
@@ -297,7 +334,7 @@
             activationFunctionProviderControlOutput.Dock = DockStyle.Fill;
             activationFunctionProviderControlOutput.Location = new Point(3, 3);
             activationFunctionProviderControlOutput.Name = "activationFunctionProviderControlOutput";
-            activationFunctionProviderControlOutput.Size = new Size(593, 452);
+            activationFunctionProviderControlOutput.Size = new Size(564, 426);
             activationFunctionProviderControlOutput.TabIndex = 0;
             // 
             // tabControlVisualisation
@@ -314,7 +351,7 @@
             tabControlVisualisation.Location = new Point(0, 0);
             tabControlVisualisation.Name = "tabControlVisualisation";
             tabControlVisualisation.SelectedIndex = 0;
-            tabControlVisualisation.Size = new Size(603, 499);
+            tabControlVisualisation.Size = new Size(575, 473);
             tabControlVisualisation.TabIndex = 0;
             // 
             // tabPageNodes
@@ -323,7 +360,7 @@
             tabPageNodes.Location = new Point(4, 37);
             tabPageNodes.Name = "tabPageNodes";
             tabPageNodes.Padding = new Padding(3);
-            tabPageNodes.Size = new Size(595, 458);
+            tabPageNodes.Size = new Size(567, 432);
             tabPageNodes.TabIndex = 0;
             tabPageNodes.Text = "Nodes";
             tabPageNodes.UseVisualStyleBackColor = true;
@@ -334,7 +371,7 @@
             networkVisualiser1.Location = new Point(3, 3);
             networkVisualiser1.Margin = new Padding(5);
             networkVisualiser1.Name = "networkVisualiser1";
-            networkVisualiser1.Size = new Size(589, 452);
+            networkVisualiser1.Size = new Size(561, 426);
             networkVisualiser1.TabIndex = 0;
             // 
             // tabPageErrors
@@ -342,24 +379,24 @@
             tabPageErrors.Controls.Add(chartErrors);
             tabPageErrors.Location = new Point(4, 37);
             tabPageErrors.Name = "tabPageErrors";
-            tabPageErrors.Size = new Size(595, 458);
+            tabPageErrors.Size = new Size(567, 432);
             tabPageErrors.TabIndex = 2;
             tabPageErrors.Text = "Errors";
             tabPageErrors.UseVisualStyleBackColor = true;
             // 
             // chartErrors
             // 
-            chartArea4.Name = "ChartArea1";
-            chartErrors.ChartAreas.Add(chartArea4);
+            chartArea1.Name = "ChartArea1";
+            chartErrors.ChartAreas.Add(chartArea1);
             chartErrors.Dock = DockStyle.Fill;
             chartErrors.Location = new Point(0, 0);
             chartErrors.Name = "chartErrors";
             chartErrors.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series4.Name = "Series1";
-            chartErrors.Series.Add(series4);
-            chartErrors.Size = new Size(595, 458);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.Name = "Series1";
+            chartErrors.Series.Add(series1);
+            chartErrors.Size = new Size(567, 432);
             chartErrors.SuppressExceptions = true;
             chartErrors.TabIndex = 18;
             chartErrors.Text = "chart1";
@@ -370,7 +407,7 @@
             tabPageTestResults.Location = new Point(4, 37);
             tabPageTestResults.Name = "tabPageTestResults";
             tabPageTestResults.Padding = new Padding(3);
-            tabPageTestResults.Size = new Size(595, 458);
+            tabPageTestResults.Size = new Size(567, 432);
             tabPageTestResults.TabIndex = 1;
             tabPageTestResults.Text = "Test results";
             tabPageTestResults.UseVisualStyleBackColor = true;
@@ -381,7 +418,7 @@
             testResultsGrid1.Dock = DockStyle.Fill;
             testResultsGrid1.Location = new Point(3, 3);
             testResultsGrid1.Name = "testResultsGrid1";
-            testResultsGrid1.Size = new Size(589, 452);
+            testResultsGrid1.Size = new Size(561, 426);
             testResultsGrid1.TabIndex = 0;
             // 
             // tabPageJson
@@ -389,7 +426,7 @@
             tabPageJson.Controls.Add(textBoxJson);
             tabPageJson.Location = new Point(4, 37);
             tabPageJson.Name = "tabPageJson";
-            tabPageJson.Size = new Size(595, 458);
+            tabPageJson.Size = new Size(567, 432);
             tabPageJson.TabIndex = 3;
             tabPageJson.Text = "JSON";
             tabPageJson.UseVisualStyleBackColor = true;
@@ -403,7 +440,7 @@
             textBoxJson.Name = "textBoxJson";
             textBoxJson.ReadOnly = true;
             textBoxJson.ScrollBars = ScrollBars.Vertical;
-            textBoxJson.Size = new Size(595, 458);
+            textBoxJson.Size = new Size(567, 432);
             textBoxJson.TabIndex = 0;
             // 
             // tabPagePredict
@@ -416,7 +453,7 @@
             tabPagePredict.Location = new Point(4, 37);
             tabPagePredict.Name = "tabPagePredict";
             tabPagePredict.Padding = new Padding(3);
-            tabPagePredict.Size = new Size(595, 458);
+            tabPagePredict.Size = new Size(567, 432);
             tabPagePredict.TabIndex = 4;
             tabPagePredict.Text = "Predict";
             tabPagePredict.UseVisualStyleBackColor = true;
@@ -503,7 +540,7 @@
             statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1 });
             statusStrip1.Location = new Point(0, 622);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new Size(1222, 22);
+            statusStrip1.Size = new Size(1165, 22);
             statusStrip1.TabIndex = 3;
             // 
             // toolStripStatusLabel1
@@ -517,7 +554,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, enableDisableUIFeaturesToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1222, 33);
+            menuStrip1.Size = new Size(1165, 33);
             menuStrip1.TabIndex = 18;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -592,33 +629,21 @@
             openFileDialog1.SupportMultiDottedExtensions = true;
             openFileDialog1.Title = "Browse for trained network file";
             // 
-            // label6
+            // label7
             // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label6.Location = new Point(534, 10);
-            label6.Name = "label6";
-            label6.Size = new Size(110, 25);
-            label6.TabIndex = 16;
-            label6.Text = "Momentum";
-            // 
-            // numericUpDown1
-            // 
-            numericUpDown1.DecimalPlaces = 2;
-            numericUpDown1.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            numericUpDown1.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
-            numericUpDown1.Location = new Point(640, 6);
-            numericUpDown1.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
-            numericUpDown1.Name = "numericUpDown1";
-            numericUpDown1.Size = new Size(62, 33);
-            numericUpDown1.TabIndex = 17;
-            numericUpDown1.Value = new decimal(new int[] { 5, 0, 0, 65536 });
+            label7.AutoSize = true;
+            label7.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label7.Location = new Point(7, 40);
+            label7.Name = "label7";
+            label7.Size = new Size(153, 25);
+            label7.TabIndex = 19;
+            label7.Text = "Problem to solve";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1222, 644);
+            ClientSize = new Size(1165, 644);
             Controls.Add(menuStrip1);
             Controls.Add(statusStrip1);
             Controls.Add(splitContainer1);
@@ -629,6 +654,7 @@
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)numericUpDownMomentum).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownNeuronsPerHiddenLayer).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownLearningRate).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownNumberOfIterations).EndInit();
@@ -654,7 +680,6 @@
             statusStrip1.PerformLayout();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -707,6 +732,8 @@
         private SaveFileDialog saveFileDialog1;
         private OpenFileDialog openFileDialog1;
         private Label label6;
-        private NumericUpDown numericUpDown1;
+        private NumericUpDown numericUpDownMomentum;
+        private ComboBox comboBoxDataProvider;
+        private Label label7;
     }
 }

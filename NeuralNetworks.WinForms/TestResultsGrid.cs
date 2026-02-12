@@ -5,6 +5,7 @@
 namespace Sde.NeuralNetworks.WinForms
 {
     using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using Sde.NeuralNetworks.Quadratics;
 
     /// <summary>
@@ -29,10 +30,15 @@ namespace Sde.NeuralNetworks.WinForms
         public INeuralNetwork Network { get; set; }
 
         /// <summary>
-        /// Populates the grid with the results of testing the neural network on the provided test inputs and expected outputs.
+        /// Populates the grid with the results of testing the neural network on the provided
+        /// test inputs and expected outputs.
         /// </summary>
         /// <param name="testInputs">The inputs to the testing process.</param>
         /// <param name="expected">The expected outputs from the testing process.</param>
+        [SuppressMessage(
+            "Blocker Code Smell",
+            "S2368:Public methods should not have multidimensional array parameters",
+            Justification = "As per design")]
         public void Populate(double[][] testInputs, double[][] expected)
         {
             for (var i = 0; i < this.Network.InputSize; i++)
@@ -53,22 +59,24 @@ namespace Sde.NeuralNetworks.WinForms
             this.ReadOnly = true;
             for (var i = 0; i < testInputs.Length; i++)
             {
-                var a = testInputs[i][0];
-                var b = testInputs[i][1];
-                var c = testInputs[i][2];
                 var predicted = this.Network.Predict(testInputs[i]);
-                this.Rows.Add(
-                    a,
-                    b,
-                    c,
-                    $"{predicted[0]:F2}",
-                    $"{predicted[1]:F2}",
-                    $"{predicted[2]:F2}",
-                    $"{predicted[3]:F2}",
-                    $"{expected[i][0]:F2}",
-                    $"{expected[i][0]:F2}",
-                    $"{expected[i][1]:F2}",
-                    $"{expected[i][1]:F2}");
+                var row = new DataGridViewRow();
+                foreach (var input in testInputs[i])
+                {
+                    row.Cells.Add(new DataGridViewTextBoxCell { Value = $"{input:F2}" });
+                }
+
+                foreach (var output in predicted)
+                {
+                    row.Cells.Add(new DataGridViewTextBoxCell { Value = $"{output:F2}" });
+                }
+
+                foreach (var expectedOutput in expected[i])
+                {
+                    row.Cells.Add(new DataGridViewTextBoxCell { Value = $"{expectedOutput:F2}" });
+                }
+
+                this.Rows.Add(row);
             }
 
             this.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);

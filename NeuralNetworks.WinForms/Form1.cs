@@ -44,6 +44,14 @@ namespace Sde.NeuralNetworks.WinForms
             this.progressBarTimer.Tick += this.ProgressBarTimer_Tick;
 
             this.testResultsGrid1.Network = this.Network;
+
+            var assembly = typeof(IDataProvider).Assembly;
+            var dataProviderTypes = assembly.GetTypes().Where(t => typeof(IDataProvider).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract).ToArray();
+            foreach (var type in dataProviderTypes)
+            {
+                this.comboBoxDataProvider.Items.Add(type);
+                this.comboBoxDataProvider.SelectedIndex = 0;
+            }
         }
 
         private INeuralNetwork Network { get; }
@@ -79,6 +87,8 @@ namespace Sde.NeuralNetworks.WinForms
                     area.AxisX.Maximum = (double)this.numericUpDownNumberOfIterations.Value;
                     area.AxisX.Title = "Epoch";
                     area.AxisY.Title = "Error";
+                    area.AxisX.TitleFont= new Font(this.chartErrors.Font.FontFamily, 14);
+                    area.AxisY.TitleFont = new Font(this.chartErrors.Font.FontFamily, 14);
                     area.AxisY.IsStartedFromZero = false;
                 }
             }
@@ -100,14 +110,22 @@ namespace Sde.NeuralNetworks.WinForms
 
             this.Network.NumberOfIterations = (int)this.numericUpDownNumberOfIterations.Value;
             this.Network.LearningRate = (double)this.numericUpDownLearningRate.Value;
+            this.Network.Momentum = (double)this.numericUpDownMomentum.Value;
             this.Network.HiddenSize = (int)this.numericUpDownNeuronsPerHiddenLayer.Value;
             this.Network.HiddenActivationFunctionProvider = this.activationFunctionProviderControlHidden1.SelectedActivationFunctionProvider!;
             this.Network.OutputActivationFunctionProvider = this.activationFunctionProviderControlOutput.SelectedActivationFunctionProvider!;
 
             this.toolStripStatusLabel1.Text = "Creating training data...";
             this.Invalidate();
-            var dataProvider = new QuadraticDataProvider(-10, 10, 0.5, 0.2);
-            var trainingData = dataProvider.GetTrainingData();
+
+            // TODO: get DataProvider parameters from the UI.
+            var dataProvider = (IDataProvider)Activator.CreateInstance((Type)this.comboBoxDataProvider.SelectedItem!) !;
+            dataProvider.InputsLowerBound = -10;
+            dataProvider.InputsUpperBound = 10;
+            dataProvider.InputsIncrement = 0.5;
+            dataProvider.PercentageOfTestData = 0.1;
+            dataProvider.GenerateData();
+            var trainingData = dataProvider.TrainingData;
             this.trainingDataLength = trainingData.Length;
             var (inputs, targets) = dataProvider.SplitIntoInputsAndOutputs(trainingData);
             this.Network.InputSize = inputs[0].Length;
@@ -133,7 +151,7 @@ namespace Sde.NeuralNetworks.WinForms
             this.Invalidate();
             this.textBoxJson.Text = JsonSerializer.Serialize(this.Network, new JsonSerializerOptions { WriteIndented = true });
 
-            var testData = dataProvider.GetTestData();
+            var testData = dataProvider.TestData;
             var (testInputs, expected) = dataProvider.SplitIntoInputsAndOutputs(testData);
             this.testResultsGrid1.Populate(testInputs, expected);
 
