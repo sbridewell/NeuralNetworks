@@ -362,13 +362,17 @@ namespace Sde.NeuralNetworks.WinForms
                 var progress = (double)net.CurrentIteration / net.NumberOfIterations;
                 var estimatedTotalTime = TimeSpan.FromTicks((long)(this.trainingStopwatch.Elapsed.Ticks / progress));
                 this.Network.EstimatedTrainingTimeLeft = estimatedTotalTime - this.trainingStopwatch.Elapsed;
-                this.toolStripStatusLabel1.Text
+                this.toolStripStatusLabel2.Text
                     = $"Training with {this.trainingDataLength} items"
                     + $". Epoch: {net.CurrentIteration}/{net.NumberOfIterations}"
-                    + $". Hidden MSE: {net.HiddenLayerMeanSquaredError:F4}"
-                    + $". Output MSE: {net.OutputLayerMeanSquaredError:F4}"
                     + $". Time spent training: {net.TimeSpentTraining.ToString(@"hh\:mm\:ss")}"
-                    ////+ $". Estimated training time remaining: {net.EstimatedTrainingTimeLeft.ToString(@"hh\:mm\:ss")}" // TODO: why does this line cause an empty string?
+                    + $". Estimated training time remaining: {net.EstimatedTrainingTimeLeft.ToString(@"hh\:mm\:ss")}"
+                    + $". ";
+                this.toolStripStatusLabel3.Text
+                    = $"Hidden MSE: {net.HiddenLayerMeanSquaredError:F4}"
+                    + $". ";
+                this.toolStripStatusLabel4.Text
+                    = $"Output MSE: {net.OutputLayerMeanSquaredError:F4}"
                     + $". ";
             }
         }
