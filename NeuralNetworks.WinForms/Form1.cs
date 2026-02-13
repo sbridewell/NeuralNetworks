@@ -49,9 +49,11 @@ namespace Sde.NeuralNetworks.WinForms
             var dataProviderTypes = assembly.GetTypes().Where(t => typeof(IDataProvider).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract).ToArray();
             foreach (var type in dataProviderTypes)
             {
-                this.comboBoxDataProvider.Items.Add(type);
-                this.comboBoxDataProvider.SelectedIndex = 0;
+                this.comboBoxDataProvider.Items.Add(new DataProviderListItem((IDataProvider)Activator.CreateInstance(type) !));
+                this.comboBoxDataProvider.DisplayMember = nameof(DataProviderListItem.TypeName);
             }
+
+            this.comboBoxDataProvider.SelectedIndex = 0;
         }
 
         private INeuralNetwork Network { get; }
@@ -87,7 +89,7 @@ namespace Sde.NeuralNetworks.WinForms
                     area.AxisX.Maximum = (double)this.numericUpDownNumberOfIterations.Value;
                     area.AxisX.Title = "Epoch";
                     area.AxisY.Title = "Error";
-                    area.AxisX.TitleFont= new Font(this.chartErrors.Font.FontFamily, 14);
+                    area.AxisX.TitleFont = new Font(this.chartErrors.Font.FontFamily, 14);
                     area.AxisY.TitleFont = new Font(this.chartErrors.Font.FontFamily, 14);
                     area.AxisY.IsStartedFromZero = false;
                 }
@@ -118,12 +120,11 @@ namespace Sde.NeuralNetworks.WinForms
             this.toolStripStatusLabel1.Text = "Creating training data...";
             this.Invalidate();
 
-            // TODO: get DataProvider parameters from the UI.
-            var dataProvider = (IDataProvider)Activator.CreateInstance((Type)this.comboBoxDataProvider.SelectedItem!) !;
-            dataProvider.InputsLowerBound = -10;
-            dataProvider.InputsUpperBound = 10;
-            dataProvider.InputsIncrement = 0.5;
-            dataProvider.PercentageOfTestData = 0.1;
+            var dataProvider = ((DataProviderListItem)this.comboBoxDataProvider.SelectedItem !).provider;
+            dataProvider.InputsLowerBound = (double)this.numericUpDownInputLowerBound.Value;
+            dataProvider.InputsUpperBound = (double)this.numericUpDownInputUpperBound.Value;
+            dataProvider.InputsIncrement = (double)this.numericUpDownInputsIncrement.Value;
+            dataProvider.PercentageOfTestData = (double)this.numericUpDownPercentageTestData.Value;
             dataProvider.GenerateData();
             var trainingData = dataProvider.TrainingData;
             this.trainingDataLength = trainingData.Length;
@@ -475,5 +476,19 @@ namespace Sde.NeuralNetworks.WinForms
         }
 
         #endregion
+
+        /// <summary>
+        /// Small wrapper used to expose a TypeName property for ListBox DisplayMember while retaining the provider instance.
+        /// </summary>
+        private sealed record DataProviderListItem(IDataProvider provider)
+        {
+            /// <summary>
+            /// Gets the short type name (no namespace) of the provider.
+            /// </summary>
+            public string TypeName => this.provider.GetType().Name;
+
+            /// <inheritdoc />
+            public override string ToString() => this.TypeName;
+        }
     }
 }
