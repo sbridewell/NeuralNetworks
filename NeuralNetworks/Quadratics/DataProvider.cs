@@ -29,19 +29,11 @@ namespace Sde.NeuralNetworks.Quadratics
         /// <inheritdoc/>
         public double[][] TestData { get; protected set; } = Array.Empty<double[]>();
 
-        /// <summary>
-        /// Gets the number of inputs into the neural network.
-        /// Each element of the test data and training data must have the same number
-        /// of elements as NumberOfInputs + NumberOfOutputs.
-        /// </summary>
-        protected abstract int NumberOfInputs { get; }
+        /// <inheritdoc/>
+        public virtual int NumberOfInputs { get; }
 
-        /// <summary>
-        /// Gets the number of outputs from the neural network.
-        /// Each element of the test data and training data must have the same number
-        /// of elements as NumberOfInputs + NumberOfOutputs.
-        /// </summary>
-        protected abstract int NumberOfOutputs { get; }
+        /// <inheritdoc/>
+        public virtual int NumberOfOutputs { get; }
 
         /// <inheritdoc/>
         public abstract void GenerateData();

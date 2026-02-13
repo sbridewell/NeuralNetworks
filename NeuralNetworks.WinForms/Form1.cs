@@ -16,11 +16,13 @@ namespace Sde.NeuralNetworks.WinForms
     /// </summary>
     public partial class Form1 : Form
     {
-        private readonly Timer statusStripTimer = new () { Interval = 100 };
-        private readonly Timer visualiserTimer = new () { Interval = 100 };
-        private readonly Timer errorsTimer = new () { Interval = 100 };
-        private readonly Timer progressBarTimer = new () { Interval = 100 };
-        private readonly Stopwatch trainingStopwatch = new ();
+#pragma warning disable SA1000 // Keywords should be spaced correctly
+        private readonly Timer statusStripTimer = new() { Interval = 100 };
+        private readonly Timer visualiserTimer = new() { Interval = 100 };
+        private readonly Timer errorsTimer = new() { Interval = 100 };
+        private readonly Timer progressBarTimer = new() { Interval = 100 };
+        private readonly Stopwatch trainingStopwatch = new();
+#pragma warning restore SA1000 // Keywords should be spaced correctly
         private bool chartErrorSeriesInitialised;
         private int trainingDataLength;
 
@@ -120,7 +122,7 @@ namespace Sde.NeuralNetworks.WinForms
             this.toolStripStatusLabel1.Text = "Creating training data...";
             this.Invalidate();
 
-            var dataProvider = ((DataProviderListItem)this.comboBoxDataProvider.SelectedItem !).provider;
+            var dataProvider = ((DataProviderListItem)this.comboBoxDataProvider.SelectedItem!).provider;
             dataProvider.InputsLowerBound = (double)this.numericUpDownInputLowerBound.Value;
             dataProvider.InputsUpperBound = (double)this.numericUpDownInputUpperBound.Value;
             dataProvider.InputsIncrement = (double)this.numericUpDownInputsIncrement.Value;
@@ -480,6 +482,14 @@ namespace Sde.NeuralNetworks.WinForms
         }
 
         #endregion
+
+        private void ComboBoxDataProvider_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var provider = ((DataProviderListItem)this.comboBoxDataProvider.SelectedItem!).provider;
+            this.Network.InputSize = provider.NumberOfInputs;
+            this.Network.OutputSize = provider.NumberOfOutputs;
+            this.networkVisualiser1.Invalidate();
+        }
 
         /// <summary>
         /// Small wrapper used to expose a TypeName property for ListBox DisplayMember while retaining the provider instance.

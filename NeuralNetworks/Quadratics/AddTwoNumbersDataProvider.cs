@@ -10,10 +10,10 @@ namespace Sde.NeuralNetworks.Quadratics
     public class AddTwoNumbersDataProvider : DataProvider
     {
         /// <inheritdoc/>
-        protected override int NumberOfInputs => 2;
+        public override int NumberOfInputs => 2;
 
         /// <inheritdoc/>
-        protected override int NumberOfOutputs => 1;
+        public override int NumberOfOutputs => 1;
 
         /// <inheritdoc/>
         public override void GenerateData()

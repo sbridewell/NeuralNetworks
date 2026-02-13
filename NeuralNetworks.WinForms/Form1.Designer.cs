@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             splitContainer1 = new SplitContainer();
             numericUpDownPercentageTestData = new NumericUpDown();
             label11 = new Label();
@@ -263,6 +263,7 @@
             comboBoxDataProvider.Name = "comboBoxDataProvider";
             comboBoxDataProvider.Size = new Size(310, 33);
             comboBoxDataProvider.TabIndex = 18;
+            comboBoxDataProvider.SelectedIndexChanged += ComboBoxDataProvider_SelectedIndexChanged;
             // 
             // numericUpDownMomentum
             // 
@@ -500,16 +501,16 @@
             // 
             // chartErrors
             // 
-            chartArea1.Name = "ChartArea1";
-            chartErrors.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            chartErrors.ChartAreas.Add(chartArea2);
             chartErrors.Dock = DockStyle.Fill;
             chartErrors.Location = new Point(0, 0);
             chartErrors.Name = "chartErrors";
             chartErrors.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.Name = "Series1";
-            chartErrors.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series2.Name = "Series1";
+            chartErrors.Series.Add(series2);
             chartErrors.Size = new Size(605, 432);
             chartErrors.SuppressExceptions = true;
             chartErrors.TabIndex = 18;

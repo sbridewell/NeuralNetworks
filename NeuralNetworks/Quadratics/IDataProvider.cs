@@ -46,6 +46,20 @@ namespace Sde.NeuralNetworks.Quadratics
         double[][] TestData { get; }
 
         /// <summary>
+        /// Gets the number of inputs into the neural network.
+        /// Each element of the test data and training data must have the same number
+        /// of elements as NumberOfInputs + NumberOfOutputs.
+        /// </summary>
+        int NumberOfInputs { get; }
+
+        /// <summary>
+        /// Gets the number of outputs from the neural network.
+        /// Each element of the test data and training data must have the same number
+        /// of elements as NumberOfInputs + NumberOfOutputs.
+        /// </summary>
+        int NumberOfOutputs { get; }
+
+        /// <summary>
         /// Generates test and training data.
         /// </summary>
         void GenerateData();

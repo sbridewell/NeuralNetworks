@@ -12,10 +12,10 @@ namespace Sde.NeuralNetworks.Quadratics
     public class QuadraticDataProvider : DataProvider
     {
         /// <inheritdoc/>
-        protected override int NumberOfInputs => 3;
+        public override int NumberOfInputs => 3;
 
         /// <inheritdoc/>
-        protected override int NumberOfOutputs => 4;
+        public override int NumberOfOutputs => 4;
 
         /// <inheritdoc/>
         public override void GenerateData()
