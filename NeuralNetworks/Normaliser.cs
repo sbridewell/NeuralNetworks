@@ -88,6 +88,7 @@ namespace Sde.NeuralNetworks
         /// </returns>
         public static int[] Normalise(int upperBound, int lowerBound, double[] data)
         {
+            // TODO: revisit the Normalise logic - networkVisualiser shows flipping from -255 to 255 and also stuck at 0.
             if (data.Length == 0)
             {
                 return Array.Empty<int>();
