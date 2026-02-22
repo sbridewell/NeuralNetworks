@@ -28,19 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             splitContainer1 = new SplitContainer();
-            numericUpDownPercentageTestData = new NumericUpDown();
-            label11 = new Label();
-            label10 = new Label();
-            numericUpDownInputsIncrement = new NumericUpDown();
-            numericUpDownInputUpperBound = new NumericUpDown();
-            label9 = new Label();
-            numericUpDownInputLowerBound = new NumericUpDown();
-            label8 = new Label();
-            label7 = new Label();
-            comboBoxDataProvider = new ComboBox();
             numericUpDownMomentum = new NumericUpDown();
             label6 = new Label();
             progressBar1 = new ProgressBar();
@@ -94,10 +84,6 @@
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownPercentageTestData).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownInputsIncrement).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownInputUpperBound).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownInputLowerBound).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownMomentum).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownNeuronsPerHiddenLayer).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownLearningRate).BeginInit();
@@ -133,16 +119,6 @@
             // 
             // splitContainer1.Panel1
             // 
-            splitContainer1.Panel1.Controls.Add(numericUpDownPercentageTestData);
-            splitContainer1.Panel1.Controls.Add(label11);
-            splitContainer1.Panel1.Controls.Add(label10);
-            splitContainer1.Panel1.Controls.Add(numericUpDownInputsIncrement);
-            splitContainer1.Panel1.Controls.Add(numericUpDownInputUpperBound);
-            splitContainer1.Panel1.Controls.Add(label9);
-            splitContainer1.Panel1.Controls.Add(numericUpDownInputLowerBound);
-            splitContainer1.Panel1.Controls.Add(label8);
-            splitContainer1.Panel1.Controls.Add(label7);
-            splitContainer1.Panel1.Controls.Add(comboBoxDataProvider);
             splitContainer1.Panel1.Controls.Add(numericUpDownMomentum);
             splitContainer1.Panel1.Controls.Add(label6);
             splitContainer1.Panel1.Controls.Add(progressBar1);
@@ -161,109 +137,6 @@
             splitContainer1.Size = new Size(1241, 583);
             splitContainer1.SplitterDistance = 102;
             splitContainer1.TabIndex = 0;
-            // 
-            // numericUpDownPercentageTestData
-            // 
-            numericUpDownPercentageTestData.DecimalPlaces = 2;
-            numericUpDownPercentageTestData.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            numericUpDownPercentageTestData.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
-            numericUpDownPercentageTestData.Location = new Point(1094, 41);
-            numericUpDownPercentageTestData.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
-            numericUpDownPercentageTestData.Name = "numericUpDownPercentageTestData";
-            numericUpDownPercentageTestData.Size = new Size(61, 33);
-            numericUpDownPercentageTestData.TabIndex = 27;
-            // 
-            // label11
-            // 
-            label11.AutoSize = true;
-            label11.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label11.Location = new Point(992, 45);
-            label11.Name = "label11";
-            label11.Size = new Size(105, 25);
-            label11.TabIndex = 26;
-            label11.Text = "% test data";
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label10.Location = new Point(825, 46);
-            label10.Name = "label10";
-            label10.Size = new Size(97, 25);
-            label10.TabIndex = 25;
-            label10.Text = "Increment";
-            // 
-            // numericUpDownInputsIncrement
-            // 
-            numericUpDownInputsIncrement.DecimalPlaces = 1;
-            numericUpDownInputsIncrement.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            numericUpDownInputsIncrement.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            numericUpDownInputsIncrement.Location = new Point(928, 40);
-            numericUpDownInputsIncrement.Maximum = new decimal(new int[] { 10, 0, 0, 0 });
-            numericUpDownInputsIncrement.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
-            numericUpDownInputsIncrement.Name = "numericUpDownInputsIncrement";
-            numericUpDownInputsIncrement.Size = new Size(60, 33);
-            numericUpDownInputsIncrement.TabIndex = 24;
-            numericUpDownInputsIncrement.Value = new decimal(new int[] { 1, 0, 0, 65536 });
-            // 
-            // numericUpDownInputUpperBound
-            // 
-            numericUpDownInputUpperBound.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            numericUpDownInputUpperBound.Location = new Point(765, 42);
-            numericUpDownInputUpperBound.Name = "numericUpDownInputUpperBound";
-            numericUpDownInputUpperBound.Size = new Size(54, 33);
-            numericUpDownInputUpperBound.TabIndex = 23;
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label9.Location = new Point(644, 44);
-            label9.Name = "label9";
-            label9.Size = new Size(124, 25);
-            label9.TabIndex = 22;
-            label9.Text = "Upper bound";
-            // 
-            // numericUpDownInputLowerBound
-            // 
-            numericUpDownInputLowerBound.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            numericUpDownInputLowerBound.Location = new Point(573, 40);
-            numericUpDownInputLowerBound.Maximum = new decimal(new int[] { 0, 0, 0, 0 });
-            numericUpDownInputLowerBound.Minimum = new decimal(new int[] { 100, 0, 0, int.MinValue });
-            numericUpDownInputLowerBound.Name = "numericUpDownInputLowerBound";
-            numericUpDownInputLowerBound.Size = new Size(65, 33);
-            numericUpDownInputLowerBound.TabIndex = 21;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label8.Location = new Point(454, 42);
-            label8.Name = "label8";
-            label8.Size = new Size(123, 25);
-            label8.TabIndex = 20;
-            label8.Text = "Lower bound";
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label7.Location = new Point(7, 40);
-            label7.Name = "label7";
-            label7.Size = new Size(127, 25);
-            label7.TabIndex = 19;
-            label7.Text = "Data provider";
-            // 
-            // comboBoxDataProvider
-            // 
-            comboBoxDataProvider.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBoxDataProvider.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            comboBoxDataProvider.FormattingEnabled = true;
-            comboBoxDataProvider.Location = new Point(140, 38);
-            comboBoxDataProvider.Name = "comboBoxDataProvider";
-            comboBoxDataProvider.Size = new Size(310, 33);
-            comboBoxDataProvider.TabIndex = 18;
-            comboBoxDataProvider.SelectedIndexChanged += ComboBoxDataProvider_SelectedIndexChanged;
             // 
             // numericUpDownMomentum
             // 
@@ -501,16 +374,16 @@
             // 
             // chartErrors
             // 
-            chartArea2.Name = "ChartArea1";
-            chartErrors.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            chartErrors.ChartAreas.Add(chartArea1);
             chartErrors.Dock = DockStyle.Fill;
             chartErrors.Location = new Point(0, 0);
             chartErrors.Name = "chartErrors";
             chartErrors.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Name = "Series1";
-            chartErrors.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.Name = "Series1";
+            chartErrors.Series.Add(series1);
             chartErrors.Size = new Size(605, 432);
             chartErrors.SuppressExceptions = true;
             chartErrors.TabIndex = 18;
@@ -774,10 +647,6 @@
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)numericUpDownPercentageTestData).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownInputsIncrement).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownInputUpperBound).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownInputLowerBound).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownMomentum).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownNeuronsPerHiddenLayer).EndInit();
             ((System.ComponentModel.ISupportInitialize)numericUpDownLearningRate).EndInit();
@@ -857,16 +726,6 @@
         private OpenFileDialog openFileDialog1;
         private Label label6;
         private NumericUpDown numericUpDownMomentum;
-        private ComboBox comboBoxDataProvider;
-        private Label label7;
-        private NumericUpDown numericUpDownInputLowerBound;
-        private Label label8;
-        private Label label9;
-        private NumericUpDown numericUpDownInputUpperBound;
-        private NumericUpDown numericUpDownInputsIncrement;
-        private Label label10;
-        private NumericUpDown numericUpDownPercentageTestData;
-        private Label label11;
         private ToolStripStatusLabel toolStripStatusLabel2;
         private ToolStripStatusLabel toolStripStatusLabel3;
         private ToolStripStatusLabel toolStripStatusLabel4;

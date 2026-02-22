@@ -10,12 +10,16 @@ namespace Sde.NeuralNetworks.WinForms
     using System.Windows.Forms;
     using System.Windows.Forms.DataVisualization.Charting;
     using Sde.NeuralNetworks.Quadratics;
+    using Sde.NeuralNetworks.WinForms.Forms;
+    using Sde.NeuralNetworks.WinForms.ViewModels;
 
     /// <summary>
     /// Main form in the application.
     /// </summary>
     public partial class Form1 : Form
     {
+        private readonly TrainingDataViewModel trainingDataViewModel = new TrainingDataViewModel();
+
 #pragma warning disable SA1000 // Keywords should be spaced correctly
         private readonly Timer statusStripTimer = new() { Interval = 100 };
         private readonly Timer visualiserTimer = new() { Interval = 100 };
@@ -47,18 +51,22 @@ namespace Sde.NeuralNetworks.WinForms
 
             this.testResultsGrid1.Network = this.Network;
 
-            var assembly = typeof(IDataProvider).Assembly;
-            var dataProviderTypes = assembly.GetTypes().Where(t => typeof(IDataProvider).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract).ToArray();
-            foreach (var type in dataProviderTypes)
+            this.TrainingDataPropertiesForm = new TrainingDataPropertiesForm(this.trainingDataViewModel);
+            var initialProvider = this.trainingDataViewModel.DataProvider;
+            if (initialProvider != null)
             {
-                this.comboBoxDataProvider.Items.Add(new DataProviderListItem((IDataProvider)Activator.CreateInstance(type) !));
-                this.comboBoxDataProvider.DisplayMember = nameof(DataProviderListItem.TypeName);
+                initialProvider.InputsLowerBound = -50;
+                initialProvider.InputsUpperBound = 50;
+                initialProvider.InputsIncrement = 0.5;
+                initialProvider.PercentageOfTestData = 1;
             }
 
-            this.comboBoxDataProvider.SelectedIndex = 0;
+            this.TrainingDataPropertiesForm.Show();
         }
 
         private INeuralNetwork Network { get; }
+
+        private TrainingDataPropertiesForm TrainingDataPropertiesForm { get; }
 
         #region button click event handlers
 
@@ -69,124 +77,127 @@ namespace Sde.NeuralNetworks.WinForms
         /// <param name="e">Event arcuments.</param>
         private async void ButtonGo_Click(object sender, EventArgs e)
         {
-            this.textBoxJson.Text = string.Empty;
-
-            this.numericUpDownNumberOfIterations.Enabled = false;
-            this.numericUpDownLearningRate.Enabled = false;
-            this.numericUpDownNeuronsPerHiddenLayer.Enabled = false;
-            this.buttonGo.Enabled = false;
-            this.buttonStop.Enabled = true;
-
-            this.testResultsGrid1.Rows.Clear();
-            this.testResultsGrid1.Columns.Clear();
-
-            // Reset chart state before training starts.
-            if (this.chartErrors != null)
+            try
             {
-                this.chartErrors.Series.Clear();
-                if (this.chartErrors.ChartAreas.Count > 0)
+                this.textBoxJson.Text = string.Empty;
+
+                this.numericUpDownNumberOfIterations.Enabled = false;
+                this.numericUpDownLearningRate.Enabled = false;
+                this.numericUpDownNeuronsPerHiddenLayer.Enabled = false;
+                this.buttonGo.Enabled = false;
+                this.buttonStop.Enabled = true;
+
+                this.testResultsGrid1.Rows.Clear();
+                this.testResultsGrid1.Columns.Clear();
+
+                // Reset chart state before training starts.
+                if (this.chartErrors != null)
                 {
-                    var area = this.chartErrors.ChartAreas[0];
-                    area.AxisX.Minimum = 0;
-                    area.AxisX.Maximum = (double)this.numericUpDownNumberOfIterations.Value;
-                    area.AxisX.Title = "Epoch";
-                    area.AxisY.Title = "Error";
-                    area.AxisX.TitleFont = new Font(this.chartErrors.Font.FontFamily, 14);
-                    area.AxisY.TitleFont = new Font(this.chartErrors.Font.FontFamily, 14);
-                    area.AxisY.IsStartedFromZero = false;
+                    this.chartErrors.Series.Clear();
+                    if (this.chartErrors.ChartAreas.Count > 0)
+                    {
+                        var area = this.chartErrors.ChartAreas[0];
+                        area.AxisX.Minimum = 0;
+                        area.AxisX.Maximum = (double)this.numericUpDownNumberOfIterations.Value;
+                        area.AxisX.Title = "Epoch";
+                        area.AxisY.Title = "Error";
+                        area.AxisX.TitleFont = new Font(this.chartErrors.Font.FontFamily, 14);
+                        area.AxisY.TitleFont = new Font(this.chartErrors.Font.FontFamily, 14);
+                        area.AxisY.IsStartedFromZero = false;
+                    }
                 }
-            }
 
-            this.chartErrorSeriesInitialised = false;
-            if (this.errorsChartToolStripMenuItem.Checked)
+                this.chartErrorSeriesInitialised = false;
+                this.Network.NumberOfIterations = (int)this.numericUpDownNumberOfIterations.Value;
+                this.Network.LearningRate = (double)this.numericUpDownLearningRate.Value;
+                this.Network.Momentum = (double)this.numericUpDownMomentum.Value;
+                this.Network.HiddenSize = (int)this.numericUpDownNeuronsPerHiddenLayer.Value;
+                this.Network.HiddenActivationFunctionProvider = this.activationFunctionProviderControlHidden1.SelectedActivationFunctionProvider!;
+                this.Network.OutputActivationFunctionProvider = this.activationFunctionProviderControlOutput.SelectedActivationFunctionProvider!;
+
+                this.toolStripStatusLabel1.Text = "Creating training data...";
+                this.toolStripStatusLabel1.Invalidate();
+
+                var dataProvider = this.trainingDataViewModel.DataProvider!;
+                dataProvider.GenerateData();
+                var trainingData = dataProvider.TrainingData;
+                this.trainingDataLength = trainingData.Length;
+                var (inputs, targets) = dataProvider.SplitIntoInputsAndOutputs(trainingData);
+                this.Network.InputSize = inputs[0].Length;
+                this.Network.OutputSize = targets[0].Length;
+
+                this.progressBarTimer.Start();
+                this.trainingStopwatch.Reset();
+                this.trainingStopwatch.Start();
+                if (this.errorsChartToolStripMenuItem.Checked)
+                {
+                    this.errorsTimer.Start();
+                }
+
+                if (this.networkVisualisationToolStripMenuItem.Checked)
+                {
+                    this.visualiserTimer.Start();
+                }
+
+                if (this.statusBarToolStripMenuItem.Checked)
+                {
+                    this.statusStripTimer.Start();
+                }
+
+                /////////////////////////////////////////////////////////////////////////////////////
+                // Train the network! ///////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////////////////////////////
+                await this.Network!.Train(inputs, targets);
+
+                // Training finished. Stop polling.
+                this.trainingStopwatch.Stop();
+                this.errorsTimer.Stop();
+                this.progressBarTimer.Stop();
+                this.visualiserTimer.Stop();
+                this.statusStripTimer.Stop();
+                this.toolStripStatusLabel1.Text = "Training complete. Testing network.";
+                this.Invalidate();
+                this.textBoxJson.Text = JsonSerializer.Serialize(this.Network, new JsonSerializerOptions { WriteIndented = true });
+
+                var testData = dataProvider.TestData;
+                var (testInputs, expected) = dataProvider.SplitIntoInputsAndOutputs(testData);
+                this.testResultsGrid1.Populate(testInputs, expected);
+
+                this.networkVisualiser1.Invalidate();
+                this.numericUpDownNumberOfIterations.Enabled = true;
+                this.numericUpDownLearningRate.Enabled = true;
+                this.numericUpDownNeuronsPerHiddenLayer.Enabled = true;
+                this.buttonGo.Enabled = true;
+                this.buttonStop.Enabled = false;
+                this.toolStripStatusLabel1.Text = "Ready";
+                this.Invalidate();
+
+                this.dataGridViewInputs.Rows.Clear();
+                this.dataGridViewInputs.Columns.Clear();
+                this.dataGridViewOutputs.Rows.Clear();
+                this.dataGridViewOutputs.Columns.Clear();
+                var inputRow = new DataGridViewRow();
+                for (var i = 0; i < this.Network.InputSize; i++)
+                {
+                    this.dataGridViewInputs.Columns.Add(string.Empty, string.Empty);
+                    inputRow.Cells.Add(new DataGridViewTextBoxCell());
+                }
+
+                var outputRow = new DataGridViewRow();
+                for (var i = 0; i < this.Network.OutputSize; i++)
+                {
+                    this.dataGridViewOutputs.Columns.Add(string.Empty, string.Empty);
+                    outputRow.Cells.Add(new DataGridViewTextBoxCell());
+                }
+
+                this.dataGridViewInputs.Rows.Add(inputRow);
+                this.dataGridViewOutputs.Rows.Add(outputRow);
+            }
+            catch (Exception ex)
             {
-                this.errorsTimer.Start();
+                var errorForm = new ErrorForm { Exception = ex };
+                _ = await errorForm.ShowDialogAsync();
             }
-
-            if (this.networkVisualisationToolStripMenuItem.Checked)
-            {
-                this.visualiserTimer.Start();
-            }
-
-            this.progressBarTimer.Start();
-            this.trainingStopwatch.Reset();
-            this.trainingStopwatch.Start();
-
-            this.Network.NumberOfIterations = (int)this.numericUpDownNumberOfIterations.Value;
-            this.Network.LearningRate = (double)this.numericUpDownLearningRate.Value;
-            this.Network.Momentum = (double)this.numericUpDownMomentum.Value;
-            this.Network.HiddenSize = (int)this.numericUpDownNeuronsPerHiddenLayer.Value;
-            this.Network.HiddenActivationFunctionProvider = this.activationFunctionProviderControlHidden1.SelectedActivationFunctionProvider!;
-            this.Network.OutputActivationFunctionProvider = this.activationFunctionProviderControlOutput.SelectedActivationFunctionProvider!;
-
-            this.toolStripStatusLabel1.Text = "Creating training data...";
-            this.Invalidate();
-
-            var dataProvider = ((DataProviderListItem)this.comboBoxDataProvider.SelectedItem!).provider;
-            dataProvider.InputsLowerBound = (double)this.numericUpDownInputLowerBound.Value;
-            dataProvider.InputsUpperBound = (double)this.numericUpDownInputUpperBound.Value;
-            dataProvider.InputsIncrement = (double)this.numericUpDownInputsIncrement.Value;
-            dataProvider.PercentageOfTestData = (double)this.numericUpDownPercentageTestData.Value;
-            dataProvider.GenerateData();
-            var trainingData = dataProvider.TrainingData;
-            this.trainingDataLength = trainingData.Length;
-            var (inputs, targets) = dataProvider.SplitIntoInputsAndOutputs(trainingData);
-            this.Network.InputSize = inputs[0].Length;
-            this.Network.OutputSize = targets[0].Length;
-
-            if (this.statusBarToolStripMenuItem.Checked)
-            {
-                this.statusStripTimer.Start();
-            }
-
-            /////////////////////////////////////////////////////////////////////////////////////
-            // Train the network! ///////////////////////////////////////////////////////////////
-            /////////////////////////////////////////////////////////////////////////////////////
-            await this.Network!.Train(inputs, targets);
-
-            // Training finished. Stop polling.
-            this.trainingStopwatch.Stop();
-            this.errorsTimer.Stop();
-            this.progressBarTimer.Stop();
-            this.visualiserTimer.Stop();
-            this.statusStripTimer.Stop();
-            this.toolStripStatusLabel1.Text = "Training complete. Testing network.";
-            this.Invalidate();
-            this.textBoxJson.Text = JsonSerializer.Serialize(this.Network, new JsonSerializerOptions { WriteIndented = true });
-
-            var testData = dataProvider.TestData;
-            var (testInputs, expected) = dataProvider.SplitIntoInputsAndOutputs(testData);
-            this.testResultsGrid1.Populate(testInputs, expected);
-
-            this.networkVisualiser1.Invalidate();
-            this.numericUpDownNumberOfIterations.Enabled = true;
-            this.numericUpDownLearningRate.Enabled = true;
-            this.numericUpDownNeuronsPerHiddenLayer.Enabled = true;
-            this.buttonGo.Enabled = true;
-            this.buttonStop.Enabled = false;
-            this.toolStripStatusLabel1.Text = "Ready";
-            this.Invalidate();
-
-            this.dataGridViewInputs.Rows.Clear();
-            this.dataGridViewInputs.Columns.Clear();
-            this.dataGridViewOutputs.Rows.Clear();
-            this.dataGridViewOutputs.Columns.Clear();
-            var inputRow = new DataGridViewRow();
-            for (var i = 0; i < this.Network.InputSize; i++)
-            {
-                this.dataGridViewInputs.Columns.Add(string.Empty, string.Empty);
-                inputRow.Cells.Add(new DataGridViewTextBoxCell());
-            }
-
-            var outputRow = new DataGridViewRow();
-            for (var i = 0; i < this.Network.OutputSize; i++)
-            {
-                this.dataGridViewOutputs.Columns.Add(string.Empty, string.Empty);
-                outputRow.Cells.Add(new DataGridViewTextBoxCell());
-            }
-
-            this.dataGridViewInputs.Rows.Add(inputRow);
-            this.dataGridViewOutputs.Rows.Add(outputRow);
         }
 
         /// <summary>
@@ -381,6 +392,8 @@ namespace Sde.NeuralNetworks.WinForms
 
         #endregion
 
+        #region menu item click event handlers
+
         private void NumericUpDownNumberOfHiddenLayer_ValueChanged(object sender, EventArgs e)
         {
             this.Network.HiddenSize = (int)this.numericUpDownNeuronsPerHiddenLayer.Value;
@@ -398,8 +411,6 @@ namespace Sde.NeuralNetworks.WinForms
                 this.visualiserTimer.Stop();
             }
         }
-
-        #region menu item click event handlers
 
         private void ErrorsChartToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -482,27 +493,5 @@ namespace Sde.NeuralNetworks.WinForms
         }
 
         #endregion
-
-        private void ComboBoxDataProvider_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var provider = ((DataProviderListItem)this.comboBoxDataProvider.SelectedItem!).provider;
-            this.Network.InputSize = provider.NumberOfInputs;
-            this.Network.OutputSize = provider.NumberOfOutputs;
-            this.networkVisualiser1.Invalidate();
-        }
-
-        /// <summary>
-        /// Small wrapper used to expose a TypeName property for ListBox DisplayMember while retaining the provider instance.
-        /// </summary>
-        private sealed record DataProviderListItem(IDataProvider provider)
-        {
-            /// <summary>
-            /// Gets the short type name (no namespace) of the provider.
-            /// </summary>
-            public string TypeName => this.provider.GetType().Name;
-
-            /// <inheritdoc />
-            public override string ToString() => this.TypeName;
-        }
     }
 }

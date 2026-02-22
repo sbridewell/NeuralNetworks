@@ -27,6 +27,9 @@ namespace Sde.NeuralNetworks.Quadratics
         private double[] hPrevBiasesDelta = Array.Empty<double>(); // hidden biases
         private double[][] hoPrevWeightsDelta = Array.Empty<double[]>(); // hidden -> output
         private double[] oPrevBiasesDelta = Array.Empty<double>(); // output biases
+        // Stored pre-activation sums required for correct backpropagation.
+        private double[] hiddenPreActivations = Array.Empty<double>();
+        private double[] outputPreActivations = Array.Empty<double>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NeuralNetwork"/> class.
@@ -165,15 +168,37 @@ namespace Sde.NeuralNetworks.Quadratics
                         var hidden = this.ApplyHiddenWeightsAndBiases(input);
                         var output = this.ApplyOutputWeightsAndBiases(hidden);
 
-                        // Calculate errors
-                        var outputLayerErrors = this.CalculateOutputLayerErrors(expectedOutput, output);
-                        var hiddenLayerErrors = this.CalculateHiddenLayerErrors(outputLayerErrors);
-                        this.OutputLayerMeanSquaredError = outputLayerErrors.Select(e => e * e).Average();
-                        this.HiddenLayerMeanSquaredError = hiddenLayerErrors.Select(e => e * e).Average();
+                        // Calculate raw errors for reporting
+                        var rawOutputErrors = new double[this.OutputSize];
+                        for (var o = 0; o < this.OutputSize; o++)
+                        {
+                            rawOutputErrors[o] = expectedOutput[o] - output[o];
+                        }
+
+                        // Calculate deltas (local gradients) to use for weight updates
+                        var outputLayerDeltas = this.CalculateOutputLayerDeltas(expectedOutput, output);
+
+                        // Calculate raw hidden errors for reporting (before applying activation derivative)
+                        var rawHiddenErrors = new double[this.HiddenSize];
+                        for (var h = 0; h < this.HiddenSize; h++)
+                        {
+                            var err = 0.0;
+                            for (var o = 0; o < this.OutputSize; o++)
+                            {
+                                err += rawOutputErrors[o] * this.HiddenToOutputWeights[h][o];
+                            }
+
+                            rawHiddenErrors[h] = err;
+                        }
+
+                        var hiddenLayerDeltas = this.CalculateHiddenLayerDeltas(outputLayerDeltas);
+
+                        this.OutputLayerMeanSquaredError = rawOutputErrors.Select(e => e * e).Average();
+                        this.HiddenLayerMeanSquaredError = rawHiddenErrors.Select(e => e * e).Average();
 
                         // Update weights and biases taking into account the calculated errors (backward propogation)
-                        this.UpdateOutputLayerWeightsAndBiases(outputLayerErrors, hidden, this.LearningRate);
-                        this.UpdateHiddenLayerWeightsAndBiases(hiddenLayerErrors, input, this.LearningRate);
+                        this.UpdateOutputLayerWeightsAndBiases(outputLayerDeltas, hidden, this.LearningRate);
+                        this.UpdateHiddenLayerWeightsAndBiases(hiddenLayerDeltas, input, this.LearningRate);
                     }
                 }
 
@@ -212,6 +237,7 @@ namespace Sde.NeuralNetworks.Quadratics
         private double[] ApplyHiddenWeightsAndBiases(double[] inputs)
         {
             var hidden = new double[this.HiddenSize];
+            this.hiddenPreActivations = new double[this.HiddenSize];
             for (var h = 0; h < this.HiddenSize; h++)
             {
                 var sumOfWeightedInputs = 0.0;
@@ -221,6 +247,8 @@ namespace Sde.NeuralNetworks.Quadratics
                 }
 
                 sumOfWeightedInputs += this.HiddenBiases[h];
+                // store pre-activation for gradient calculation during backprop
+                this.hiddenPreActivations[h] = sumOfWeightedInputs;
                 hidden[h] = this.HiddenActivationFunctionProvider.CalculateActivation(sumOfWeightedInputs);
             }
 
@@ -240,6 +268,7 @@ namespace Sde.NeuralNetworks.Quadratics
         private double[] ApplyOutputWeightsAndBiases(double[] hidden)
         {
             var output = new double[this.OutputSize];
+            this.outputPreActivations = new double[this.OutputSize];
             for (var o = 0; o < this.OutputSize; o++)
             {
                 var sumOfWeightedInputs = 0.0;
@@ -249,6 +278,8 @@ namespace Sde.NeuralNetworks.Quadratics
                 }
 
                 sumOfWeightedInputs += this.OutputBiases[o];
+                // store pre-activation for gradient calculation during backprop
+                this.outputPreActivations[o] = sumOfWeightedInputs;
                 output[o] = this.OutputActivationFunctionProvider.CalculateActivation(sumOfWeightedInputs);
             }
 
@@ -256,45 +287,47 @@ namespace Sde.NeuralNetworks.Quadratics
         }
 
         /// <summary>
-        /// Calculates the errors in the outputs from the output layer, based on the differences
-        /// between the actual outputs and the expected outputs as supplied in the training data.
+        /// Calculates the output-layer deltas (local gradients) for backpropagation.
+        /// Returns delta_o = (expected_o - output_o) * f'_output(preActivation_o).
         /// </summary>
         /// <param name="expected">The expected outputs.</param>
         /// <param name="output">The actual outputs.</param>
-        /// <returns>The errors in the outputs from the output layer.</returns>
-        private double[] CalculateOutputLayerErrors(double[] expected, double[] output)
+        /// <returns>The output-layer deltas.</returns>
+        private double[] CalculateOutputLayerDeltas(double[] expected, double[] output)
         {
-            var outputErrors = new double[this.OutputSize];
+            var outputDeltas = new double[this.OutputSize];
             for (var o = 0; o < this.OutputSize; o++)
             {
-                outputErrors[o] = expected[o] - output[o];
+                var error = expected[o] - output[o]; // raw error
+                var grad = this.OutputActivationFunctionProvider.CalculateGradient(this.outputPreActivations.Length > o ? this.outputPreActivations[o] : output[o]);
+                outputDeltas[o] = error * grad;
             }
 
-            return outputErrors;
+            return outputDeltas;
         }
 
         /// <summary>
-        /// Calculates the errors in the outputs from the hidden layer, based on the errors
-        /// in the outputs from the output layer and the weights connecting the hidden layer
-        /// to the output layer.
+        /// Calculates the hidden-layer deltas (local gradients) from output-layer deltas.
+        /// Returns delta_h = f'_hidden(preActivation_h) * sum_o (delta_o * w_h_o).
         /// </summary>
-        /// <param name="outputErrors">The errors in the outputs from the output layer.</param>
-        /// <returns>The errors in the outputs from the hidden layer.</returns>
-        private double[] CalculateHiddenLayerErrors(double[] outputErrors)
+        /// <param name="outputDeltas">The output-layer deltas.</param>
+        /// <returns>The hidden-layer deltas.</returns>
+        private double[] CalculateHiddenLayerDeltas(double[] outputDeltas)
         {
-            var hiddenErrors = new double[this.HiddenSize];
+            var hiddenDeltas = new double[this.HiddenSize];
             for (var h = 0; h < this.HiddenSize; h++)
             {
-                double error = 0;
+                var sum = 0.0;
                 for (var o = 0; o < this.OutputSize; o++)
                 {
-                    error += outputErrors[o] * this.HiddenToOutputWeights[h][o];
+                    sum += outputDeltas[o] * this.HiddenToOutputWeights[h][o];
                 }
 
-                hiddenErrors[h] = error;
+                var grad = this.HiddenActivationFunctionProvider.CalculateGradient(this.hiddenPreActivations.Length > h ? this.hiddenPreActivations[h] : 0.0);
+                hiddenDeltas[h] = grad * sum;
             }
 
-            return hiddenErrors;
+            return hiddenDeltas;
         }
 
         /// <summary>

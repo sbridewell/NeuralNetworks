@@ -50,7 +50,7 @@ namespace Sde.NeuralNetworks.Quadratics
             }
 
             var inputsAndOutputs = records.Shuffle().ToArray();
-            var numberOfTestRecords = (int)(inputsAndOutputs.Length * this.PercentageOfTestData);
+            var numberOfTestRecords = (int)(inputsAndOutputs.Length * this.PercentageOfTestData / 100);
             var numberOfTrainingRecords = inputsAndOutputs.Length - numberOfTestRecords;
             this.TrainingData = inputsAndOutputs.Take(numberOfTrainingRecords).ToArray();
             this.TestData = inputsAndOutputs.Skip(numberOfTrainingRecords).Take(numberOfTestRecords).ToArray();
