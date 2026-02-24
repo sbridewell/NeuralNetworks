@@ -5,6 +5,7 @@
 namespace Sde.NeuralNetworks.WinForms
 {
     using System;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Text.Json;
     using System.Windows.Forms;
@@ -38,9 +39,10 @@ namespace Sde.NeuralNetworks.WinForms
             this.InitializeComponent();
 
             this.Network = new NeuralNetwork();
+            this.Network.NumberOfIterations = 100;
             this.Network.Momentum = 0.9;
             this.Network.InputSize = 1;
-            this.Network.HiddenSize = (int)this.numericUpDownNeuronsPerHiddenLayer.Value;
+            this.Network.HiddenSize = 1;
             this.Network.OutputSize = 1;
             this.networkVisualiser1.Network = this.Network;
             this.networkVisualiser1.Invalidate();
@@ -61,12 +63,30 @@ namespace Sde.NeuralNetworks.WinForms
                 initialProvider.PercentageOfTestData = 1;
             }
 
+            this.NetworkPropertiesForm = new NetworkPropertiesForm
+            {
+                ViewModel = new NetworkPropertiesViewModel
+                {
+                    LearningRate = (decimal)this.Network.LearningRate,
+                    Momentum = (decimal)this.Network.Momentum,
+                    NumberOfIterations = this.Network.NumberOfIterations,
+                    NodesInHiddenLayer = this.Network.HiddenSize,
+                },
+            };
+
+            // Keep the runtime view-model and network in sync: when the properties form's
+            // view-model changes, propagate the HiddenSize to the active network and UI.
+            this.NetworkPropertiesForm.ViewModel.PropertyChanged += this.NetworkPropertiesForm_ViewModel_PropertyChanged;
+
             this.TrainingDataPropertiesForm.Show();
+            this.NetworkPropertiesForm.Show();
         }
 
         private INeuralNetwork Network { get; }
 
         private TrainingDataPropertiesForm TrainingDataPropertiesForm { get; }
+
+        private NetworkPropertiesForm NetworkPropertiesForm { get; }
 
         #region button click event handlers
 
@@ -81,9 +101,7 @@ namespace Sde.NeuralNetworks.WinForms
             {
                 this.textBoxJson.Text = string.Empty;
 
-                this.numericUpDownNumberOfIterations.Enabled = false;
-                this.numericUpDownLearningRate.Enabled = false;
-                this.numericUpDownNeuronsPerHiddenLayer.Enabled = false;
+                // TODO: disable controls which shouldn't be changed during training
                 this.buttonGo.Enabled = false;
                 this.buttonStop.Enabled = true;
 
@@ -98,7 +116,7 @@ namespace Sde.NeuralNetworks.WinForms
                     {
                         var area = this.chartErrors.ChartAreas[0];
                         area.AxisX.Minimum = 0;
-                        area.AxisX.Maximum = (double)this.numericUpDownNumberOfIterations.Value;
+                        area.AxisX.Maximum = this.Network.NumberOfIterations;
                         area.AxisX.Title = "Epoch";
                         area.AxisY.Title = "Error";
                         area.AxisX.TitleFont = new Font(this.chartErrors.Font.FontFamily, 14);
@@ -108,10 +126,11 @@ namespace Sde.NeuralNetworks.WinForms
                 }
 
                 this.chartErrorSeriesInitialised = false;
-                this.Network.NumberOfIterations = (int)this.numericUpDownNumberOfIterations.Value;
-                this.Network.LearningRate = (double)this.numericUpDownLearningRate.Value;
-                this.Network.Momentum = (double)this.numericUpDownMomentum.Value;
-                this.Network.HiddenSize = (int)this.numericUpDownNeuronsPerHiddenLayer.Value;
+                var viewModel = this.NetworkPropertiesForm.ViewModel;
+                this.Network.NumberOfIterations = viewModel.NumberOfIterations;
+                this.Network.LearningRate = (double)viewModel.LearningRate;
+                this.Network.Momentum = (double)viewModel.Momentum;
+                this.Network.HiddenSize = viewModel.NodesInHiddenLayer;
                 this.Network.HiddenActivationFunctionProvider = this.activationFunctionProviderControlHidden1.SelectedActivationFunctionProvider!;
                 this.Network.OutputActivationFunctionProvider = this.activationFunctionProviderControlOutput.SelectedActivationFunctionProvider!;
 
@@ -162,9 +181,8 @@ namespace Sde.NeuralNetworks.WinForms
                 this.testResultsGrid1.Populate(testInputs, expected);
 
                 this.networkVisualiser1.Invalidate();
-                this.numericUpDownNumberOfIterations.Enabled = true;
-                this.numericUpDownLearningRate.Enabled = true;
-                this.numericUpDownNeuronsPerHiddenLayer.Enabled = true;
+
+                // TODO: re-enable controls which were disabled during training
                 this.buttonGo.Enabled = true;
                 this.buttonStop.Enabled = false;
                 this.ShowInStatusBar("Ready");
@@ -386,12 +404,6 @@ namespace Sde.NeuralNetworks.WinForms
 
         #region menu item click event handlers
 
-        private void NumericUpDownNumberOfHiddenLayer_ValueChanged(object sender, EventArgs e)
-        {
-            this.Network.HiddenSize = (int)this.numericUpDownNeuronsPerHiddenLayer.Value;
-            this.networkVisualiser1.Invalidate();
-        }
-
         private void NetworkVisualisationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.networkVisualisationToolStripMenuItem.Checked)
@@ -499,6 +511,43 @@ namespace Sde.NeuralNetworks.WinForms
 
             // Refresh only the status strip so the new text is visible immediately.
             this.statusStrip1?.Refresh();
+        }
+
+        /// <summary>
+        /// Propagates changes from the NetworkPropertiesForm view-model into the running network.
+        /// </summary>
+        private void NetworkPropertiesForm_ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e?.PropertyName != nameof(NetworkPropertiesViewModel.NodesInHiddenLayer))
+            {
+                return;
+            }
+
+            if (sender is not NetworkPropertiesViewModel vm)
+            {
+                return;
+            }
+
+            // Capture the new value.
+            var newHiddenSize = vm.NodesInHiddenLayer;
+
+            void ApplyChange()
+            {
+                // Update the network.
+                this.Network.HiddenSize = newHiddenSize;
+
+                // Refresh visualiser to reflect the new architecture.
+                this.networkVisualiser1.Invalidate();
+            }
+
+            if (this.InvokeRequired)
+            {
+                _ = this.BeginInvoke((Action)ApplyChange);
+            }
+            else
+            {
+                ApplyChange();
+            }
         }
     }
 }

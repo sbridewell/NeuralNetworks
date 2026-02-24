@@ -31,17 +31,9 @@
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             splitContainer1 = new SplitContainer();
-            numericUpDownMomentum = new NumericUpDown();
-            label6 = new Label();
             progressBar1 = new ProgressBar();
-            numericUpDownNeuronsPerHiddenLayer = new NumericUpDown();
-            label5 = new Label();
             buttonStop = new Button();
             buttonGo = new Button();
-            numericUpDownLearningRate = new NumericUpDown();
-            label2 = new Label();
-            numericUpDownNumberOfIterations = new NumericUpDown();
-            label1 = new Label();
             symmericSplitContainer1 = new SymmericSplitContainer();
             tabControlFunctions = new TabControl();
             tabPageHiddenLayer = new TabPage();
@@ -81,10 +73,6 @@
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownMomentum).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownNeuronsPerHiddenLayer).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownLearningRate).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownNumberOfIterations).BeginInit();
             ((System.ComponentModel.ISupportInitialize)symmericSplitContainer1).BeginInit();
             symmericSplitContainer1.Panel1.SuspendLayout();
             symmericSplitContainer1.Panel2.SuspendLayout();
@@ -116,17 +104,9 @@
             // 
             // splitContainer1.Panel1
             // 
-            splitContainer1.Panel1.Controls.Add(numericUpDownMomentum);
-            splitContainer1.Panel1.Controls.Add(label6);
             splitContainer1.Panel1.Controls.Add(progressBar1);
-            splitContainer1.Panel1.Controls.Add(numericUpDownNeuronsPerHiddenLayer);
-            splitContainer1.Panel1.Controls.Add(label5);
             splitContainer1.Panel1.Controls.Add(buttonStop);
             splitContainer1.Panel1.Controls.Add(buttonGo);
-            splitContainer1.Panel1.Controls.Add(numericUpDownLearningRate);
-            splitContainer1.Panel1.Controls.Add(label2);
-            splitContainer1.Panel1.Controls.Add(numericUpDownNumberOfIterations);
-            splitContainer1.Panel1.Controls.Add(label1);
             // 
             // splitContainer1.Panel2
             // 
@@ -134,28 +114,6 @@
             splitContainer1.Size = new Size(1241, 583);
             splitContainer1.SplitterDistance = 102;
             splitContainer1.TabIndex = 0;
-            // 
-            // numericUpDownMomentum
-            // 
-            numericUpDownMomentum.DecimalPlaces = 2;
-            numericUpDownMomentum.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            numericUpDownMomentum.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
-            numericUpDownMomentum.Location = new Point(640, 6);
-            numericUpDownMomentum.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
-            numericUpDownMomentum.Name = "numericUpDownMomentum";
-            numericUpDownMomentum.Size = new Size(62, 33);
-            numericUpDownMomentum.TabIndex = 17;
-            numericUpDownMomentum.Value = new decimal(new int[] { 5, 0, 0, 65536 });
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label6.Location = new Point(534, 10);
-            label6.Name = "label6";
-            label6.Size = new Size(110, 25);
-            label6.TabIndex = 16;
-            label6.Text = "Momentum";
             // 
             // progressBar1
             // 
@@ -166,32 +124,10 @@
             progressBar1.Style = ProgressBarStyle.Continuous;
             progressBar1.TabIndex = 15;
             // 
-            // numericUpDownNeuronsPerHiddenLayer
-            // 
-            numericUpDownNeuronsPerHiddenLayer.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            numericUpDownNeuronsPerHiddenLayer.Location = new Point(885, 6);
-            numericUpDownNeuronsPerHiddenLayer.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            numericUpDownNeuronsPerHiddenLayer.Name = "numericUpDownNeuronsPerHiddenLayer";
-            numericUpDownNeuronsPerHiddenLayer.Size = new Size(46, 33);
-            numericUpDownNeuronsPerHiddenLayer.TabIndex = 14;
-            numericUpDownNeuronsPerHiddenLayer.Value = new decimal(new int[] { 6, 0, 0, 0 });
-            numericUpDownNeuronsPerHiddenLayer.ValueChanged += NumericUpDownNumberOfHiddenLayer_ValueChanged;
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label5.Location = new Point(708, 10);
-            label5.Name = "label5";
-            label5.Size = new Size(175, 25);
-            label5.TabIndex = 13;
-            label5.Text = "Hidden layer nodes";
-            // 
             // buttonStop
             // 
-            buttonStop.BackColor = Color.FromArgb(255, 128, 128);
             buttonStop.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonStop.Location = new Point(1072, 5);
+            buttonStop.Location = new Point(138, 5);
             buttonStop.Name = "buttonStop";
             buttonStop.Size = new Size(133, 37);
             buttonStop.TabIndex = 12;
@@ -201,57 +137,14 @@
             // 
             // buttonGo
             // 
-            buttonGo.BackColor = Color.FromArgb(0, 192, 0);
             buttonGo.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonGo.Location = new Point(937, 3);
+            buttonGo.Location = new Point(3, 3);
             buttonGo.Name = "buttonGo";
             buttonGo.Size = new Size(129, 39);
             buttonGo.TabIndex = 5;
             buttonGo.Text = "Start training";
             buttonGo.UseVisualStyleBackColor = false;
             buttonGo.Click += ButtonGo_Click;
-            // 
-            // numericUpDownLearningRate
-            // 
-            numericUpDownLearningRate.DecimalPlaces = 3;
-            numericUpDownLearningRate.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            numericUpDownLearningRate.Increment = new decimal(new int[] { 1, 0, 0, 196608 });
-            numericUpDownLearningRate.Location = new Point(456, 6);
-            numericUpDownLearningRate.Name = "numericUpDownLearningRate";
-            numericUpDownLearningRate.Size = new Size(70, 33);
-            numericUpDownLearningRate.TabIndex = 2;
-            numericUpDownLearningRate.Value = new decimal(new int[] { 1, 0, 0, 196608 });
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label2.Location = new Point(326, 8);
-            label2.Name = "label2";
-            label2.Size = new Size(124, 25);
-            label2.TabIndex = 2;
-            label2.Text = "Learning rate";
-            // 
-            // numericUpDownNumberOfIterations
-            // 
-            numericUpDownNumberOfIterations.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            numericUpDownNumberOfIterations.Location = new Point(200, 6);
-            numericUpDownNumberOfIterations.Maximum = new decimal(new int[] { 100000, 0, 0, 0 });
-            numericUpDownNumberOfIterations.Name = "numericUpDownNumberOfIterations";
-            numericUpDownNumberOfIterations.Size = new Size(120, 33);
-            numericUpDownNumberOfIterations.TabIndex = 1;
-            numericUpDownNumberOfIterations.ThousandsSeparator = true;
-            numericUpDownNumberOfIterations.Value = new decimal(new int[] { 1000, 0, 0, 0 });
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label1.Location = new Point(7, 10);
-            label1.Name = "label1";
-            label1.Size = new Size(187, 25);
-            label1.TabIndex = 0;
-            label1.Text = "Number of iterations";
             // 
             // symmericSplitContainer1
             // 
@@ -531,7 +424,7 @@
             // toolStripStatusLabel1
             // 
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            toolStripStatusLabel1.Size = new Size(1195, 25);
+            toolStripStatusLabel1.Size = new Size(1226, 25);
             toolStripStatusLabel1.Spring = true;
             toolStripStatusLabel1.Text = "Ready";
             toolStripStatusLabel1.TextAlign = ContentAlignment.MiddleLeft;
@@ -628,14 +521,9 @@
             Name = "Form1";
             Text = "Neural Network Playground";
             splitContainer1.Panel1.ResumeLayout(false);
-            splitContainer1.Panel1.PerformLayout();
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)numericUpDownMomentum).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownNeuronsPerHiddenLayer).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownLearningRate).EndInit();
-            ((System.ComponentModel.ISupportInitialize)numericUpDownNumberOfIterations).EndInit();
             symmericSplitContainer1.Panel1.ResumeLayout(false);
             symmericSplitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)symmericSplitContainer1).EndInit();
@@ -665,18 +553,12 @@
         #endregion
 
         private SplitContainer splitContainer1;
-        private NumericUpDown numericUpDownLearningRate;
-        private Label label2;
-        private NumericUpDown numericUpDownNumberOfIterations;
-        private Label label1;
         private Button buttonGo;
         private TabControl tabControlVisualisation;
         private TabPage tabPageNodes;
         private TabPage tabPageTestResults;
         private Sde.NeuralNetworks.WinForms.NetworkVisualiser networkVisualiser1;
         private Button buttonStop;
-        private Label label5;
-        private NumericUpDown numericUpDownNeuronsPerHiddenLayer;
         private TabControl tabControlFunctions;
         private TabPage tabPageHiddenLayer;
         private TabPage tabPageOutputLayer;
@@ -709,7 +591,5 @@
         private Button buttonPredict;
         private SaveFileDialog saveFileDialog1;
         private OpenFileDialog openFileDialog1;
-        private Label label6;
-        private NumericUpDown numericUpDownMomentum;
     }
 }
