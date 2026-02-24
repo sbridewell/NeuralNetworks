@@ -115,8 +115,7 @@ namespace Sde.NeuralNetworks.WinForms
                 this.Network.HiddenActivationFunctionProvider = this.activationFunctionProviderControlHidden1.SelectedActivationFunctionProvider!;
                 this.Network.OutputActivationFunctionProvider = this.activationFunctionProviderControlOutput.SelectedActivationFunctionProvider!;
 
-                this.toolStripStatusLabel1.Text = "Creating training data...";
-                this.toolStripStatusLabel1.Invalidate();
+                this.ShowInStatusBar("Creating training data...");
 
                 var dataProvider = this.trainingDataViewModel.DataProvider!;
                 dataProvider.GenerateData();
@@ -155,8 +154,7 @@ namespace Sde.NeuralNetworks.WinForms
                 this.progressBarTimer.Stop();
                 this.visualiserTimer.Stop();
                 this.statusStripTimer.Stop();
-                this.toolStripStatusLabel1.Text = "Training complete. Testing network.";
-                this.Invalidate();
+                this.ShowInStatusBar("Training complete. Testing network.");
                 this.textBoxJson.Text = JsonSerializer.Serialize(this.Network, new JsonSerializerOptions { WriteIndented = true });
 
                 var testData = dataProvider.TestData;
@@ -169,8 +167,7 @@ namespace Sde.NeuralNetworks.WinForms
                 this.numericUpDownNeuronsPerHiddenLayer.Enabled = true;
                 this.buttonGo.Enabled = true;
                 this.buttonStop.Enabled = false;
-                this.toolStripStatusLabel1.Text = "Ready";
-                this.Invalidate();
+                this.ShowInStatusBar("Ready");
 
                 this.dataGridViewInputs.Rows.Clear();
                 this.dataGridViewInputs.Columns.Clear();
@@ -375,18 +372,13 @@ namespace Sde.NeuralNetworks.WinForms
                 var progress = (double)net.CurrentIteration / net.NumberOfIterations;
                 var estimatedTotalTime = TimeSpan.FromTicks((long)(this.trainingStopwatch.Elapsed.Ticks / progress));
                 this.Network.EstimatedTrainingTimeLeft = estimatedTotalTime - this.trainingStopwatch.Elapsed;
-                this.toolStripStatusLabel2.Text
-                    = $"Training with {this.trainingDataLength} items"
-                    + $". Epoch: {net.CurrentIteration}/{net.NumberOfIterations}"
-                    + $". Time spent training: {net.TimeSpentTraining.ToString(@"hh\:mm\:ss")}"
-                    + $". Estimated training time remaining: {net.EstimatedTrainingTimeLeft.ToString(@"hh\:mm\:ss")}"
-                    + $". ";
-                this.toolStripStatusLabel3.Text
-                    = $"Hidden MSE: {net.HiddenLayerMeanSquaredError:F4}"
-                    + $". ";
-                this.toolStripStatusLabel4.Text
-                    = $"Output MSE: {net.OutputLayerMeanSquaredError:F4}"
-                    + $". ";
+                var message = $"Training with {this.trainingDataLength} items. "
+                    + $"Epoch: {net.CurrentIteration}/{net.NumberOfIterations}. "
+                    + $"Time spent training: {net.TimeSpentTraining:hh\\:mm\\:ss}. "
+                    + $"Estimated training time remaining: {net.EstimatedTrainingTimeLeft:hh\\:mm\\:ss}. "
+                    + $"Hidden MSE: {net.HiddenLayerMeanSquaredError:F4}. "
+                    + $"Output MSE: {net.OutputLayerMeanSquaredError:F4}. ";
+                this.ShowInStatusBar(message);
             }
         }
 
@@ -493,5 +485,20 @@ namespace Sde.NeuralNetworks.WinForms
         }
 
         #endregion
+
+        private void ShowInStatusBar(string text)
+        {
+            if (this.InvokeRequired)
+            {
+                // Marshal the update to the UI thread without blocking the caller.
+                _ = this.BeginInvoke((Action)(() => this.ShowInStatusBar(text)));
+                return;
+            }
+
+            this.toolStripStatusLabel1!.Text = text;
+
+            // Refresh only the status strip so the new text is visible immediately.
+            this.statusStrip1?.Refresh();
+        }
     }
 }
