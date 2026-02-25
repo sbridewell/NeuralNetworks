@@ -125,6 +125,30 @@ namespace Sde.NeuralNetworks.WinForms
             }
         }
 
+        /// <summary>
+        /// Disables the controls which allow user input.
+        /// </summary>
+        public void DisableUserInput()
+        {
+            this.numericUpDownLowerBound.Enabled = false;
+            this.numericUpDownUpperBound.Enabled = false;
+            this.numericUpDownIncrement.Enabled = false;
+            this.numericUpDownPercentageOfTrainingData.Enabled = false;
+            this.comboBoxDataProvider.Enabled = false;
+        }
+
+        /// <summary>
+        /// Enables the controls which allow user input.
+        /// </summary>
+        public void EnableUserInput()
+        {
+            this.numericUpDownLowerBound.Enabled = true;
+            this.numericUpDownUpperBound.Enabled = true;
+            this.numericUpDownIncrement.Enabled = true;
+            this.numericUpDownPercentageOfTrainingData.Enabled = true;
+            this.comboBoxDataProvider.Enabled = true;
+        }
+
         private void InitializeBindings()
         {
             if (this.DataProviders.Count == 0)

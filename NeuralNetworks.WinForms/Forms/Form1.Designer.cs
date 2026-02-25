@@ -44,7 +44,7 @@
             tabPageNodes = new TabPage();
             networkVisualiser1 = new NetworkVisualiser();
             tabPageErrors = new TabPage();
-            chartErrors = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            errorChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             tabPageTestResults = new TabPage();
             testResultsGrid1 = new TestResultsGrid();
             tabPageJson = new TabPage();
@@ -83,7 +83,7 @@
             tabControlVisualisation.SuspendLayout();
             tabPageNodes.SuspendLayout();
             tabPageErrors.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)chartErrors).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)errorChart).BeginInit();
             tabPageTestResults.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)testResultsGrid1).BeginInit();
             tabPageJson.SuspendLayout();
@@ -126,8 +126,9 @@
             // 
             // buttonStop
             // 
+            buttonStop.Enabled = false;
             buttonStop.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonStop.Location = new Point(138, 5);
+            buttonStop.Location = new Point(138, 4);
             buttonStop.Name = "buttonStop";
             buttonStop.Size = new Size(133, 37);
             buttonStop.TabIndex = 12;
@@ -254,7 +255,7 @@
             // 
             // tabPageErrors
             // 
-            tabPageErrors.Controls.Add(chartErrors);
+            tabPageErrors.Controls.Add(errorChart);
             tabPageErrors.Location = new Point(4, 37);
             tabPageErrors.Name = "tabPageErrors";
             tabPageErrors.Size = new Size(605, 432);
@@ -265,19 +266,19 @@
             // chartErrors
             // 
             chartArea1.Name = "ChartArea1";
-            chartErrors.ChartAreas.Add(chartArea1);
-            chartErrors.Dock = DockStyle.Fill;
-            chartErrors.Location = new Point(0, 0);
-            chartErrors.Name = "chartErrors";
-            chartErrors.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
+            errorChart.ChartAreas.Add(chartArea1);
+            errorChart.Dock = DockStyle.Fill;
+            errorChart.Location = new Point(0, 0);
+            errorChart.Name = "chartErrors";
+            errorChart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series1.Name = "Series1";
-            chartErrors.Series.Add(series1);
-            chartErrors.Size = new Size(605, 432);
-            chartErrors.SuppressExceptions = true;
-            chartErrors.TabIndex = 18;
-            chartErrors.Text = "chart1";
+            errorChart.Series.Add(series1);
+            errorChart.Size = new Size(605, 432);
+            errorChart.SuppressExceptions = true;
+            errorChart.TabIndex = 18;
+            errorChart.Text = "chart1";
             // 
             // tabPageTestResults
             // 
@@ -534,7 +535,7 @@
             tabControlVisualisation.ResumeLayout(false);
             tabPageNodes.ResumeLayout(false);
             tabPageErrors.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)chartErrors).EndInit();
+            ((System.ComponentModel.ISupportInitialize)errorChart).EndInit();
             tabPageTestResults.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)testResultsGrid1).EndInit();
             tabPageJson.ResumeLayout(false);
@@ -562,7 +563,7 @@
         private TabControl tabControlFunctions;
         private TabPage tabPageHiddenLayer;
         private TabPage tabPageOutputLayer;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chartErrors;
+        private System.Windows.Forms.DataVisualization.Charting.Chart errorChart;
         private ActivationFunctionProviderControl activationFunctionProviderControlHidden1;
         private ActivationFunctionProviderControl activationFunctionProviderControlOutput;
         private SymmericSplitContainer symmericSplitContainer1;

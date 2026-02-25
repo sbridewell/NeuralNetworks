@@ -68,6 +68,28 @@ namespace Sde.NeuralNetworks.WinForms
             }
         }
 
+        /// <summary>
+        /// Disables the controls which allow user input.
+        /// </summary>
+        public void DisableUserInput()
+        {
+            this.numericUpDownNumberOfIterations.Enabled = false;
+            this.numericUpDownLearningRate.Enabled = false;
+            this.numericUpDownMomentum.Enabled = false;
+            this.numericUpDownNodesInHiddenLayer.Enabled = false;
+        }
+
+        /// <summary>
+        /// Enables the controls which allow user input.
+        /// </summary>
+        public void EnableUserInput()
+        {
+            this.numericUpDownNumberOfIterations.Enabled = true;
+            this.numericUpDownLearningRate.Enabled = true;
+            this.numericUpDownMomentum.Enabled = true;
+            this.numericUpDownNodesInHiddenLayer.Enabled = true;
+        }
+
         private void InitializeBindings()
         {
             this.BindNumericUpDown(this.numericUpDownNumberOfIterations, nameof(this.viewModel.NumberOfIterations));

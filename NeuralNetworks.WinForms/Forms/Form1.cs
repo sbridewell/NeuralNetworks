@@ -100,30 +100,13 @@ namespace Sde.NeuralNetworks.WinForms
             try
             {
                 this.textBoxJson.Text = string.Empty;
-
-                // TODO: disable controls which shouldn't be changed during training
-                this.buttonGo.Enabled = false;
-                this.buttonStop.Enabled = true;
+                this.DisableUserInput();
 
                 this.testResultsGrid1.Rows.Clear();
                 this.testResultsGrid1.Columns.Clear();
 
-                // Reset chart state before training starts.
-                if (this.chartErrors != null)
-                {
-                    this.chartErrors.Series.Clear();
-                    if (this.chartErrors.ChartAreas.Count > 0)
-                    {
-                        var area = this.chartErrors.ChartAreas[0];
-                        area.AxisX.Minimum = 0;
-                        area.AxisX.Maximum = this.Network.NumberOfIterations;
-                        area.AxisX.Title = "Epoch";
-                        area.AxisY.Title = "Error";
-                        area.AxisX.TitleFont = new Font(this.chartErrors.Font.FontFamily, 14);
-                        area.AxisY.TitleFont = new Font(this.chartErrors.Font.FontFamily, 14);
-                        area.AxisY.IsStartedFromZero = false;
-                    }
-                }
+                this.ResetErrorChart();
+                this.ClearDataGridViews();
 
                 this.chartErrorSeriesInitialised = false;
                 var viewModel = this.NetworkPropertiesForm.ViewModel;
@@ -144,23 +127,7 @@ namespace Sde.NeuralNetworks.WinForms
                 this.Network.InputSize = inputs[0].Length;
                 this.Network.OutputSize = targets[0].Length;
 
-                this.progressBarTimer.Start();
-                this.trainingStopwatch.Reset();
-                this.trainingStopwatch.Start();
-                if (this.errorsChartToolStripMenuItem.Checked)
-                {
-                    this.errorsTimer.Start();
-                }
-
-                if (this.networkVisualisationToolStripMenuItem.Checked)
-                {
-                    this.visualiserTimer.Start();
-                }
-
-                if (this.statusBarToolStripMenuItem.Checked)
-                {
-                    this.statusStripTimer.Start();
-                }
+                this.StartTimers();
 
                 /////////////////////////////////////////////////////////////////////////////////////
                 // Train the network! ///////////////////////////////////////////////////////////////
@@ -168,11 +135,7 @@ namespace Sde.NeuralNetworks.WinForms
                 await this.Network!.Train(inputs, targets);
 
                 // Training finished. Stop polling.
-                this.trainingStopwatch.Stop();
-                this.errorsTimer.Stop();
-                this.progressBarTimer.Stop();
-                this.visualiserTimer.Stop();
-                this.statusStripTimer.Stop();
+                this.StopTimers();
                 this.ShowInStatusBar("Training complete. Testing network.");
                 this.textBoxJson.Text = JsonSerializer.Serialize(this.Network, new JsonSerializerOptions { WriteIndented = true });
 
@@ -182,36 +145,15 @@ namespace Sde.NeuralNetworks.WinForms
 
                 this.networkVisualiser1.Invalidate();
 
-                // TODO: re-enable controls which were disabled during training
-                this.buttonGo.Enabled = true;
-                this.buttonStop.Enabled = false;
+                this.EnableUserInput();
                 this.ShowInStatusBar("Ready");
-
-                this.dataGridViewInputs.Rows.Clear();
-                this.dataGridViewInputs.Columns.Clear();
-                this.dataGridViewOutputs.Rows.Clear();
-                this.dataGridViewOutputs.Columns.Clear();
-                var inputRow = new DataGridViewRow();
-                for (var i = 0; i < this.Network.InputSize; i++)
-                {
-                    this.dataGridViewInputs.Columns.Add(string.Empty, string.Empty);
-                    inputRow.Cells.Add(new DataGridViewTextBoxCell());
-                }
-
-                var outputRow = new DataGridViewRow();
-                for (var i = 0; i < this.Network.OutputSize; i++)
-                {
-                    this.dataGridViewOutputs.Columns.Add(string.Empty, string.Empty);
-                    outputRow.Cells.Add(new DataGridViewTextBoxCell());
-                }
-
-                this.dataGridViewInputs.Rows.Add(inputRow);
-                this.dataGridViewOutputs.Rows.Add(outputRow);
+                this.InitialiseDataGridViews();
             }
             catch (Exception ex)
             {
                 var errorForm = new ErrorForm { Exception = ex };
                 _ = await errorForm.ShowDialogAsync();
+                this.EnableUserInput();
             }
         }
 
@@ -223,6 +165,7 @@ namespace Sde.NeuralNetworks.WinForms
         private void ButtonStopClick(object sender, EventArgs e)
         {
             this.Network!.Stop();
+            this.EnableUserInput();
         }
 
         /// <summary>
@@ -266,7 +209,7 @@ namespace Sde.NeuralNetworks.WinForms
         private void ErrorsTimer_Tick(object? sender, EventArgs e)
         {
             var net = this.networkVisualiser1?.Network;
-            if (net == null || this.chartErrors == null)
+            if (net == null || this.errorChart == null)
             {
                 return;
             }
@@ -274,14 +217,14 @@ namespace Sde.NeuralNetworks.WinForms
             // Initialise series the first time we have a valid network instance.
             if (!this.chartErrorSeriesInitialised)
             {
-                this.chartErrors.Series.Clear();
+                this.errorChart.Series.Clear();
 
-                if (this.chartErrors.ChartAreas.Count == 0)
+                if (this.errorChart.ChartAreas.Count == 0)
                 {
                     return;
                 }
 
-                var area = this.chartErrors.ChartAreas[0];
+                var area = this.errorChart.ChartAreas[0];
                 area.AxisX.Minimum = 0;
                 area.AxisX.Title = "Epoch";
                 area.AxisY.Title = "Error";
@@ -289,7 +232,7 @@ namespace Sde.NeuralNetworks.WinForms
                 // Clear any existing legends and add two dedicated legends:
                 // - one for the hidden-layer mean squared error
                 // - one for the output-layer mean squared error
-                this.chartErrors.Legends.Clear();
+                this.errorChart.Legends.Clear();
 
                 var hiddenLegend = new Legend("HiddenLegend")
                 {
@@ -306,13 +249,13 @@ namespace Sde.NeuralNetworks.WinForms
                 // Place the two legends side-by-side above the chart area using absolute positions
                 // Positions are percentages: (x, y, width, height).
                 // Slight vertical offset (y) keeps them above the plotting area.
-                hiddenLegend.Font = new Font(this.chartErrors.Font.FontFamily, 14);
+                hiddenLegend.Font = new Font(this.errorChart.Font.FontFamily, 14);
                 hiddenLegend.Position = new ElementPosition(5f, 0f, 45f, 8f);  // left legend
-                outputLegend.Font = new Font(this.chartErrors.Font.FontFamily, 14);
+                outputLegend.Font = new Font(this.errorChart.Font.FontFamily, 14);
                 outputLegend.Position = new ElementPosition(50f, 0f, 45f, 8f); // right legend
 
-                this.chartErrors.Legends.Add(hiddenLegend);
-                this.chartErrors.Legends.Add(outputLegend);
+                this.errorChart.Legends.Add(hiddenLegend);
+                this.errorChart.Legends.Add(outputLegend);
 
                 // Series that plot the aggregated mean-squared-errors.
                 var seriesHiddenErrors = new Series("Hidden errors")
@@ -322,7 +265,7 @@ namespace Sde.NeuralNetworks.WinForms
                     Legend = hiddenLegend.Name,
                     LegendText = "Hidden layer MSE",
                 };
-                this.chartErrors.Series.Add(seriesHiddenErrors);
+                this.errorChart.Series.Add(seriesHiddenErrors);
 
                 var seriesOutputErrors = new Series("Output errors")
                 {
@@ -331,7 +274,7 @@ namespace Sde.NeuralNetworks.WinForms
                     Legend = outputLegend.Name,
                     LegendText = "Output layer MSE",
                 };
-                this.chartErrors.Series.Add(seriesOutputErrors);
+                this.errorChart.Series.Add(seriesOutputErrors);
 
                 this.chartErrorSeriesInitialised = true;
             }
@@ -341,28 +284,28 @@ namespace Sde.NeuralNetworks.WinForms
             {
                 var epochX = net.CurrentIteration;
                 var seriesName1 = "Output errors";
-                if (this.chartErrors.Series.IndexOf(seriesName1) >= 0)
+                if (this.errorChart.Series.IndexOf(seriesName1) >= 0)
                 {
-                    this.chartErrors.Series[seriesName1].Points.AddXY(epochX, net.OutputLayerMeanSquaredError);
+                    this.errorChart.Series[seriesName1].Points.AddXY(epochX, net.OutputLayerMeanSquaredError);
                 }
 
                 var seriesName2 = "Hidden errors";
-                if (this.chartErrors.Series.IndexOf(seriesName2) >= 0)
+                if (this.errorChart.Series.IndexOf(seriesName2) >= 0)
                 {
-                    this.chartErrors.Series[seriesName2].Points.AddXY(epochX, net.HiddenLayerMeanSquaredError);
+                    this.errorChart.Series[seriesName2].Points.AddXY(epochX, net.HiddenLayerMeanSquaredError);
                 }
 
                 // Keep X axis range sensible while training.
-                if (this.chartErrors.ChartAreas.Count > 0)
+                if (this.errorChart.ChartAreas.Count > 0)
                 {
-                    var area = this.chartErrors.ChartAreas[0];
+                    var area = this.errorChart.ChartAreas[0];
                     if (net.NumberOfIterations > 0)
                     {
                         // Keep the axis progressive during training.
                         area.AxisX.Maximum = net.CurrentIteration;
                     }
 
-                    this.chartErrors.Invalidate();
+                    this.errorChart.Invalidate();
                 }
             }
             catch
@@ -497,6 +440,132 @@ namespace Sde.NeuralNetworks.WinForms
         }
 
         #endregion
+
+        #region enable / disable user input
+
+        /// <summary>
+        /// Disables the controls which allow user input, except for the stop button,
+        /// because it only makes sense to allow the user to stop the training process
+        /// once it's started.
+        /// </summary>
+        private void DisableUserInput()
+        {
+            this.buttonGo.Enabled = false;
+            this.buttonStop.Enabled = true;
+            this.fileToolStripMenuItem.Enabled = false;
+            this.enableDisableUIFeaturesToolStripMenuItem.Enabled = false;
+            this.TrainingDataPropertiesForm.DisableUserInput();
+            this.NetworkPropertiesForm.DisableUserInput();
+
+            // TODO: disable activation provider form once refactored
+            // TODO: disable prediction control once refactored
+        }
+
+        /// <summary>
+        /// Enables the controls which allow user input, except for the stop button,
+        /// because it only makes sense to allow the user to stop the training process
+        /// once it's started.
+        /// </summary>
+        private void EnableUserInput()
+        {
+            this.buttonGo.Enabled = true;
+            this.buttonStop.Enabled = false;
+            this.fileToolStripMenuItem.Enabled = true;
+            this.enableDisableUIFeaturesToolStripMenuItem.Enabled = true;
+            this.TrainingDataPropertiesForm.EnableUserInput();
+            this.NetworkPropertiesForm.EnableUserInput();
+
+            // TODO: enable activation provider form once refactored
+            // TODO: enable prediction control once refactored
+        }
+
+        #endregion
+
+        #region start / stop timers
+
+        private void StartTimers()
+        {
+            this.progressBarTimer.Start();
+            this.trainingStopwatch.Reset();
+            this.trainingStopwatch.Start();
+            if (this.errorsChartToolStripMenuItem.Checked)
+            {
+                this.errorsTimer.Start();
+            }
+
+            if (this.networkVisualisationToolStripMenuItem.Checked)
+            {
+                this.visualiserTimer.Start();
+            }
+
+            if (this.statusBarToolStripMenuItem.Checked)
+            {
+                this.statusStripTimer.Start();
+            }
+        }
+
+        private void StopTimers()
+        {
+            // TODO: wait a second before stopping timers to allow the final updates to be rendered in the UI?
+            this.trainingStopwatch.Stop();
+            this.errorsTimer.Stop();
+            this.progressBarTimer.Stop();
+            this.visualiserTimer.Stop();
+            this.statusStripTimer.Stop();
+        }
+
+        #endregion
+
+        #region clear / initialise data grid views
+
+        private void ClearDataGridViews()
+        {
+            this.dataGridViewInputs.Rows.Clear();
+            this.dataGridViewInputs.Columns.Clear();
+            this.dataGridViewOutputs.Rows.Clear();
+            this.dataGridViewOutputs.Columns.Clear();
+        }
+
+        private void InitialiseDataGridViews()
+        {
+            var inputRow = new DataGridViewRow();
+            for (var i = 0; i < this.Network.InputSize; i++)
+            {
+                this.dataGridViewInputs.Columns.Add(string.Empty, string.Empty);
+                inputRow.Cells.Add(new DataGridViewTextBoxCell());
+            }
+
+            var outputRow = new DataGridViewRow();
+            for (var i = 0; i < this.Network.OutputSize; i++)
+            {
+                this.dataGridViewOutputs.Columns.Add(string.Empty, string.Empty);
+                outputRow.Cells.Add(new DataGridViewTextBoxCell());
+            }
+
+            this.dataGridViewInputs.Rows.Add(inputRow);
+            this.dataGridViewOutputs.Rows.Add(outputRow);
+        }
+
+        #endregion
+
+        private void ResetErrorChart()
+        {
+            if (this.errorChart != null)
+            {
+                this.errorChart.Series.Clear();
+                if (this.errorChart.ChartAreas.Count > 0)
+                {
+                    var area = this.errorChart.ChartAreas[0];
+                    area.AxisX.Minimum = 0;
+                    area.AxisX.Maximum = this.Network.NumberOfIterations;
+                    area.AxisX.Title = "Epoch";
+                    area.AxisY.Title = "Error";
+                    area.AxisX.TitleFont = new Font(this.errorChart.Font.FontFamily, 14);
+                    area.AxisY.TitleFont = new Font(this.errorChart.Font.FontFamily, 14);
+                    area.AxisY.IsStartedFromZero = false;
+                }
+            }
+        }
 
         private void ShowInStatusBar(string text)
         {
