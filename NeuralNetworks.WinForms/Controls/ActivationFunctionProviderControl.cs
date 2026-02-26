@@ -5,7 +5,6 @@
 namespace Sde.NeuralNetworks.WinForms
 {
     using System.Data;
-    using System.Windows.Forms.DataVisualization.Charting;
     using Sde.NeuralNetworks.ActivationProviders;
 
     /// <summary>
@@ -24,8 +23,9 @@ namespace Sde.NeuralNetworks.WinForms
             {
                 this.comboBox1.Items.Add(new ActivationListItem((IActivationFunctionProvider)Activator.CreateInstance(t) !));
                 this.comboBox1.DisplayMember = nameof(ActivationListItem.TypeName);
-                this.comboBox1.SelectedIndex = 0;
             }
+
+            this.comboBox1.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -53,6 +53,22 @@ namespace Sde.NeuralNetworks.WinForms
         public void SetTitle(string title)
         {
             this.label1.Text = title;
+        }
+
+        /// <summary>
+        /// Disables user input by disabling the combo box, preventing the user from changing the selected provider.
+        /// </summary>
+        public void DisableUserInput()
+        {
+            this.comboBox1.Enabled = false;
+        }
+
+        /// <summary>
+        /// Enables user input by enabling the combo box.
+        /// </summary>
+        public void EnableUserInput()
+        {
+            this.comboBox1.Enabled = true;
         }
 
         private void ComboBox1SelectedIndexChanged(object sender, EventArgs e)

@@ -92,7 +92,6 @@ namespace Sde.NeuralNetworks.WinForms
         /// </summary>
         public List<IDataProvider> DataProviders
         {
-            // TODO: populate activation function combo boxes like this?
             get
             {
                 if (this.dataProviders == null || this.dataProviders.Count == 0)

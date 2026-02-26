@@ -35,11 +35,6 @@
             buttonStop = new Button();
             buttonGo = new Button();
             symmericSplitContainer1 = new SymmericSplitContainer();
-            tabControlFunctions = new TabControl();
-            tabPageHiddenLayer = new TabPage();
-            activationFunctionProviderControlHidden1 = new ActivationFunctionProviderControl();
-            tabPageOutputLayer = new TabPage();
-            activationFunctionProviderControlOutput = new ActivationFunctionProviderControl();
             tabControlVisualisation = new TabControl();
             tabPageNodes = new TabPage();
             networkVisualiser1 = new NetworkVisualiser();
@@ -74,12 +69,8 @@
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)symmericSplitContainer1).BeginInit();
-            symmericSplitContainer1.Panel1.SuspendLayout();
             symmericSplitContainer1.Panel2.SuspendLayout();
             symmericSplitContainer1.SuspendLayout();
-            tabControlFunctions.SuspendLayout();
-            tabPageHiddenLayer.SuspendLayout();
-            tabPageOutputLayer.SuspendLayout();
             tabControlVisualisation.SuspendLayout();
             tabPageNodes.SuspendLayout();
             tabPageErrors.SuspendLayout();
@@ -154,67 +145,12 @@
             symmericSplitContainer1.Location = new Point(0, 0);
             symmericSplitContainer1.Name = "symmericSplitContainer1";
             // 
-            // symmericSplitContainer1.Panel1
-            // 
-            symmericSplitContainer1.Panel1.Controls.Add(tabControlFunctions);
-            // 
             // symmericSplitContainer1.Panel2
             // 
             symmericSplitContainer1.Panel2.Controls.Add(tabControlVisualisation);
             symmericSplitContainer1.Size = new Size(1241, 477);
-            symmericSplitContainer1.SplitterDistance = 620;
+            symmericSplitContainer1.SplitterDistance = 174;
             symmericSplitContainer1.TabIndex = 19;
-            // 
-            // tabControlFunctions
-            // 
-            tabControlFunctions.Appearance = TabAppearance.Buttons;
-            tabControlFunctions.Controls.Add(tabPageHiddenLayer);
-            tabControlFunctions.Controls.Add(tabPageOutputLayer);
-            tabControlFunctions.Dock = DockStyle.Fill;
-            tabControlFunctions.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            tabControlFunctions.Location = new Point(0, 0);
-            tabControlFunctions.Name = "tabControlFunctions";
-            tabControlFunctions.SelectedIndex = 0;
-            tabControlFunctions.Size = new Size(616, 473);
-            tabControlFunctions.TabIndex = 17;
-            // 
-            // tabPageHiddenLayer
-            // 
-            tabPageHiddenLayer.Controls.Add(activationFunctionProviderControlHidden1);
-            tabPageHiddenLayer.Location = new Point(4, 37);
-            tabPageHiddenLayer.Name = "tabPageHiddenLayer";
-            tabPageHiddenLayer.Padding = new Padding(3);
-            tabPageHiddenLayer.Size = new Size(608, 432);
-            tabPageHiddenLayer.TabIndex = 0;
-            tabPageHiddenLayer.Text = "Hidden layer 1";
-            tabPageHiddenLayer.UseVisualStyleBackColor = true;
-            // 
-            // activationFunctionProviderControlHidden1
-            // 
-            activationFunctionProviderControlHidden1.Dock = DockStyle.Fill;
-            activationFunctionProviderControlHidden1.Location = new Point(3, 3);
-            activationFunctionProviderControlHidden1.Name = "activationFunctionProviderControlHidden1";
-            activationFunctionProviderControlHidden1.Size = new Size(602, 426);
-            activationFunctionProviderControlHidden1.TabIndex = 1;
-            // 
-            // tabPageOutputLayer
-            // 
-            tabPageOutputLayer.Controls.Add(activationFunctionProviderControlOutput);
-            tabPageOutputLayer.Location = new Point(4, 37);
-            tabPageOutputLayer.Name = "tabPageOutputLayer";
-            tabPageOutputLayer.Padding = new Padding(3);
-            tabPageOutputLayer.Size = new Size(608, 432);
-            tabPageOutputLayer.TabIndex = 1;
-            tabPageOutputLayer.Text = "Output layer";
-            tabPageOutputLayer.UseVisualStyleBackColor = true;
-            // 
-            // activationFunctionProviderControlOutput
-            // 
-            activationFunctionProviderControlOutput.Dock = DockStyle.Fill;
-            activationFunctionProviderControlOutput.Location = new Point(3, 3);
-            activationFunctionProviderControlOutput.Name = "activationFunctionProviderControlOutput";
-            activationFunctionProviderControlOutput.Size = new Size(602, 426);
-            activationFunctionProviderControlOutput.TabIndex = 0;
             // 
             // tabControlVisualisation
             // 
@@ -230,7 +166,7 @@
             tabControlVisualisation.Location = new Point(0, 0);
             tabControlVisualisation.Name = "tabControlVisualisation";
             tabControlVisualisation.SelectedIndex = 0;
-            tabControlVisualisation.Size = new Size(613, 473);
+            tabControlVisualisation.Size = new Size(1059, 473);
             tabControlVisualisation.TabIndex = 0;
             // 
             // tabPageNodes
@@ -239,7 +175,7 @@
             tabPageNodes.Location = new Point(4, 37);
             tabPageNodes.Name = "tabPageNodes";
             tabPageNodes.Padding = new Padding(3);
-            tabPageNodes.Size = new Size(605, 432);
+            tabPageNodes.Size = new Size(1051, 432);
             tabPageNodes.TabIndex = 0;
             tabPageNodes.Text = "Nodes";
             tabPageNodes.UseVisualStyleBackColor = true;
@@ -250,7 +186,7 @@
             networkVisualiser1.Location = new Point(3, 3);
             networkVisualiser1.Margin = new Padding(5);
             networkVisualiser1.Name = "networkVisualiser1";
-            networkVisualiser1.Size = new Size(599, 426);
+            networkVisualiser1.Size = new Size(1045, 426);
             networkVisualiser1.TabIndex = 0;
             // 
             // tabPageErrors
@@ -263,13 +199,13 @@
             tabPageErrors.Text = "Errors";
             tabPageErrors.UseVisualStyleBackColor = true;
             // 
-            // chartErrors
+            // errorChart
             // 
             chartArea1.Name = "ChartArea1";
             errorChart.ChartAreas.Add(chartArea1);
             errorChart.Dock = DockStyle.Fill;
             errorChart.Location = new Point(0, 0);
-            errorChart.Name = "chartErrors";
+            errorChart.Name = "errorChart";
             errorChart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Excel;
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
@@ -525,13 +461,9 @@
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
-            symmericSplitContainer1.Panel1.ResumeLayout(false);
             symmericSplitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)symmericSplitContainer1).EndInit();
             symmericSplitContainer1.ResumeLayout(false);
-            tabControlFunctions.ResumeLayout(false);
-            tabPageHiddenLayer.ResumeLayout(false);
-            tabPageOutputLayer.ResumeLayout(false);
             tabControlVisualisation.ResumeLayout(false);
             tabPageNodes.ResumeLayout(false);
             tabPageErrors.ResumeLayout(false);
@@ -560,12 +492,7 @@
         private TabPage tabPageTestResults;
         private Sde.NeuralNetworks.WinForms.NetworkVisualiser networkVisualiser1;
         private Button buttonStop;
-        private TabControl tabControlFunctions;
-        private TabPage tabPageHiddenLayer;
-        private TabPage tabPageOutputLayer;
         private System.Windows.Forms.DataVisualization.Charting.Chart errorChart;
-        private ActivationFunctionProviderControl activationFunctionProviderControlHidden1;
-        private ActivationFunctionProviderControl activationFunctionProviderControlOutput;
         private SymmericSplitContainer symmericSplitContainer1;
         private TabPage tabPageErrors;
         private TabPage tabPageJson;

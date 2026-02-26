@@ -78,6 +78,9 @@ namespace Sde.NeuralNetworks.WinForms
             // view-model changes, propagate the HiddenSize to the active network and UI.
             this.NetworkPropertiesForm.ViewModel.PropertyChanged += this.NetworkPropertiesForm_ViewModel_PropertyChanged;
 
+            this.ActivationFunctionProviderForm = new ActivationFunctionProviderForm();
+
+            this.ActivationFunctionProviderForm.Show();
             this.TrainingDataPropertiesForm.Show();
             this.NetworkPropertiesForm.Show();
         }
@@ -87,6 +90,8 @@ namespace Sde.NeuralNetworks.WinForms
         private TrainingDataPropertiesForm TrainingDataPropertiesForm { get; }
 
         private NetworkPropertiesForm NetworkPropertiesForm { get; }
+
+        private ActivationFunctionProviderForm ActivationFunctionProviderForm { get; }
 
         #region button click event handlers
 
@@ -114,8 +119,8 @@ namespace Sde.NeuralNetworks.WinForms
                 this.Network.LearningRate = (double)viewModel.LearningRate;
                 this.Network.Momentum = (double)viewModel.Momentum;
                 this.Network.HiddenSize = viewModel.NodesInHiddenLayer;
-                this.Network.HiddenActivationFunctionProvider = this.activationFunctionProviderControlHidden1.SelectedActivationFunctionProvider!;
-                this.Network.OutputActivationFunctionProvider = this.activationFunctionProviderControlOutput.SelectedActivationFunctionProvider!;
+                this.Network.HiddenActivationFunctionProvider = this.ActivationFunctionProviderForm.HiddenLayerProvider;
+                this.Network.OutputActivationFunctionProvider = this.ActivationFunctionProviderForm.OutputLayerProvider;
 
                 this.ShowInStatusBar("Creating training data...");
 
@@ -456,8 +461,8 @@ namespace Sde.NeuralNetworks.WinForms
             this.enableDisableUIFeaturesToolStripMenuItem.Enabled = false;
             this.TrainingDataPropertiesForm.DisableUserInput();
             this.NetworkPropertiesForm.DisableUserInput();
+            this.ActivationFunctionProviderForm.DisableUserInput();
 
-            // TODO: disable activation provider form once refactored
             // TODO: disable prediction control once refactored
         }
 
@@ -474,8 +479,8 @@ namespace Sde.NeuralNetworks.WinForms
             this.enableDisableUIFeaturesToolStripMenuItem.Enabled = true;
             this.TrainingDataPropertiesForm.EnableUserInput();
             this.NetworkPropertiesForm.EnableUserInput();
+            this.ActivationFunctionProviderForm.EnableUserInput();
 
-            // TODO: enable activation provider form once refactored
             // TODO: enable prediction control once refactored
         }
 
