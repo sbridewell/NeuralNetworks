@@ -43,8 +43,8 @@ namespace Sde.NeuralNetworks.WinForms.Forms
         /// </summary>
         public void EnableUserInput()
         {
-            this.activationFunctionProviderControlHidden1.Enabled = true;
-            this.activationFunctionProviderControlOutput.Enabled = true;
+            this.activationFunctionProviderControlHidden1.EnableUserInput();
+            this.activationFunctionProviderControlOutput.EnableUserInput();
         }
     }
 }
