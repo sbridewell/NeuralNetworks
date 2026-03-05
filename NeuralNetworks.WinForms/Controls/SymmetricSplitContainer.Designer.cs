@@ -1,6 +1,6 @@
 ﻿namespace Sde.NeuralNetworks.WinForms
 {
-    partial class SymmericSplitContainer
+    partial class SymmetricSplitContainer
     {
         /// <summary> 
         /// Required designer variable.

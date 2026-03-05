@@ -98,7 +98,7 @@
             Controls.Add(tabControl1);
             FormBorderStyle = FormBorderStyle.SizableToolWindow;
             Name = "ActivationFunctionProviderForm";
-            Text = "ActivationFunctionProviderForm";
+            Text = "Activation function provider";
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage2.ResumeLayout(false);

@@ -1,4 +1,4 @@
-﻿// <copyright file="SymmericSplitContainer.cs" company="Simon Bridewell">
+﻿// <copyright file="SymmetricSplitContainer.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
@@ -8,12 +8,12 @@ namespace Sde.NeuralNetworks.WinForms
     /// Subclass of <see cref="SplitContainer"/> which adjusts the splitter distance each
     /// time it is resized, to keep both panels the same size.
     /// </summary>
-    public partial class SymmericSplitContainer : SplitContainer
+    public partial class SymmetricSplitContainer : SplitContainer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SymmericSplitContainer"/> class.
+        /// Initializes a new instance of the <see cref="SymmetricSplitContainer"/> class.
         /// </summary>
-        public SymmericSplitContainer()
+        public SymmetricSplitContainer()
         {
             this.InitializeComponent();
             this.Resize += (sender, eventArgs) =>

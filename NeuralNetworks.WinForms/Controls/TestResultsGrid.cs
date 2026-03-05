@@ -39,8 +39,17 @@ namespace Sde.NeuralNetworks.WinForms
             "Blocker Code Smell",
             "S2368:Public methods should not have multidimensional array parameters",
             Justification = "As per design")]
-        public void Populate(double[][] testInputs, double[][] expected)
+        [SuppressMessage(
+            "StyleCop.CSharp.SpacingRules",
+            "SA1011:Closing square brackets should be spaced correctly",
+            Justification = "Contradicts SA1018 Nullable type symbol should not be preceded by a space")]
+        public void Populate(double[][]? testInputs, double[][]? expected)
         {
+            if (testInputs is null || expected is null)
+            {
+                return;
+            }
+
             for (var i = 0; i < this.Network.InputSize; i++)
             {
                 this.Columns.Add($"i{i}", $"i{i}");

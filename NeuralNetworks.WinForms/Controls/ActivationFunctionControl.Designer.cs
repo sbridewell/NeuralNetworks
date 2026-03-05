@@ -35,7 +35,7 @@
             System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             chartGradientFunction = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            symmericSplitContainer1 = new SymmericSplitContainer();
+            symmericSplitContainer1 = new SymmetricSplitContainer();
             chartActivationFunction = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)chartGradientFunction).BeginInit();
             ((System.ComponentModel.ISupportInitialize)symmericSplitContainer1).BeginInit();
@@ -124,7 +124,7 @@
 
         #endregion
         private System.Windows.Forms.DataVisualization.Charting.Chart chartGradientFunction;
-        private SymmericSplitContainer symmericSplitContainer1;
+        private SymmetricSplitContainer symmericSplitContainer1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartActivationFunction;
     }
 }
