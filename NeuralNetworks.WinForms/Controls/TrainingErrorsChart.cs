@@ -86,7 +86,7 @@ namespace Sde.NeuralNetworks.WinForms.Controls
                 // Series that plot the aggregated mean-squared-errors.
                 var seriesHiddenErrors = new Series("Hidden errors")
                 {
-                    ChartType = SeriesChartType.Line,
+                    ChartType = SeriesChartType.Column,
                     BorderWidth = 2,
                     Legend = hiddenLegend.Name,
                     LegendText = "Hidden layer MSE",
@@ -95,7 +95,7 @@ namespace Sde.NeuralNetworks.WinForms.Controls
 
                 var seriesOutputErrors = new Series("Output errors")
                 {
-                    ChartType = SeriesChartType.Line,
+                    ChartType = SeriesChartType.Column,
                     BorderWidth = 2,
                     Legend = outputLegend.Name,
                     LegendText = "Output layer MSE",
