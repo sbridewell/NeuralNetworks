@@ -98,7 +98,7 @@ namespace Sde.NeuralNetworks.Quadratics
         public double LearningRate { get; set; }
 
         /// <inheritdoc/>
-        public double Momentum { get; set; } // TODO: add momentum control to form
+        public double Momentum { get; set; }
 
         /// <inheritdoc/>
         public double[][] InputToHiddenWeights { get; private set; } = Array.Empty<double[]>();
