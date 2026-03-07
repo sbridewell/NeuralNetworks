@@ -104,7 +104,6 @@ namespace Sde.NeuralNetworks.WinForms
 
         private void PositionForms()
         {
-            // TODO: PositionForms method?
             var screenSize = Screen.FromControl(this).WorkingArea;
             var screenWidth = screenSize.Width;
             var screenHeight = screenSize.Height;
