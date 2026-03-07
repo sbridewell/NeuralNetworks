@@ -9,7 +9,6 @@ namespace Sde.NeuralNetworks.WinForms
     using System.Diagnostics;
     using System.Text.Json;
     using System.Windows.Forms;
-    using System.Windows.Forms.DataVisualization.Charting;
     using Sde.NeuralNetworks.Quadratics;
     using Sde.NeuralNetworks.WinForms.Forms;
     using Sde.NeuralNetworks.WinForms.ViewModels;
@@ -20,6 +19,11 @@ namespace Sde.NeuralNetworks.WinForms
     public partial class Form1 : Form
     {
         private readonly TrainingDataViewModel trainingDataViewModel = new TrainingDataViewModel();
+        private readonly INeuralNetwork network;
+        private readonly TrainingDataPropertiesForm trainingDataPropertiesForm;
+        private readonly NetworkPropertiesForm networkPropertiesForm;
+        private readonly ActivationFunctionProviderForm activationFunctionProviderForm;
+        private readonly VisualisationForm visualisationForm;
 
 #pragma warning disable SA1000 // Keywords should be spaced correctly
         private readonly Timer statusStripTimer = new() { Interval = 100 };
@@ -39,17 +43,17 @@ namespace Sde.NeuralNetworks.WinForms
 
             this.Invalidate();
 
-            this.Network = new NeuralNetwork();
+            this.network = new NeuralNetwork();
 
-            this.NetworkPropertiesForm = new NetworkPropertiesForm();
-            this.ActivationFunctionProviderForm = new ActivationFunctionProviderForm();
-            this.VisualisationForm = new VisualisationForm { Network = this.Network };
+            this.networkPropertiesForm = new NetworkPropertiesForm();
+            this.activationFunctionProviderForm = new ActivationFunctionProviderForm();
+            this.visualisationForm = new VisualisationForm { Network = this.network };
 
-            this.Network.NumberOfIterations = 100;
-            this.Network.Momentum = 0.9;
-            this.Network.InputSize = 1;
-            this.Network.HiddenSize = 1;
-            this.Network.OutputSize = 1;
+            this.network.NumberOfIterations = 100;
+            this.network.Momentum = 0.9;
+            this.network.InputSize = 1;
+            this.network.HiddenSize = 1;
+            this.network.OutputSize = 1;
 
             // TODO: consolidate into a single timer
             this.statusStripTimer.Tick += this.StatusStripTimer_Tick;
@@ -60,7 +64,7 @@ namespace Sde.NeuralNetworks.WinForms
             // UI controls that depend on input / output counts remain in sync.
             this.trainingDataViewModel.PropertyChanged += this.TrainingDataViewModel_PropertyChanged;
 
-            this.TrainingDataPropertiesForm = new TrainingDataPropertiesForm(this.trainingDataViewModel);
+            this.trainingDataPropertiesForm = new TrainingDataPropertiesForm(this.trainingDataViewModel);
             var initialProvider = this.trainingDataViewModel.DataProvider;
             if (initialProvider != null)
             {
@@ -73,34 +77,23 @@ namespace Sde.NeuralNetworks.WinForms
             this.trainingDataViewModel.PropertyChanged += this.TrainingDataViewModel_PropertyChanged;
             this.ApplyProviderToNetworkAndUI();
 
-            this.NetworkPropertiesForm.ViewModel = new NetworkPropertiesViewModel
+            this.networkPropertiesForm.ViewModel = new NetworkPropertiesViewModel
             {
-                LearningRate = (decimal)this.Network.LearningRate,
-                Momentum = (decimal)this.Network.Momentum,
-                NumberOfIterations = this.Network.NumberOfIterations,
-                NodesInHiddenLayer = this.Network.HiddenSize,
+                LearningRate = (decimal)this.network.LearningRate,
+                Momentum = (decimal)this.network.Momentum,
+                NumberOfIterations = this.network.NumberOfIterations,
+                NodesInHiddenLayer = this.network.HiddenSize,
             };
 
             // Keep the runtime view-model and network in sync: when the properties form's
             // view-model changes, propagate the HiddenSize to the active network and UI.
-            this.NetworkPropertiesForm.ViewModel.PropertyChanged += this.NetworkPropertiesForm_ViewModel_PropertyChanged;
+            this.networkPropertiesForm.ViewModel.PropertyChanged += this.NetworkPropertiesForm_ViewModel_PropertyChanged;
 
             this.Shown += (s, e) => this.PositionForms();
 
-            this.visualiserTimer.Tick += (s, e) => this.VisualisationForm.Invalidate();
+            this.visualiserTimer.Tick += (s, e) => this.visualisationForm.Invalidate();
             this.visualiserTimer.Start();
         }
-
-        // TODO: make these fields rather than properties?
-        private INeuralNetwork Network { get; }
-
-        private TrainingDataPropertiesForm TrainingDataPropertiesForm { get; }
-
-        private NetworkPropertiesForm NetworkPropertiesForm { get; }
-
-        private ActivationFunctionProviderForm ActivationFunctionProviderForm { get; }
-
-        private VisualisationForm VisualisationForm { get; }
 
         private void PositionForms()
         {
@@ -111,32 +104,32 @@ namespace Sde.NeuralNetworks.WinForms
             this.Location = new Point(0, 0);
             this.Width = screenWidth;
 
-            this.TrainingDataPropertiesForm.Show();
-            this.TrainingDataPropertiesForm.Location = new Point(0, this.Location.Y + this.Height);
+            this.trainingDataPropertiesForm.Show();
+            this.trainingDataPropertiesForm.Location = new Point(0, this.Location.Y + this.Height);
 
-            this.NetworkPropertiesForm.Show();
-            this.NetworkPropertiesForm.Location = new Point(
+            this.networkPropertiesForm.Show();
+            this.networkPropertiesForm.Location = new Point(
                 0,
-                this.Location.Y + this.Height + this.TrainingDataPropertiesForm.Height);
+                this.Location.Y + this.Height + this.trainingDataPropertiesForm.Height);
 
-            this.VisualisationForm.Show();
-            this.VisualisationForm.Location = new Point(
-                this.TrainingDataPropertiesForm.Location.X + this.TrainingDataPropertiesForm.Width,
+            this.visualisationForm.Show();
+            this.visualisationForm.Location = new Point(
+                this.trainingDataPropertiesForm.Location.X + this.trainingDataPropertiesForm.Width,
                 this.Location.Y + this.Height);
-            this.VisualisationForm.Width = screenWidth - this.VisualisationForm.Location.X;
-            this.VisualisationForm.Height = screenHeight - this.VisualisationForm.Location.Y;
+            this.visualisationForm.Width = screenWidth - this.visualisationForm.Location.X;
+            this.visualisationForm.Height = screenHeight - this.visualisationForm.Location.Y;
 
-            this.ActivationFunctionProviderForm.Show();
-            this.ActivationFunctionProviderForm.Width = Math.Max(this.TrainingDataPropertiesForm.Width, this.NetworkPropertiesForm.Width);
-            this.ActivationFunctionProviderForm.Height
+            this.activationFunctionProviderForm.Show();
+            this.activationFunctionProviderForm.Width = Math.Max(this.trainingDataPropertiesForm.Width, this.networkPropertiesForm.Width);
+            this.activationFunctionProviderForm.Height
                 = screenHeight
                 - this.Location.Y
                 - this.Height
-                - this.TrainingDataPropertiesForm.Height
-                - this.NetworkPropertiesForm.Height;
-            this.ActivationFunctionProviderForm.Location = new Point(
+                - this.trainingDataPropertiesForm.Height
+                - this.networkPropertiesForm.Height;
+            this.activationFunctionProviderForm.Location = new Point(
                     0,
-                    this.Location.Y + this.Height + this.TrainingDataPropertiesForm.Height + this.NetworkPropertiesForm.Height);
+                    this.Location.Y + this.Height + this.trainingDataPropertiesForm.Height + this.networkPropertiesForm.Height);
         }
 
         #region button click event handlers
@@ -168,16 +161,16 @@ namespace Sde.NeuralNetworks.WinForms
             try
             {
                 this.DisableUserInput();
-                this.VisualisationForm.ClearTestResults();
-                this.VisualisationForm.ResetErrorsChart();
+                this.visualisationForm.ClearTestResults();
+                this.visualisationForm.ResetErrorsChart();
 
-                var viewModel = this.NetworkPropertiesForm.ViewModel;
-                this.Network.NumberOfIterations = viewModel.NumberOfIterations;
-                this.Network.LearningRate = (double)viewModel.LearningRate;
-                this.Network.Momentum = (double)viewModel.Momentum;
-                this.Network.HiddenSize = viewModel.NodesInHiddenLayer;
-                this.Network.HiddenActivationFunctionProvider = this.ActivationFunctionProviderForm.HiddenLayerProvider;
-                this.Network.OutputActivationFunctionProvider = this.ActivationFunctionProviderForm.OutputLayerProvider;
+                var viewModel = this.networkPropertiesForm.ViewModel;
+                this.network.NumberOfIterations = viewModel.NumberOfIterations;
+                this.network.LearningRate = (double)viewModel.LearningRate;
+                this.network.Momentum = (double)viewModel.Momentum;
+                this.network.HiddenSize = viewModel.NodesInHiddenLayer;
+                this.network.HiddenActivationFunctionProvider = this.activationFunctionProviderForm.HiddenLayerProvider;
+                this.network.OutputActivationFunctionProvider = this.activationFunctionProviderForm.OutputLayerProvider;
 
                 this.ShowInStatusBar("Creating training data...");
 
@@ -186,24 +179,24 @@ namespace Sde.NeuralNetworks.WinForms
                 var trainingData = dataProvider.TrainingData;
                 this.trainingDataLength = trainingData.Length;
                 var (inputs, targets) = dataProvider.SplitIntoInputsAndOutputs(trainingData);
-                this.Network.InputSize = inputs[0].Length;
-                this.Network.OutputSize = targets[0].Length;
+                this.network.InputSize = inputs[0].Length;
+                this.network.OutputSize = targets[0].Length;
 
                 this.StartTimers();
 
                 /////////////////////////////////////////////////////////////////////////////////////
                 // Train the network! ///////////////////////////////////////////////////////////////
                 /////////////////////////////////////////////////////////////////////////////////////
-                await this.Network!.Train(inputs, targets);
+                await this.network!.Train(inputs, targets);
 
                 // Training finished. Stop polling.
                 this.StopTimers();
                 this.ShowInStatusBar("Training complete. Testing network.");
-                this.VisualisationForm.DisplayNetworkJson();
+                this.visualisationForm.DisplayNetworkJson();
 
                 var testData = dataProvider.TestData;
                 var (testInputs, expected) = dataProvider.SplitIntoInputsAndOutputs(testData);
-                this.VisualisationForm.DisplayTestResults(testInputs, expected);
+                this.visualisationForm.DisplayTestResults(testInputs, expected);
 
                 this.EnableUserInput();
                 this.ShowInStatusBar("Ready");
@@ -224,7 +217,7 @@ namespace Sde.NeuralNetworks.WinForms
         /// <param name="e">Event arcuments.</param>
         private void ButtonStopClick(object sender, EventArgs e)
         {
-            this.Network!.Stop();
+            this.network!.Stop();
             this.EnableUserInput();
         }
 
@@ -239,10 +232,14 @@ namespace Sde.NeuralNetworks.WinForms
         /// <param name="e">Event arcuments.</param>
         private void ProgressBarTimer_Tick(object? sender, EventArgs e)
         {
-            if (this.VisualisationForm.Network != null)
+            if (this.visualisationForm.Network != null)
             {
-                this.progressBar1.Maximum = this.Network.NumberOfIterations;
-                this.progressBar1.Value = this.Network.CurrentIteration;
+                this.progressBar1.Maximum = this.network.NumberOfIterations;
+                this.progressBar1.Value = this.network.CurrentIteration;
+
+                // debug only - just to check the weights and biases are being updated during training
+                // FIXME: network weights and biases aren't being updated during training
+                this.visualisationForm.DisplayNetworkJson();
             }
         }
 
@@ -253,7 +250,7 @@ namespace Sde.NeuralNetworks.WinForms
         /// <param name="e">Event arcuments.</param>
         private void ErrorsTimer_Tick(object? sender, EventArgs e)
         {
-            this.VisualisationForm.UpdateErrorsChart();
+            this.visualisationForm.UpdateErrorsChart();
         }
 
         /// <summary>
@@ -263,19 +260,19 @@ namespace Sde.NeuralNetworks.WinForms
         /// <param name="e">Event arcuments.</param>
         private void StatusStripTimer_Tick(object? sender, EventArgs e)
         {
-            if (this.VisualisationForm.Network != null)
+            if (this.visualisationForm.Network != null)
             {
-                var net = this.VisualisationForm.Network;
+                var net = this.visualisationForm.Network;
                 if (net.NumberOfIterations == 0)
                 {
                     return;
                 }
 
                 // TODO: write all this to a text box in Form1
-                this.Network.TimeSpentTraining = this.trainingStopwatch.Elapsed;
+                this.network.TimeSpentTraining = this.trainingStopwatch.Elapsed;
                 var progress = (double)net.CurrentIteration / net.NumberOfIterations;
                 var estimatedTotalTime = TimeSpan.FromTicks((long)(this.trainingStopwatch.Elapsed.Ticks / progress));
-                this.Network.EstimatedTrainingTimeLeft = estimatedTotalTime - this.trainingStopwatch.Elapsed;
+                this.network.EstimatedTrainingTimeLeft = estimatedTotalTime - this.trainingStopwatch.Elapsed;
                 var message = $"Training with {this.trainingDataLength} items. "
                     + $"Epoch: {net.CurrentIteration}/{net.NumberOfIterations}. "
                     + $"Time spent training: {net.TimeSpentTraining:hh\\:mm\\:ss}. "
@@ -334,7 +331,7 @@ namespace Sde.NeuralNetworks.WinForms
                 var path = this.saveFileDialog1.FileName;
                 try
                 {
-                    var json = JsonSerializer.Serialize(this.Network, new JsonSerializerOptions { WriteIndented = true });
+                    var json = JsonSerializer.Serialize(this.network, new JsonSerializerOptions { WriteIndented = true });
                     File.WriteAllText(path, json);
                     MessageBox.Show($"Model saved to {path}");
                 }
@@ -357,16 +354,16 @@ namespace Sde.NeuralNetworks.WinForms
                     var loadedNetwork = JsonSerializer.Deserialize<NeuralNetworkSingleHiddenLayer>(json);
                     if (loadedNetwork != null)
                     {
-                        this.Network.InputSize = loadedNetwork.InputSize;
-                        this.Network.HiddenSize = loadedNetwork.HiddenSize;
-                        this.Network.OutputSize = loadedNetwork.OutputSize;
-                        this.Network.LearningRate = loadedNetwork.LearningRate;
-                        this.Network.HiddenActivationFunctionProvider = loadedNetwork.HiddenActivationFunctionProvider;
-                        this.Network.OutputActivationFunctionProvider = loadedNetwork.OutputActivationFunctionProvider;
-                        Array.Copy(loadedNetwork.InputToHiddenWeights, this.Network.InputToHiddenWeights, loadedNetwork.InputToHiddenWeights.Length);
-                        Array.Copy(loadedNetwork.HiddenBiases, this.Network.HiddenBiases, loadedNetwork.HiddenBiases.Length);
-                        Array.Copy(loadedNetwork.HiddenToOutputWeights, this.Network.HiddenToOutputWeights, loadedNetwork.HiddenToOutputWeights.Length);
-                        Array.Copy(loadedNetwork.OutputBiases, this.Network.OutputBiases, loadedNetwork.OutputBiases.Length);
+                        this.network.InputSize = loadedNetwork.InputSize;
+                        this.network.HiddenSize = loadedNetwork.HiddenSize;
+                        this.network.OutputSize = loadedNetwork.OutputSize;
+                        this.network.LearningRate = loadedNetwork.LearningRate;
+                        this.network.HiddenActivationFunctionProvider = loadedNetwork.HiddenActivationFunctionProvider;
+                        this.network.OutputActivationFunctionProvider = loadedNetwork.OutputActivationFunctionProvider;
+                        Array.Copy(loadedNetwork.InputToHiddenWeights, this.network.InputToHiddenWeights, loadedNetwork.InputToHiddenWeights.Length);
+                        Array.Copy(loadedNetwork.HiddenBiases, this.network.HiddenBiases, loadedNetwork.HiddenBiases.Length);
+                        Array.Copy(loadedNetwork.HiddenToOutputWeights, this.network.HiddenToOutputWeights, loadedNetwork.HiddenToOutputWeights.Length);
+                        Array.Copy(loadedNetwork.OutputBiases, this.network.OutputBiases, loadedNetwork.OutputBiases.Length);
                         MessageBox.Show($"Model loaded from {path}");
                     }
                     else
@@ -396,10 +393,10 @@ namespace Sde.NeuralNetworks.WinForms
             this.buttonStop.Enabled = true;
             this.fileToolStripMenuItem.Enabled = false;
             this.enableDisableUIFeaturesToolStripMenuItem.Enabled = false;
-            this.TrainingDataPropertiesForm.DisableUserInput();
-            this.NetworkPropertiesForm.DisableUserInput();
-            this.ActivationFunctionProviderForm.DisableUserInput();
-            this.VisualisationForm.DisableUserInput();
+            this.trainingDataPropertiesForm.DisableUserInput();
+            this.networkPropertiesForm.DisableUserInput();
+            this.activationFunctionProviderForm.DisableUserInput();
+            this.visualisationForm.DisableUserInput();
         }
 
         /// <summary>
@@ -413,10 +410,10 @@ namespace Sde.NeuralNetworks.WinForms
             this.buttonStop.Enabled = false;
             this.fileToolStripMenuItem.Enabled = true;
             this.enableDisableUIFeaturesToolStripMenuItem.Enabled = true;
-            this.TrainingDataPropertiesForm.EnableUserInput();
-            this.NetworkPropertiesForm.EnableUserInput();
-            this.ActivationFunctionProviderForm.EnableUserInput();
-            this.VisualisationForm.EnableUserInput();
+            this.trainingDataPropertiesForm.EnableUserInput();
+            this.networkPropertiesForm.EnableUserInput();
+            this.activationFunctionProviderForm.EnableUserInput();
+            this.visualisationForm.EnableUserInput();
         }
 
         #endregion
@@ -482,7 +479,7 @@ namespace Sde.NeuralNetworks.WinForms
             void ApplyChange()
             {
                 // Update the network.
-                this.Network.HiddenSize = newHiddenSize;
+                this.network.HiddenSize = newHiddenSize;
             }
 
             if (this.InvokeRequired)
@@ -503,12 +500,12 @@ namespace Sde.NeuralNetworks.WinForms
                 return;
             }
 
-            this.Network.InputSize = provider.NumberOfInputs;
-            this.Network.OutputSize = provider.NumberOfOutputs;
+            this.network.InputSize = provider.NumberOfInputs;
+            this.network.OutputSize = provider.NumberOfOutputs;
 
             // Re-assign the network to the visualisation form to align its
             // text boxes with the new input / output sizes.
-            this.VisualisationForm.Network = this.Network;
+            this.visualisationForm.Network = this.network;
         }
     }
 }
