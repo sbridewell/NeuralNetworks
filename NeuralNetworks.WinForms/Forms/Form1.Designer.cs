@@ -31,22 +31,20 @@
             progressBar1 = new ProgressBar();
             buttonStop = new Button();
             buttonGo = new Button();
-            statusStrip1 = new StatusStrip();
-            toolStripStatusLabel1 = new ToolStripStatusLabel();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             openTrainedModelToolStripMenuItem = new ToolStripMenuItem();
             saveCurrentModelToolStripMenuItem = new ToolStripMenuItem();
             saveFileDialog1 = new SaveFileDialog();
             openFileDialog1 = new OpenFileDialog();
-            statusStrip1.SuspendLayout();
+            textBoxStatus = new TextBox();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // progressBar1
             // 
             progressBar1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            progressBar1.Location = new Point(12, 81);
+            progressBar1.Location = new Point(12, 137);
             progressBar1.Name = "progressBar1";
             progressBar1.Size = new Size(1217, 23);
             progressBar1.Style = ProgressBarStyle.Continuous;
@@ -74,23 +72,6 @@
             buttonGo.Text = "Start training";
             buttonGo.UseVisualStyleBackColor = false;
             buttonGo.Click += ButtonGo_Click;
-            // 
-            // statusStrip1
-            // 
-            statusStrip1.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1 });
-            statusStrip1.Location = new Point(0, 109);
-            statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new Size(1241, 30);
-            statusStrip1.TabIndex = 3;
-            // 
-            // toolStripStatusLabel1
-            // 
-            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            toolStripStatusLabel1.Size = new Size(1226, 25);
-            toolStripStatusLabel1.Spring = true;
-            toolStripStatusLabel1.Text = "Ready";
-            toolStripStatusLabel1.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // menuStrip1
             // 
@@ -136,20 +117,28 @@
             openFileDialog1.SupportMultiDottedExtensions = true;
             openFileDialog1.Title = "Browse for trained network file";
             // 
+            // textBoxStatus
+            // 
+            textBoxStatus.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            textBoxStatus.Location = new Point(301, 41);
+            textBoxStatus.Multiline = true;
+            textBoxStatus.Name = "textBoxStatus";
+            textBoxStatus.ReadOnly = true;
+            textBoxStatus.Size = new Size(928, 90);
+            textBoxStatus.TabIndex = 19;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1241, 139);
+            ClientSize = new Size(1241, 169);
+            Controls.Add(textBoxStatus);
             Controls.Add(progressBar1);
             Controls.Add(menuStrip1);
             Controls.Add(buttonStop);
-            Controls.Add(statusStrip1);
             Controls.Add(buttonGo);
             Name = "Form1";
             Text = "Neural Network Playground";
-            statusStrip1.ResumeLayout(false);
-            statusStrip1.PerformLayout();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);
@@ -160,13 +149,12 @@
         private Button buttonGo;
         private Button buttonStop;
         private ProgressBar progressBar1;
-        private StatusStrip statusStrip1;
-        private ToolStripStatusLabel toolStripStatusLabel1;
         private MenuStrip menuStrip1;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem openTrainedModelToolStripMenuItem;
         private ToolStripMenuItem saveCurrentModelToolStripMenuItem;
         private SaveFileDialog saveFileDialog1;
         private OpenFileDialog openFileDialog1;
+        private TextBox textBoxStatus;
     }
 }

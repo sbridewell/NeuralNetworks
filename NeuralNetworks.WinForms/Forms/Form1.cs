@@ -172,7 +172,7 @@ namespace Sde.NeuralNetworks.WinForms
                 this.network.HiddenActivationFunctionProvider = this.activationFunctionProviderForm.HiddenLayerProvider;
                 this.network.OutputActivationFunctionProvider = this.activationFunctionProviderForm.OutputLayerProvider;
 
-                this.ShowInStatusBar("Creating training data...");
+                this.ShowStatus("Creating training data...");
 
                 var dataProvider = this.trainingDataViewModel.DataProvider!;
                 dataProvider.GenerateData();
@@ -191,7 +191,7 @@ namespace Sde.NeuralNetworks.WinForms
 
                 // Training finished. Stop polling.
                 this.StopTimers();
-                this.ShowInStatusBar("Training complete. Testing network.");
+                this.ShowStatus("Training complete. Testing network.");
                 this.visualisationForm.DisplayNetworkJson();
 
                 var testData = dataProvider.TestData;
@@ -199,7 +199,7 @@ namespace Sde.NeuralNetworks.WinForms
                 this.visualisationForm.DisplayTestResults(testInputs, expected);
 
                 this.EnableUserInput();
-                this.ShowInStatusBar("Ready");
+                this.ShowStatus("Ready");
             }
             catch (Exception ex)
             {
@@ -268,18 +268,18 @@ namespace Sde.NeuralNetworks.WinForms
                     return;
                 }
 
-                // TODO: write all this to a text box in Form1
                 this.network.TimeSpentTraining = this.trainingStopwatch.Elapsed;
                 var progress = (double)net.CurrentIteration / net.NumberOfIterations;
                 var estimatedTotalTime = TimeSpan.FromTicks((long)(this.trainingStopwatch.Elapsed.Ticks / progress));
                 this.network.EstimatedTrainingTimeLeft = estimatedTotalTime - this.trainingStopwatch.Elapsed;
-                var message = $"Training with {this.trainingDataLength} items. "
-                    + $"Epoch: {net.CurrentIteration}/{net.NumberOfIterations}. "
+                var message
+                    = $"Training with {this.trainingDataLength} items. "
+                    + $"Iteration: {net.CurrentIteration}/{net.NumberOfIterations}. " + Environment.NewLine
                     + $"Time spent training: {net.TimeSpentTraining:hh\\:mm\\:ss}. "
-                    + $"Estimated training time remaining: {net.EstimatedTrainingTimeLeft:hh\\:mm\\:ss}. "
+                    + $"Estimated training time remaining: {net.EstimatedTrainingTimeLeft:hh\\:mm\\:ss}. " + Environment.NewLine
                     + $"Hidden MSE: {net.HiddenLayerMeanSquaredError:F4}. "
                     + $"Output MSE: {net.OutputLayerMeanSquaredError:F4}. ";
-                this.ShowInStatusBar(message);
+                this.ShowStatus(message);
             }
         }
 
@@ -403,19 +403,16 @@ namespace Sde.NeuralNetworks.WinForms
 
         #endregion
 
-        private void ShowInStatusBar(string text)
+        private void ShowStatus(string text)
         {
             if (this.InvokeRequired)
             {
                 // Marshal the update to the UI thread without blocking the caller.
-                _ = this.BeginInvoke((Action)(() => this.ShowInStatusBar(text)));
+                _ = this.BeginInvoke((Action)(() => this.ShowStatus(text)));
                 return;
             }
 
-            this.toolStripStatusLabel1!.Text = text;
-
-            // Refresh only the status strip so the new text is visible immediately.
-            this.statusStrip1?.Refresh();
+            this.textBoxStatus.Text = text;
         }
 
         /// <summary>
