@@ -47,9 +47,10 @@ namespace Sde.NeuralNetworks.WinForms
             this.visualisationForm = new VisualisationForm { Network = this.network };
 
             this.network.NumberOfIterations = 100;
-            this.network.Momentum = 0.9;
+            this.network.LearningRate = 0.02;
+            this.network.Momentum = 0.001;
             this.network.InputSize = 1;
-            this.network.HiddenSize = 1;
+            this.network.HiddenSize = 5;
             this.network.OutputSize = 1;
 
             this.progressTimer.Tick += this.ProgressTimer_Tick;
@@ -218,7 +219,7 @@ namespace Sde.NeuralNetworks.WinForms
 
         /// <summary>
         /// Advances the progress bar to show how close to completion the training is.
-        /// Updates the training errors chart.
+        /// Updates the training errors chart and the colours of the nodes and connectors.
         /// </summary>
         /// <param name="sender">Object which raised the event.</param>
         /// <param name="e">Event arcuments.</param>
@@ -227,13 +228,12 @@ namespace Sde.NeuralNetworks.WinForms
             if (this.visualisationForm.Network != null)
             {
                 this.progressBar1.Maximum = this.network.NumberOfIterations;
-                this.progressBar1.Value = this.network.CurrentIteration;
+                this.progressBar1.Value = Math.Min(this.network.CurrentIteration, this.network.NumberOfIterations);
 
                 this.visualisationForm.UpdateErrorsChart();
                 this.visualisationForm.Invalidate();
 
                 // debug only - just to check the weights and biases are being updated during training
-                // FIXME: network weights and biases aren't being updated during training
                 this.visualisationForm.DisplayNetworkJson();
 
                 this.DisplayTrainingStatus();
