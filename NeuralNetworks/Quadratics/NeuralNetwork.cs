@@ -27,6 +27,7 @@ namespace Sde.NeuralNetworks.Quadratics
         private double[] hPrevBiasesDelta = Array.Empty<double>(); // hidden biases
         private double[][] hoPrevWeightsDelta = Array.Empty<double[]>(); // hidden -> output
         private double[] oPrevBiasesDelta = Array.Empty<double>(); // output biases
+
         // Stored pre-activation sums required for correct backpropagation.
         private double[] hiddenPreActivations = Array.Empty<double>();
         private double[] outputPreActivations = Array.Empty<double>();
@@ -247,6 +248,7 @@ namespace Sde.NeuralNetworks.Quadratics
                 }
 
                 sumOfWeightedInputs += this.HiddenBiases[h];
+
                 // store pre-activation for gradient calculation during backprop
                 this.hiddenPreActivations[h] = sumOfWeightedInputs;
                 hidden[h] = this.HiddenActivationFunctionProvider.CalculateActivation(sumOfWeightedInputs);
@@ -278,6 +280,7 @@ namespace Sde.NeuralNetworks.Quadratics
                 }
 
                 sumOfWeightedInputs += this.OutputBiases[o];
+
                 // store pre-activation for gradient calculation during backprop
                 this.outputPreActivations[o] = sumOfWeightedInputs;
                 output[o] = this.OutputActivationFunctionProvider.CalculateActivation(sumOfWeightedInputs);

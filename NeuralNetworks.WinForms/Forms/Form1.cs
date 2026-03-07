@@ -26,10 +26,7 @@ namespace Sde.NeuralNetworks.WinForms
         private readonly VisualisationForm visualisationForm;
 
 #pragma warning disable SA1000 // Keywords should be spaced correctly
-        private readonly Timer statusStripTimer = new() { Interval = 100 };
-        private readonly Timer visualiserTimer = new() { Interval = 100 };
-        private readonly Timer errorsTimer = new() { Interval = 100 };
-        private readonly Timer progressBarTimer = new() { Interval = 100 };
+        private readonly Timer progressTimer = new() { Interval = 100 };
         private readonly Stopwatch trainingStopwatch = new();
 #pragma warning restore SA1000 // Keywords should be spaced correctly
         private int trainingDataLength;
@@ -55,10 +52,7 @@ namespace Sde.NeuralNetworks.WinForms
             this.network.HiddenSize = 1;
             this.network.OutputSize = 1;
 
-            // TODO: consolidate into a single timer
-            this.statusStripTimer.Tick += this.StatusStripTimer_Tick;
-            this.errorsTimer.Tick += this.ErrorsTimer_Tick;
-            this.progressBarTimer.Tick += this.ProgressBarTimer_Tick;
+            this.progressTimer.Tick += this.ProgressTimer_Tick;
 
             // React to the training data provider selection being changed so that
             // UI controls that depend on input / output counts remain in sync.
@@ -90,9 +84,6 @@ namespace Sde.NeuralNetworks.WinForms
             this.networkPropertiesForm.ViewModel.PropertyChanged += this.NetworkPropertiesForm_ViewModel_PropertyChanged;
 
             this.Shown += (s, e) => this.PositionForms();
-
-            this.visualiserTimer.Tick += (s, e) => this.visualisationForm.Invalidate();
-            this.visualiserTimer.Start();
         }
 
         private void PositionForms()
@@ -227,60 +218,51 @@ namespace Sde.NeuralNetworks.WinForms
 
         /// <summary>
         /// Advances the progress bar to show how close to completion the training is.
+        /// Updates the training errors chart.
         /// </summary>
         /// <param name="sender">Object which raised the event.</param>
         /// <param name="e">Event arcuments.</param>
-        private void ProgressBarTimer_Tick(object? sender, EventArgs e)
+        private void ProgressTimer_Tick(object? sender, EventArgs e)
         {
             if (this.visualisationForm.Network != null)
             {
                 this.progressBar1.Maximum = this.network.NumberOfIterations;
                 this.progressBar1.Value = this.network.CurrentIteration;
 
+                this.visualisationForm.UpdateErrorsChart();
+                this.visualisationForm.Invalidate();
+
                 // debug only - just to check the weights and biases are being updated during training
                 // FIXME: network weights and biases aren't being updated during training
                 this.visualisationForm.DisplayNetworkJson();
+
+                this.DisplayTrainingStatus();
             }
         }
 
         /// <summary>
-        /// Polls the network during training and appends the hidden/output errors to the errors chart.
+        /// Displays some progress information in a text box.
         /// </summary>
-        /// <param name="sender">Object which raised the event.</param>
-        /// <param name="e">Event arcuments.</param>
-        private void ErrorsTimer_Tick(object? sender, EventArgs e)
+        private void DisplayTrainingStatus()
         {
-            this.visualisationForm.UpdateErrorsChart();
-        }
-
-        /// <summary>
-        /// Displays some progress information on the status bar.
-        /// </summary>
-        /// <param name="sender">Object which raised the event.</param>
-        /// <param name="e">Event arcuments.</param>
-        private void StatusStripTimer_Tick(object? sender, EventArgs e)
-        {
-            if (this.visualisationForm.Network != null)
+            var net = this.visualisationForm.Network;
+            if (net.NumberOfIterations == 0)
             {
-                var net = this.visualisationForm.Network;
-                if (net.NumberOfIterations == 0)
-                {
-                    return;
-                }
-
-                this.network.TimeSpentTraining = this.trainingStopwatch.Elapsed;
-                var progress = (double)net.CurrentIteration / net.NumberOfIterations;
-                var estimatedTotalTime = TimeSpan.FromTicks((long)(this.trainingStopwatch.Elapsed.Ticks / progress));
-                this.network.EstimatedTrainingTimeLeft = estimatedTotalTime - this.trainingStopwatch.Elapsed;
-                var message
-                    = $"Training with {this.trainingDataLength} items. "
-                    + $"Iteration: {net.CurrentIteration}/{net.NumberOfIterations}. " + Environment.NewLine
-                    + $"Time spent training: {net.TimeSpentTraining:hh\\:mm\\:ss}. "
-                    + $"Estimated training time remaining: {net.EstimatedTrainingTimeLeft:hh\\:mm\\:ss}. " + Environment.NewLine
-                    + $"Hidden MSE: {net.HiddenLayerMeanSquaredError:F4}. "
-                    + $"Output MSE: {net.OutputLayerMeanSquaredError:F4}. ";
-                this.ShowStatus(message);
+                return;
             }
+
+            this.network.TimeSpentTraining = this.trainingStopwatch.Elapsed;
+            var progress = (double)net.CurrentIteration / net.NumberOfIterations;
+            var estimatedTotalTime = TimeSpan.FromTicks((long)(this.trainingStopwatch.Elapsed.Ticks / progress));
+            this.network.EstimatedTrainingTimeLeft = estimatedTotalTime - this.trainingStopwatch.Elapsed;
+            var message
+                = $"Training with {this.trainingDataLength} items. "
+                + $"Iteration: {net.CurrentIteration}/{net.NumberOfIterations}. " + Environment.NewLine
+                + $"Time spent training: {net.TimeSpentTraining:hh\\:mm\\:ss}. "
+                + $"Estimated training time remaining: {net.EstimatedTrainingTimeLeft:hh\\:mm\\:ss}. " + Environment.NewLine
+                + $"Hidden MSE: {net.HiddenLayerMeanSquaredError:F4}. "
+                + $"Output MSE: {net.OutputLayerMeanSquaredError:F4}. ";
+            this.ShowStatus(message);
         }
 
         #endregion
@@ -384,21 +366,18 @@ namespace Sde.NeuralNetworks.WinForms
 
         private void StartTimers()
         {
-            this.progressBarTimer.Start();
+            this.progressTimer.Start();
             this.trainingStopwatch.Reset();
             this.trainingStopwatch.Start();
-            this.errorsTimer.Start();
-            this.statusStripTimer.Start();
         }
 
         private void StopTimers()
         {
-            // TODO: wait a second before stopping timers to allow the final updates to be rendered in the UI?
             this.trainingStopwatch.Stop();
-            this.errorsTimer.Stop();
-            this.progressBarTimer.Stop();
-            this.visualiserTimer.Stop();
-            this.statusStripTimer.Stop();
+
+            // Let the progress timer tick once more before stopping it so that the
+            // UI shows the final state when training is complete.
+            this.progressTimer.Tick += (s, e) => this.progressTimer.Stop();
         }
 
         #endregion
@@ -432,6 +411,7 @@ namespace Sde.NeuralNetworks.WinForms
             {
                 // Update the network.
                 this.network.HiddenSize = newHiddenSize;
+                this.visualisationForm.Invalidate();
             }
 
             if (this.InvokeRequired)
