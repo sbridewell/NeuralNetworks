@@ -37,10 +37,6 @@
             fileToolStripMenuItem = new ToolStripMenuItem();
             openTrainedModelToolStripMenuItem = new ToolStripMenuItem();
             saveCurrentModelToolStripMenuItem = new ToolStripMenuItem();
-            enableDisableUIFeaturesToolStripMenuItem = new ToolStripMenuItem();
-            networkVisualisationToolStripMenuItem = new ToolStripMenuItem();
-            errorsChartToolStripMenuItem = new ToolStripMenuItem();
-            statusBarToolStripMenuItem = new ToolStripMenuItem();
             saveFileDialog1 = new SaveFileDialog();
             openFileDialog1 = new OpenFileDialog();
             statusStrip1.SuspendLayout();
@@ -99,7 +95,7 @@
             // menuStrip1
             // 
             menuStrip1.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, enableDisableUIFeaturesToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1241, 33);
@@ -126,43 +122,6 @@
             saveCurrentModelToolStripMenuItem.Size = new Size(253, 30);
             saveCurrentModelToolStripMenuItem.Text = "Save current model";
             saveCurrentModelToolStripMenuItem.Click += SaveCurrentModelToolStripMenuItem_Click;
-            // 
-            // enableDisableUIFeaturesToolStripMenuItem
-            // 
-            enableDisableUIFeaturesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { networkVisualisationToolStripMenuItem, errorsChartToolStripMenuItem, statusBarToolStripMenuItem });
-            enableDisableUIFeaturesToolStripMenuItem.Name = "enableDisableUIFeaturesToolStripMenuItem";
-            enableDisableUIFeaturesToolStripMenuItem.Size = new Size(254, 29);
-            enableDisableUIFeaturesToolStripMenuItem.Text = "Enable / disable UI features";
-            // 
-            // networkVisualisationToolStripMenuItem
-            // 
-            networkVisualisationToolStripMenuItem.Checked = true;
-            networkVisualisationToolStripMenuItem.CheckOnClick = true;
-            networkVisualisationToolStripMenuItem.CheckState = CheckState.Checked;
-            networkVisualisationToolStripMenuItem.Name = "networkVisualisationToolStripMenuItem";
-            networkVisualisationToolStripMenuItem.Size = new Size(264, 30);
-            networkVisualisationToolStripMenuItem.Text = "Network visualisation";
-            networkVisualisationToolStripMenuItem.Click += NetworkVisualisationToolStripMenuItem_Click;
-            // 
-            // errorsChartToolStripMenuItem
-            // 
-            errorsChartToolStripMenuItem.Checked = true;
-            errorsChartToolStripMenuItem.CheckOnClick = true;
-            errorsChartToolStripMenuItem.CheckState = CheckState.Checked;
-            errorsChartToolStripMenuItem.Name = "errorsChartToolStripMenuItem";
-            errorsChartToolStripMenuItem.Size = new Size(264, 30);
-            errorsChartToolStripMenuItem.Text = "Errors chart";
-            errorsChartToolStripMenuItem.Click += ErrorsChartToolStripMenuItem_Click;
-            // 
-            // statusBarToolStripMenuItem
-            // 
-            statusBarToolStripMenuItem.Checked = true;
-            statusBarToolStripMenuItem.CheckOnClick = true;
-            statusBarToolStripMenuItem.CheckState = CheckState.Checked;
-            statusBarToolStripMenuItem.Name = "statusBarToolStripMenuItem";
-            statusBarToolStripMenuItem.Size = new Size(264, 30);
-            statusBarToolStripMenuItem.Text = "Status bar";
-            statusBarToolStripMenuItem.Click += StatusBarToolStripMenuItem_Click;
             // 
             // saveFileDialog1
             // 
@@ -207,10 +166,6 @@
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem openTrainedModelToolStripMenuItem;
         private ToolStripMenuItem saveCurrentModelToolStripMenuItem;
-        private ToolStripMenuItem enableDisableUIFeaturesToolStripMenuItem;
-        private ToolStripMenuItem networkVisualisationToolStripMenuItem;
-        private ToolStripMenuItem errorsChartToolStripMenuItem;
-        private ToolStripMenuItem statusBarToolStripMenuItem;
         private SaveFileDialog saveFileDialog1;
         private OpenFileDialog openFileDialog1;
     }

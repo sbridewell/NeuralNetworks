@@ -287,42 +287,6 @@ namespace Sde.NeuralNetworks.WinForms
 
         #region menu item click event handlers
 
-        private void NetworkVisualisationToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.networkVisualisationToolStripMenuItem.Checked)
-            {
-                this.visualiserTimer.Start();
-            }
-            else
-            {
-                this.visualiserTimer.Stop();
-            }
-        }
-
-        private void ErrorsChartToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.errorsChartToolStripMenuItem.Checked)
-            {
-                this.errorsTimer.Start();
-            }
-            else
-            {
-                this.errorsTimer.Stop();
-            }
-        }
-
-        private void StatusBarToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (this.statusBarToolStripMenuItem.Checked)
-            {
-                this.statusStripTimer.Start();
-            }
-            else
-            {
-                this.statusStripTimer.Stop();
-            }
-        }
-
         private void SaveCurrentModelToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var result = this.saveFileDialog1.ShowDialog();
@@ -392,7 +356,6 @@ namespace Sde.NeuralNetworks.WinForms
             this.buttonGo.Enabled = false;
             this.buttonStop.Enabled = true;
             this.fileToolStripMenuItem.Enabled = false;
-            this.enableDisableUIFeaturesToolStripMenuItem.Enabled = false;
             this.trainingDataPropertiesForm.DisableUserInput();
             this.networkPropertiesForm.DisableUserInput();
             this.activationFunctionProviderForm.DisableUserInput();
@@ -409,7 +372,6 @@ namespace Sde.NeuralNetworks.WinForms
             this.buttonGo.Enabled = true;
             this.buttonStop.Enabled = false;
             this.fileToolStripMenuItem.Enabled = true;
-            this.enableDisableUIFeaturesToolStripMenuItem.Enabled = true;
             this.trainingDataPropertiesForm.EnableUserInput();
             this.networkPropertiesForm.EnableUserInput();
             this.activationFunctionProviderForm.EnableUserInput();
@@ -425,15 +387,8 @@ namespace Sde.NeuralNetworks.WinForms
             this.progressBarTimer.Start();
             this.trainingStopwatch.Reset();
             this.trainingStopwatch.Start();
-            if (this.errorsChartToolStripMenuItem.Checked)
-            {
-                this.errorsTimer.Start();
-            }
-
-            if (this.statusBarToolStripMenuItem.Checked)
-            {
-                this.statusStripTimer.Start();
-            }
+            this.errorsTimer.Start();
+            this.statusStripTimer.Start();
         }
 
         private void StopTimers()
