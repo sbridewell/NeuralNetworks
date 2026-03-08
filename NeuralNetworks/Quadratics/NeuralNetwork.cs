@@ -155,15 +155,18 @@ namespace Sde.NeuralNetworks.Quadratics
         /// <inheritdoc/>
         public async Task Train(double[][] inputs, double[][] expectedOutputs)
         {
+            // TODO: change signature to Train(double[,] inputs, double[,] expectedOutputs)
             this.InitialiseWeights();
             await Task.Run(() =>
             {
                 for (this.CurrentIteration = 0; this.CurrentIteration < this.NumberOfIterations; this.CurrentIteration++)
                 {
-                    for (var sample = 0; sample < inputs.Length; sample++)
+                    for (var sampleItem = 0; sampleItem < inputs.Length; sampleItem++)
                     {
-                        var input = NormaliseInputs(inputs[sample]);
-                        var expectedOutput = expectedOutputs[sample];
+                        // TODO: this looks wrong, it's normalising the feature values in one sample item
+                        // We want to normalise the values for one feature across all samples.
+                        var input = NormaliseInputs(inputs[sampleItem]);
+                        var expectedOutput = expectedOutputs[sampleItem];
 
                         // Forward propogation - does the same as the Predict method
                         var hidden = this.ApplyHiddenWeightsAndBiases(input);
@@ -215,6 +218,7 @@ namespace Sde.NeuralNetworks.Quadratics
         /// <returns>Array of normalised values.</returns>
         private static double[] NormaliseInputs(double[] input)
         {
+            // TODO: matrix transformation to reduce to -1..1 and inverse transformation to restore original scale
             var maxAbs = Math.Max(1.0, input.Max(i => Math.Abs(i)));
             var normalised = new double[input.Length];
             for (var i = 0; i < input.Length; i++)
