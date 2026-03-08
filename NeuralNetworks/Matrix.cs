@@ -11,8 +11,15 @@ namespace Sde.NeuralNetworks
     /// be used to represent a matrix in the context of neural
     /// networks.
     /// </summary>
+    [SuppressMessage(
+        "Blocker Code Smell",
+        "S2368:Public methods should not have multidimensional array parameters",
+        Justification = "By design")]
     public class Matrix(double[,] array)
     {
+        private readonly double[][] rowCache = new double[array.GetLength(0)][];
+        private readonly double[][] columnCache = new double[array.GetLength(1)][];
+
         /// <summary>
         /// Gets the number of rows in the matrix.
         /// </summary>
@@ -26,22 +33,88 @@ namespace Sde.NeuralNetworks
         /// <summary>
         /// Gets or sets the value at the supplied indices.
         /// </summary>
-        /// <param name="i">X index.</param>
-        /// <param name="j">Y index.</param>
+        /// <param name="columnIndex">X index (column number).</param>
+        /// <param name="rowNumber">Y index (row number).</param>
         /// <returns>The value at the supplied indices.</returns>
-        public double this[int i, int j]
+        public double this[int columnIndex, int rowNumber]
         {
             get
             {
-                this.ThrowIfIndexOutOfRange(i, j);
-                return array[i, j];
+                this.ThrowIfIndexOutOfRange(columnIndex, rowNumber);
+                return array[columnIndex, rowNumber];
             }
 
             set
             {
-                this.ThrowIfIndexOutOfRange(i, j);
-                array[i, j] = value;
+                this.ThrowIfIndexOutOfRange(columnIndex, rowNumber);
+                array[columnIndex, rowNumber] = value;
             }
+        }
+
+        /// <summary>
+        /// Gets all the values in one row of the current matrix.
+        /// </summary>
+        /// <param name="rowIndex">The zero-based row index.</param>
+        /// <returns>The values in the row.</returns>
+        [SuppressMessage(
+            "Major Code Smell",
+            "S112:General or reserved exceptions should never be thrown",
+            Justification = "This is the most appropriate exception type for the situation.")]
+        public double[] GetRow(int rowIndex)
+        {
+            if (this.rowCache[rowIndex] != null)
+            {
+                return this.rowCache[rowIndex];
+            }
+
+            // TODO: would it be better to return a Vector instead of an array?
+            if (rowIndex < 0 || rowIndex >= this.RowCount)
+            {
+                var msg = $"Row index {rowIndex} is out of range for matrix with {this.RowCount} rows.";
+                throw new IndexOutOfRangeException(msg);
+            }
+
+            var row = new double[this.ColumnCount];
+            for (int columnIndex = 0; columnIndex < this.ColumnCount; columnIndex++)
+            {
+                row[columnIndex] = array[rowIndex, columnIndex];
+            }
+
+            this.rowCache[rowIndex] = row;
+            return row;
+        }
+
+        /// <summary>
+        /// Gets all the values in one column of the current matrix.
+        /// </summary>
+        /// <param name="columnIndex">The zero-based column index.</param>
+        /// <returns>The values in the row.</returns>
+        [SuppressMessage(
+            "Major Code Smell",
+            "S112:General or reserved exceptions should never be thrown",
+            Justification = "This is the most appropriate exception type for the situation.")]
+        public double[] GetColumn(int columnIndex)
+        {
+            if (this.columnCache[columnIndex] != null)
+            {
+                return this.columnCache[columnIndex];
+            }
+
+            // TODO: would it be better to return a Vector instead of an array?
+            if (columnIndex < 0 || columnIndex >= this.ColumnCount)
+            {
+                var msg = $"Column index {columnIndex} is out of range for matrix with {this.ColumnCount} columns.";
+                throw new IndexOutOfRangeException(msg);
+            }
+
+            var column = new double[this.RowCount];
+            for (int rowIndex = 0; rowIndex < this.RowCount; rowIndex++)
+            {
+                column[rowIndex] = array[rowIndex, columnIndex];
+            }
+
+            this.columnCache[columnIndex] = column;
+            return column;
         }
 
         /// <summary>

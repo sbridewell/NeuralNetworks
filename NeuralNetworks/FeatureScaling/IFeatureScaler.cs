@@ -42,13 +42,26 @@ namespace Sde.NeuralNetworks.FeatureScaling
         /// </summary>
         /// <param name="unscaledValues">The unscaled values to scale.</param>
         /// <returns>The scaled values.</returns>
+        /// <remarks>
+        /// This method is only really implemented for benchmark testing against
+        /// the Matrix class.
+        /// </remarks>
         [SuppressMessage(
             "Blocker Code Smell",
             "S2368:Public methods should not have multidimensional array parameters",
             Justification = "By design")]
         double[,] Scale(double[,] unscaledValues);
 
-        // TODO: Matrix Scale(Matrix unscaledValues) method
+        /// <summary>
+        /// Scales the given unscaled values, which are expected to be in the form
+        /// of a matrix, where each row corresponds to an instance of the type of
+        /// object in the population and sample data, and each column corresponds
+        /// to a feature (data item).
+        /// </summary>
+        /// <param name="unscaledValues">The unscaled values to scale.</param>
+        /// <returns>The scaled values.</returns>
+        Matrix Scale(Matrix unscaledValues);
+
         // TODO: ScaleBack method, which is the inverse function of the Scale method.
     }
 }

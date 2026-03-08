@@ -198,5 +198,51 @@ namespace Sde.NeuralNetworks.Test
             // Assert
             act.Should().Throw<ArgumentException>();
         }
+
+        /// <summary>
+        /// Happy path test for the GetRow method.
+        /// </summary>
+        [Fact]
+        public void GetRow_ReturnsCorrectRow()
+        {
+            // Arrange
+            var m = new Matrix(new double[,]
+            {
+                { 1.0, 2.0, 3.0 },
+                { 4.0, 5.0, 6.0 },
+            });
+
+            // Act
+            var row0 = m.GetRow(0);
+            var row1 = m.GetRow(1);
+
+            // Assert
+            row0.Should().Equal(1.0, 2.0, 3.0);
+            row1.Should().Equal(4.0, 5.0, 6.0);
+        }
+
+        /// <summary>
+        /// Happy path test for the GetColumn method.
+        /// </summary>
+        [Fact]
+        public void GetColumn_ReturnsCorrectColumn()
+        {
+            // Arrange
+            var m = new Matrix(new double[,]
+            {
+                { 1.0, 2.0, 3.0 },
+                { 4.0, 5.0, 6.0 },
+            });
+
+            // Act
+            var col0 = m.GetColumn(0);
+            var col1 = m.GetColumn(1);
+            var col2 = m.GetColumn(2);
+
+            // Assert
+            col0.Should().Equal(1.0, 4.0);
+            col1.Should().Equal(2.0, 5.0);
+            col2.Should().Equal(3.0, 6.0);
+        }
     }
 }

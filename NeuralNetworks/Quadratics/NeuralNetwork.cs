@@ -154,7 +154,7 @@ namespace Sde.NeuralNetworks.Quadratics
         /// <inheritdoc/>
         public async Task Train(double[][] inputs, double[][] expectedOutputs)
         {
-            // TODO: change signature to Train(double[,] inputs, double[,] expectedOutputs)
+            // TODO: change signature to Matrix inputs, Matrix expectedOutputs)
             this.InitialiseWeights();
             await Task.Run(() =>
             {

@@ -45,7 +45,7 @@ namespace Sde.NeuralNetworks.FeatureScaling
 
                 // TODO: is it right to use sample: false here?
                 // Probably not, because the point of a neural network is to learn from
-                // a sample of the population, in order to make predictions about member
+                // a sample of the population, in order to make predictions about members
                 // of the population that were not in the sample.
                 stdDevs[featureIndex] = featureValues.StandardDeviation(sample: false);
             }
@@ -70,6 +70,44 @@ namespace Sde.NeuralNetworks.FeatureScaling
             }
 
             return standardisedData;
+        }
+
+        /// <inheritdoc/>
+        public Matrix Scale(Matrix unscaledValues)
+        {
+            var numberOfRecords = unscaledValues.RowCount;
+            var numberOfFeatures = unscaledValues.ColumnCount;
+            var means = new double[numberOfFeatures];
+            var stdDevs = new double[numberOfFeatures];
+            for (var featureIndex = 0; featureIndex < numberOfFeatures; featureIndex++)
+            {
+                var featureValues = unscaledValues.GetColumn(featureIndex);
+                means[featureIndex] = featureValues.Average();
+
+                // TODO: is it right to use sample: false here?
+                stdDevs[featureIndex] = featureValues.StandardDeviation(sample: false);
+            }
+
+            var standardisedData = new double[numberOfRecords, numberOfFeatures];
+            for (var recordIndex = 0; recordIndex < numberOfRecords; recordIndex++)
+            {
+                for (var featureIndex = 0; featureIndex < numberOfFeatures; featureIndex++)
+                {
+                    // Standard deviation cannot be less than zero.
+                    // If this ever happens then there's an error in the implementation of the standard deviation calculation.
+                    if (stdDevs[featureIndex] < 0)
+                    {
+                        var msg = $"Standard deviation cannot be less than zero for feature index {featureIndex}. Value received: {stdDevs[featureIndex]}";
+                        throw new InvalidOperationException(msg);
+                    }
+
+                    standardisedData[recordIndex, featureIndex]
+                        = (unscaledValues.GetRow(recordIndex)[featureIndex] - means[featureIndex])
+                        / stdDevs[featureIndex];
+                }
+            }
+
+            return new Matrix(standardisedData);
         }
     }
 }
