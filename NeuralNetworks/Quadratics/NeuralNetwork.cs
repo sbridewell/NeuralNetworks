@@ -146,8 +146,7 @@ namespace Sde.NeuralNetworks.Quadratics
         /// <inheritdoc/>
         public double[] Predict(double[] inputs)
         {
-            var normalisedInputs = NormaliseInputs(inputs);
-            var outputsFromHiddenLayer = this.ApplyHiddenWeightsAndBiases(normalisedInputs);
+            var outputsFromHiddenLayer = this.ApplyHiddenWeightsAndBiases(inputs);
             var outputsFromOutputLayer = this.ApplyOutputWeightsAndBiases(outputsFromHiddenLayer);
             return outputsFromOutputLayer;
         }
@@ -163,9 +162,8 @@ namespace Sde.NeuralNetworks.Quadratics
                 {
                     for (var sampleItem = 0; sampleItem < inputs.Length; sampleItem++)
                     {
-                        // TODO: this looks wrong, it's normalising the feature values in one sample item
-                        // We want to normalise the values for one feature across all samples.
-                        var input = NormaliseInputs(inputs[sampleItem]);
+                        // TODO: Normalise the input values per feature across all samples.
+                        var input = inputs[sampleItem];
                         var expectedOutput = expectedOutputs[sampleItem];
 
                         // Forward propogation - does the same as the Predict method
@@ -208,25 +206,6 @@ namespace Sde.NeuralNetworks.Quadratics
 
                 this.NumberOfTrainingRecords = inputs.Length;
             });
-        }
-
-        /// <summary>
-        /// Scales the values in the supplied array to values in the range -1 to 1,
-        /// whilst maintaining their relative magnitudes.
-        /// </summary>
-        /// <param name="input">The array to normalise.</param>
-        /// <returns>Array of normalised values.</returns>
-        private static double[] NormaliseInputs(double[] input)
-        {
-            // TODO: matrix transformation to reduce to -1..1 and inverse transformation to restore original scale
-            var maxAbs = Math.Max(1.0, input.Max(i => Math.Abs(i)));
-            var normalised = new double[input.Length];
-            for (var i = 0; i < input.Length; i++)
-            {
-                normalised[i] = input[i] / maxAbs;
-            }
-
-            return normalised;
         }
 
         /// <summary>
