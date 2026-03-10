@@ -3,10 +3,11 @@
 // </copyright>
 
 // https://visualstudiomagazine.com/articles/2015/04/01/back-propagation-using-c.aspx
-namespace Sde.NeuralNetworks.MsdnMagazine
+namespace Sde.NeuralNetworks.OtherImplementations.MsdnMagazine
 {
     using System;
 
+#pragma warning disable SA1407 // Arithmetic expressions should declare precedence
     /// <summary>
     /// Class containing the main entry point for the MSDN back-propagation demo.
     /// </summary>
@@ -173,12 +174,12 @@ namespace Sde.NeuralNetworks.MsdnMagazine
         private static double[][] MakeAllData(int numInput, int numHidden, int numOutput, int numRows, int seed)
         {
             Random rnd = new Random(seed);
-            int numWeights = (numInput * numHidden) + numHidden +
-              (numHidden * numOutput) + numOutput;
+            int numWeights = numInput * numHidden + numHidden +
+              numHidden * numOutput + numOutput;
             double[] weights = new double[numWeights]; // actually weights & biases
             for (int i = 0; i < numWeights; ++i)
             {
-                weights[i] = (20.0 * rnd.NextDouble()) - 10.0; // [-10.0 to 10.0]
+                weights[i] = 20.0 * rnd.NextDouble() - 10.0; // [-10.0 to 10.0]
             }
 
             Console.WriteLine("Generating weights and biases:");
@@ -200,7 +201,7 @@ namespace Sde.NeuralNetworks.MsdnMagazine
                 double[] inputs = new double[numInput];
                 for (int i = 0; i < numInput; ++i)
                 {
-                    inputs[i] = (20.0 * rnd.NextDouble()) - 10.0; // [-10.0 to -10.0]
+                    inputs[i] = 20.0 * rnd.NextDouble() - 10.0; // [-10.0 to -10.0]
                 }
 
                 // compute outputs
@@ -280,4 +281,5 @@ namespace Sde.NeuralNetworks.MsdnMagazine
             }
         } // SplitTrainTest
     } // Program
+#pragma warning restore SA1407 // Arithmetic expressions should declare precedence
 } // ns

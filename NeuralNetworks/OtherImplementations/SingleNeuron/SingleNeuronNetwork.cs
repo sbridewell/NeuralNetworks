@@ -2,11 +2,13 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-namespace Sde.NeuralNetworks.SingleNeuron
+namespace Sde.NeuralNetworks.OtherImplementations.SingleNeuron
 {
     using System.Text;
     using Sde.NeuralNetworks.ActivationProviders;
 
+#pragma warning disable SA1407 // Arithmetic expressions should declare precedence
+#pragma warning disable SA1101 // Prefix local calls with this
     /// <summary>
     /// A neural network consisting of a single neuron (perceptron), which
     /// allows injection of different activation functions.
@@ -25,7 +27,7 @@ namespace Sde.NeuralNetworks.SingleNeuron
         {
             // Seed the randomiser so we get the same random numbers each time.
             var random = new Random(1);
-            this.Bias = (random.NextSingle() * 2) - 1;
+            Bias = random.NextSingle() * 2 - 1;
             this.activationProvider = activationProvider;
         }
 
@@ -71,24 +73,24 @@ namespace Sde.NeuralNetworks.SingleNeuron
 
             // Initialise the weeights here rather than in the constructor
             // to allow a variable number of inputs.
-            this.Weights = new double[numberOfInputs];
+            Weights = new double[numberOfInputs];
 
             // Seed the randomiser so we get the same random numbers each time.
             var random = new Random(1);
-            for (var i = 0; i < this.Weights.Length; i++)
+            for (var i = 0; i < Weights.Length; i++)
             {
                 // Random values between -1 and 1.
-                this.Weights[i] = (random.NextSingle() * 2) - 1;
+                Weights[i] = random.NextSingle() * 2 - 1;
             }
 
-            this.CaptureWeightsAndBias();
+            CaptureWeightsAndBias();
 
             for (var iter = 0; iter < numberOfIterations; iter++)
             {
                 foreach (var trainingDatum in trainingData)
                 {
                     // Predict the output based on the training set example inputs.
-                    var predictedOutput = this.Think(trainingDatum.Inputs);
+                    var predictedOutput = Think(trainingDatum.Inputs);
 
                     // Calculate the error as the difference between the desired output
                     // and the predicted output.
@@ -96,9 +98,9 @@ namespace Sde.NeuralNetworks.SingleNeuron
                     var errorInOutput = trainingDatum.DesiredOutput - predictedOutput;
 
                     // Iterate through the weights and adjust each one
-                    this.AdjustInputWeightsAndBias(trainingDatum, errorInOutput, predictedOutput);
+                    AdjustInputWeightsAndBias(trainingDatum, errorInOutput, predictedOutput);
 
-                    this.CaptureWeightsAndBias();
+                    CaptureWeightsAndBias();
                 }
             }
         }
@@ -110,9 +112,9 @@ namespace Sde.NeuralNetworks.SingleNeuron
         /// <returns>The predicted output.</returns>
         public double Think(int[] neuronInputs)
         {
-            var sumOfWeightedInputs = this.SumOfWeightedInputs(neuronInputs);
-            var neuronOutput = this.activationProvider.CalculateActivation(
-                sumOfWeightedInputs + this.Bias);
+            var sumOfWeightedInputs = SumOfWeightedInputs(neuronInputs);
+            var neuronOutput = activationProvider.CalculateActivation(
+                sumOfWeightedInputs + Bias);
             return neuronOutput;
         }
 
@@ -126,12 +128,12 @@ namespace Sde.NeuralNetworks.SingleNeuron
         {
             var sb = new StringBuilder();
             sb.Append("Weights: [");
-            foreach (var weight in this.Weights)
+            foreach (var weight in Weights)
             {
                 sb.Append($"{weight}, ");
             }
 
-            sb.Append($"Bias: {this.Bias}]");
+            sb.Append($"Bias: {Bias}]");
             return sb.ToString();
         }
 
@@ -140,8 +142,8 @@ namespace Sde.NeuralNetworks.SingleNeuron
             double errorInOutput,
             double predictedOutput)
         {
-            var derivative = this.activationProvider.CalculateGradient(predictedOutput);
-            for (var i = 0; i < this.Weights.Length; i++)
+            var derivative = activationProvider.CalculateGradient(predictedOutput);
+            for (var i = 0; i < Weights.Length; i++)
             {
                 // Calculate how much to adjust the weight by
                 var neuronInput = trainingDatum.Inputs[i];
@@ -150,11 +152,11 @@ namespace Sde.NeuralNetworks.SingleNeuron
                     * derivative;
 
                 // Adjust the weight
-                this.Weights[i] += adjustment;
+                Weights[i] += adjustment;
             }
 
             // Adjust the bias too
-            this.Bias += errorInOutput * derivative;
+            Bias += errorInOutput * derivative;
         }
 
         private double SumOfWeightedInputs(int[] neuronInputs)
@@ -162,7 +164,7 @@ namespace Sde.NeuralNetworks.SingleNeuron
             var sumOfWeightedInputs = 0.0;
             for (var i = 0; i < neuronInputs.Length; i++)
             {
-                sumOfWeightedInputs += neuronInputs[i] * this.Weights[i];
+                sumOfWeightedInputs += neuronInputs[i] * Weights[i];
             }
 
             return sumOfWeightedInputs;
@@ -173,10 +175,12 @@ namespace Sde.NeuralNetworks.SingleNeuron
         /// </summary>
         private void CaptureWeightsAndBias()
         {
-            var weightsCopy = new double[this.Weights.Length];
-            Array.Copy(this.Weights, weightsCopy, this.Weights.Length);
-            this.WeightsOverTime.Add(weightsCopy);
-            this.BiasOverTime.Add(this.Bias);
+            var weightsCopy = new double[Weights.Length];
+            Array.Copy(Weights, weightsCopy, Weights.Length);
+            WeightsOverTime.Add(weightsCopy);
+            BiasOverTime.Add(Bias);
         }
     }
+#pragma warning restore SA1101 // Prefix local calls with this
+#pragma warning restore SA1407 // Arithmetic expressions should declare precedence
 }
