@@ -38,6 +38,7 @@ namespace Sde.NeuralNetworks.WinForms.Forms
             set
             {
                 this.networkVisualiser1.Network = value;
+                this.networkVisualiser1.Refresh();
                 this.trainingErrorsChart1.Network = value;
                 this.testResultsGrid1.Network = value;
                 this.predictionControl1.Network = value;
