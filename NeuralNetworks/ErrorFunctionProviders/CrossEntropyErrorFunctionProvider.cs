@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ErrorFunctionProviders
     public class CrossEntropyErrorFunctionProvider : IErrorFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Cross entropy";
+
+        /// <inheritdoc/>
         public double CalculateError(double expectedOutput, double actualOutput)
         {
             return (expectedOutput * Math.Log(actualOutput)) + ((1 - expectedOutput) * Math.Log(1 - actualOutput));

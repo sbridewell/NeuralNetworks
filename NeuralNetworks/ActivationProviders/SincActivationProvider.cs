@@ -12,6 +12,9 @@ namespace Sde.NeuralNetworks.ActivationProviders
     public class SincActivationProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Sinc";
+
+        /// <inheritdoc/>
         [SuppressMessage(
             "Major Bug",
             "S1244:Floating point numbers should not be tested for equality",

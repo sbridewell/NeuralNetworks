@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ActivationProviders
     public class SinusoidalActivationProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Sinusoidal";
+
+        /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
             return Math.Sin(input);

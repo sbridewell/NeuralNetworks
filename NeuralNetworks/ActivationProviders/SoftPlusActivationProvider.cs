@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ActivationProviders
     public class SoftPlusActivationProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Soft plus";
+
+        /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
             return Math.Log(1 + Math.Exp(input));

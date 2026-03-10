@@ -171,7 +171,7 @@ namespace Sde.NeuralNetworks.WinForms
             this.BindNumericUpDown(this.numericUpDownPercentageOfTrainingData, nameof(IDataProvider.PercentageOfTestData));
 
             this.comboBoxDataProvider.DataSource = this.DataProviderListItems;
-            this.comboBoxDataProvider.DisplayMember = nameof(ClassListItem<IDataProvider>.TypeName);
+            this.comboBoxDataProvider.DisplayMember = nameof(ClassListItem<IDataProvider>.DisplayName);
             this.comboBoxDataProvider.ValueMember = nameof(ClassListItem<IDataProvider>.instance);
 
             this.comboBoxDataProvider.DataBindings.Add(

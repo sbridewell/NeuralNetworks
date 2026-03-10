@@ -7,9 +7,10 @@ namespace Sde.NeuralNetworks.ErrorFunctionProviders
     /// <summary>
     /// Interface for a providor of error functions (loss / cost functions) for neural networks.
     /// </summary>
-    public interface IErrorFunctionProvider
+    public interface IErrorFunctionProvider : IHaveADisplayName
     {
         // TODO: accept and receive double[] to support multiple neurons in a layer.
+
         /// <summary>
         /// Calculates the error between an expected value and an actual value.
         /// </summary>

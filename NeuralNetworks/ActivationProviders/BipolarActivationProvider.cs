@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ActivationProviders
     public class BipolarActivationProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Bipolar";
+
+        /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
             return input < 0 ? -1 : 1;

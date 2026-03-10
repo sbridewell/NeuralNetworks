@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ActivationProviders
     public class ArctangentActivationProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Arctangent";
+
+        /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
             return Math.Atan(input);

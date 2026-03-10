@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ActivationProviders
     public class HyperbolicTangentActivationProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Hyperbolic tangent";
+
+        /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
             return Math.Tanh(input);

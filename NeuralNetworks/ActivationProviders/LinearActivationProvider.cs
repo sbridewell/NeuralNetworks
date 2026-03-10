@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ActivationProviders
     public class LinearActivationProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Linear";
+
+        /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
             return input;

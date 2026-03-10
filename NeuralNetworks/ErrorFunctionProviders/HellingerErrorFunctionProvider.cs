@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ErrorFunctionProviders
     public class HellingerErrorFunctionProvider : IErrorFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Hellinger";
+
+        /// <inheritdoc/>
         public double CalculateError(double expectedOutput, double actualOutput)
         {
             var error = Math.Pow(Math.Sqrt(actualOutput) - Math.Sqrt(expectedOutput), 2);

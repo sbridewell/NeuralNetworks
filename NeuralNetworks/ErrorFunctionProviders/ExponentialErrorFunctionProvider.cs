@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ErrorFunctionProviders
     public class ExponentialErrorFunctionProvider : IErrorFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Exponential";
+
+        /// <inheritdoc/>
         public double CalculateError(double expectedOutput, double actualOutput)
         {
             var error = Math.Pow(actualOutput - expectedOutput, 2);

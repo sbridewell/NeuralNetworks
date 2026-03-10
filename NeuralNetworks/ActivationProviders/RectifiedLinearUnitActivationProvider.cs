@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ActivationProviders
     public class RectifiedLinearUnitActivationProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Rectified linear unit";
+
+        /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
             return input < 0 ? 0 : input;

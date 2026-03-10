@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ErrorFunctionProviders
     public class GeneralisedKLErrorFunctionProvider : IErrorFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Generalised KL";
+
+        /// <inheritdoc/>
         public double CalculateError(double expectedOutput, double actualOutput)
         {
             return new KullbackLeiblerErrorFunctionProvider().CalculateError(expectedOutput, actualOutput) - expectedOutput + actualOutput;

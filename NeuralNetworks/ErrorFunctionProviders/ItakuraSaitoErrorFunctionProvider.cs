@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ErrorFunctionProviders
     public class ItakuraSaitoErrorFunctionProvider : IErrorFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Itakura Saito";
+
+        /// <inheritdoc/>
         public double CalculateError(double expectedOutput, double actualOutput)
         {
             return (expectedOutput / actualOutput) - Math.Log(expectedOutput / actualOutput) - 1;

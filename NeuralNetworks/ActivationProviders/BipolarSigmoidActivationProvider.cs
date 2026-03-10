@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ActivationProviders
     public class BipolarSigmoidActivationProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Bipolar sigmoid";
+
+        /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
             return (1 - Math.Exp(-input)) / (1 + Math.Exp(-input));

@@ -12,6 +12,9 @@ namespace Sde.NeuralNetworks.Quadratics
     public abstract class DataProvider : IDataProvider
     {
         /// <inheritdoc/>
+        public abstract string DisplayName { get; }
+
+        /// <inheritdoc/>
         public double PercentageOfTestData { get; set; } = 0.1;
 
         /// <inheritdoc/>

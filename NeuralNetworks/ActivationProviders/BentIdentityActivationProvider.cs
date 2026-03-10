@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ActivationProviders
     public class BentIdentityActivationProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Bent identity";
+
+        /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
             return ((Math.Sqrt(Math.Pow(input, 2) + 1) - 1) / 2) + input;

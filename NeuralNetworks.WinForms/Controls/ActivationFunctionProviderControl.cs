@@ -21,8 +21,9 @@ namespace Sde.NeuralNetworks.WinForms
             var assembly = typeof(IActivationFunctionProvider).Assembly;
             foreach (var t in assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && typeof(IActivationFunctionProvider).IsAssignableFrom(t)))
             {
-                this.comboBox1.Items.Add(new ActivationListItem((IActivationFunctionProvider)Activator.CreateInstance(t) !));
-                this.comboBox1.DisplayMember = nameof(ActivationListItem.TypeName);
+                var item = new ClassListItem<IActivationFunctionProvider>((IActivationFunctionProvider)Activator.CreateInstance(t) !);
+                this.comboBox1.Items.Add(item);
+                this.comboBox1.DisplayMember = item.DisplayName;
             }
 
             this.comboBox1.SelectedIndex = 0;
@@ -35,9 +36,9 @@ namespace Sde.NeuralNetworks.WinForms
         {
             get
             {
-                if (this.comboBox1.SelectedItem is ActivationListItem item)
+                if (this.comboBox1.SelectedItem is ClassListItem<IActivationFunctionProvider> item)
                 {
-                    return item.provider;
+                    return item.instance;
                 }
                 else
                 {
@@ -73,22 +74,8 @@ namespace Sde.NeuralNetworks.WinForms
 
         private void ComboBox1SelectedIndexChanged(object sender, EventArgs e)
         {
-            var activationProvider = ((ActivationListItem)this.comboBox1.SelectedItem!).provider;
+            var activationProvider = ((ClassListItem<IActivationFunctionProvider>)this.comboBox1.SelectedItem!).instance;
             this.activationFunctionControl1.SetActivationProvider(activationProvider);
-        }
-
-        /// <summary>
-        /// Small wrapper used to expose a TypeName property for ListBox DisplayMember while retaining the provider instance.
-        /// </summary>
-        private sealed record ActivationListItem(IActivationFunctionProvider provider)
-        {
-            /// <summary>
-            /// Gets the short type name (no namespace) of the provider.
-            /// </summary>
-            public string TypeName => this.provider.GetType().Name;
-
-            /// <inheritdoc />
-            public override string ToString() => this.TypeName;
         }
     }
 }

@@ -4,13 +4,14 @@
 
 namespace Sde.NeuralNetworks.Quadratics
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// Provider of training / test data for solving quadratic equations.
     /// </summary>
     public class QuadraticDataProvider : DataProvider
     {
+        /// <inheritdoc/>
+        public override string DisplayName => "Solve quadratic equation";
+
         /// <inheritdoc/>
         public override int NumberOfInputs => 3;
 

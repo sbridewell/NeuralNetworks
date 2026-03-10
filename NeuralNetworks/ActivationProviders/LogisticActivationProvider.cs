@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ActivationProviders
     public class LogisticActivationProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Logistic";
+
+        /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
             return 1 / (1 + Math.Exp(-input));

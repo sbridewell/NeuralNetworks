@@ -10,6 +10,9 @@ namespace Sde.NeuralNetworks.ActivationProviders
     public class GaussianActivationProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
+        public string DisplayName => "Gaussian";
+
+        /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
             return Math.Exp(Math.Pow(-input, 2));

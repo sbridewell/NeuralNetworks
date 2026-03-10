@@ -9,7 +9,7 @@ namespace Sde.NeuralNetworks.Quadratics
     /// <summary>
     /// Interface for providers of training / test data for a neural network.
     /// </summary>
-    public interface IDataProvider
+    public interface IDataProvider : IHaveADisplayName
     {
         /// <summary>
         /// Gets or sets the percentage of the data to reserve for testing the network.

@@ -7,7 +7,7 @@ namespace Sde.NeuralNetworks.ActivationProviders
     /// <summary>
     /// Interface for a provider of activation functions for neural networks.
     /// </summary>
-    public interface IActivationFunctionProvider
+    public interface IActivationFunctionProvider : IHaveADisplayName
     {
         /// <summary>
         /// Applies the activation function to the specified input value.
