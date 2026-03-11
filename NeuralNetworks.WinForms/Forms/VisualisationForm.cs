@@ -8,7 +8,7 @@ namespace Sde.NeuralNetworks.WinForms.Forms
     using System.Diagnostics.CodeAnalysis;
     using System.Text.Json;
     using System.Windows.Forms;
-    using Sde.NeuralNetworks.Quadratics;
+    using Sde.NeuralNetworks.Networks;
 
     /// <summary>
     /// A form which displays a visual representation of the network's structure and

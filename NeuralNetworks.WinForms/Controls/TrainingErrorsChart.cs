@@ -6,7 +6,7 @@ namespace Sde.NeuralNetworks.WinForms.Controls
 {
     using System.ComponentModel;
     using System.Windows.Forms.DataVisualization.Charting;
-    using Sde.NeuralNetworks.Quadratics;
+    using Sde.NeuralNetworks.Networks;
 
     /// <summary>
     /// User control which displays a chart of the training errors over time.

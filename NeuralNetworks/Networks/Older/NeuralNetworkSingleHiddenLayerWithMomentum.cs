@@ -2,7 +2,7 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-namespace Sde.NeuralNetworks.Quadratics
+namespace Sde.NeuralNetworks.Networks.Older
 {
     using Sde.NeuralNetworks.ActivationFunctionProviders;
 
@@ -33,8 +33,8 @@ namespace Sde.NeuralNetworks.Quadratics
         /// </summary>
         public NeuralNetworkSingleHiddenLayerWithMomentum()
         {
-            this.random = new Random(42);
-            this.Momentum = 0.0;
+            random = new Random(42);
+            Momentum = 0.0;
         }
 
         /// <inheritdoc/>
@@ -44,23 +44,23 @@ namespace Sde.NeuralNetworks.Quadratics
         public IActivationFunctionProvider OutputActivationFunctionProvider { get; set; } = new LinearActivationFunctionProvider();
 
         /// <inheritdoc/>
-        public string HiddenActivationFunctionProviderName => this.HiddenActivationFunctionProvider.GetType().Name;
+        public string HiddenActivationFunctionProviderName => HiddenActivationFunctionProvider.GetType().Name;
 
         /// <inheritdoc/>
-        public string OutputActivationFunctionProviderName => this.OutputActivationFunctionProvider.GetType().Name;
+        public string OutputActivationFunctionProviderName => OutputActivationFunctionProvider.GetType().Name;
 
         /// <inheritdoc/>
         public int InputSize
         {
             get
             {
-                return this.inputSize;
+                return inputSize;
             }
 
             set
             {
-                this.inputSize = value;
-                this.InitialiseWeights();
+                inputSize = value;
+                InitialiseWeights();
             }
         }
 
@@ -69,13 +69,13 @@ namespace Sde.NeuralNetworks.Quadratics
         {
             get
             {
-                return this.hiddenSize;
+                return hiddenSize;
             }
 
             set
             {
-                this.hiddenSize = value;
-                this.InitialiseWeights();
+                hiddenSize = value;
+                InitialiseWeights();
             }
         }
 
@@ -84,13 +84,13 @@ namespace Sde.NeuralNetworks.Quadratics
         {
             get
             {
-                return this.outputSize;
+                return outputSize;
             }
 
             set
             {
-                this.outputSize = value;
-                this.InitialiseWeights();
+                outputSize = value;
+                InitialiseWeights();
             }
         }
 
@@ -136,25 +136,25 @@ namespace Sde.NeuralNetworks.Quadratics
         /// <inheritdoc/>
         public void Stop()
         {
-            this.CurrentIteration = this.NumberOfIterations;
+            CurrentIteration = NumberOfIterations;
         }
 
         /// <inheritdoc/>
         public double[] Predict(double[] inputs)
         {
             var normalisedInputs = NormaliseInputs(inputs);
-            var outputsFromHiddenLayer = this.ApplyHiddenWeightsAndBiases(normalisedInputs);
-            var outputsFromOutputLayer = this.ApplyOutputWeightsAndBiases(outputsFromHiddenLayer);
+            var outputsFromHiddenLayer = ApplyHiddenWeightsAndBiases(normalisedInputs);
+            var outputsFromOutputLayer = ApplyOutputWeightsAndBiases(outputsFromHiddenLayer);
             return outputsFromOutputLayer;
         }
 
         /// <inheritdoc/>
         public async Task Train(double[][] inputs, double[][] expectedOutputs)
         {
-            this.InitialiseWeights();
+            InitialiseWeights();
             await Task.Run(() =>
             {
-                for (this.CurrentIteration = 0; this.CurrentIteration < this.NumberOfIterations; this.CurrentIteration++)
+                for (CurrentIteration = 0; CurrentIteration < NumberOfIterations; CurrentIteration++)
                 {
                     for (var sample = 0; sample < inputs.Length; sample++)
                     {
@@ -162,22 +162,22 @@ namespace Sde.NeuralNetworks.Quadratics
                         var expectedOutput = expectedOutputs[sample];
 
                         // Forward propogation - does the same as the Predict method
-                        var hidden = this.ApplyHiddenWeightsAndBiases(input);
-                        var output = this.ApplyOutputWeightsAndBiases(hidden);
+                        var hidden = ApplyHiddenWeightsAndBiases(input);
+                        var output = ApplyOutputWeightsAndBiases(hidden);
 
                         // Calculate errors
-                        var outputLayerErrors = this.CalculateOutputLayerErrors(expectedOutput, output);
-                        var hiddenLayerErrors = this.CalculateHiddenLayerErrors(outputLayerErrors);
-                        this.OutputLayerMeanSquaredError = outputLayerErrors.Select(e => e * e).Average();
-                        this.HiddenLayerMeanSquaredError = hiddenLayerErrors.Select(e => e * e).Average();
+                        var outputLayerErrors = CalculateOutputLayerErrors(expectedOutput, output);
+                        var hiddenLayerErrors = CalculateHiddenLayerErrors(outputLayerErrors);
+                        OutputLayerMeanSquaredError = outputLayerErrors.Select(e => e * e).Average();
+                        HiddenLayerMeanSquaredError = hiddenLayerErrors.Select(e => e * e).Average();
 
                         // Update weights and biases taking into account the calculated errors (backward propogation)
-                        this.UpdateOutputLayerWeightsAndBiases(outputLayerErrors, hidden, this.LearningRate);
-                        this.UpdateHiddenLayerWeightsAndBiases(hiddenLayerErrors, input, this.LearningRate);
+                        UpdateOutputLayerWeightsAndBiases(outputLayerErrors, hidden, LearningRate);
+                        UpdateHiddenLayerWeightsAndBiases(hiddenLayerErrors, input, LearningRate);
                     }
                 }
 
-                this.NumberOfTrainingRecords = inputs.Length;
+                NumberOfTrainingRecords = inputs.Length;
             });
         }
 
@@ -211,17 +211,17 @@ namespace Sde.NeuralNetworks.Quadratics
         /// <returns>The values passeed to the hidden layer.</returns>
         private double[] ApplyHiddenWeightsAndBiases(double[] inputs)
         {
-            var hidden = new double[this.HiddenSize];
-            for (var h = 0; h < this.HiddenSize; h++)
+            var hidden = new double[HiddenSize];
+            for (var h = 0; h < HiddenSize; h++)
             {
                 var sumOfWeightedInputs = 0.0;
-                for (var i = 0; i < this.InputSize; i++)
+                for (var i = 0; i < InputSize; i++)
                 {
-                    sumOfWeightedInputs += inputs[i] * this.InputToHiddenWeights[i][h];
+                    sumOfWeightedInputs += inputs[i] * InputToHiddenWeights[i][h];
                 }
 
-                sumOfWeightedInputs += this.HiddenBiases[h];
-                hidden[h] = this.HiddenActivationFunctionProvider.CalculateActivation(sumOfWeightedInputs);
+                sumOfWeightedInputs += HiddenBiases[h];
+                hidden[h] = HiddenActivationFunctionProvider.CalculateActivation(sumOfWeightedInputs);
             }
 
             return hidden;
@@ -239,17 +239,17 @@ namespace Sde.NeuralNetworks.Quadratics
         /// <returns>The values passed to the output layer.</returns>
         private double[] ApplyOutputWeightsAndBiases(double[] hidden)
         {
-            var output = new double[this.OutputSize];
-            for (var o = 0; o < this.OutputSize; o++)
+            var output = new double[OutputSize];
+            for (var o = 0; o < OutputSize; o++)
             {
                 var sumOfWeightedInputs = 0.0;
-                for (var h = 0; h < this.HiddenSize; h++)
+                for (var h = 0; h < HiddenSize; h++)
                 {
-                    sumOfWeightedInputs += hidden[h] * this.HiddenToOutputWeights[h][o];
+                    sumOfWeightedInputs += hidden[h] * HiddenToOutputWeights[h][o];
                 }
 
-                sumOfWeightedInputs += this.OutputBiases[o];
-                output[o] = this.OutputActivationFunctionProvider.CalculateActivation(sumOfWeightedInputs);
+                sumOfWeightedInputs += OutputBiases[o];
+                output[o] = OutputActivationFunctionProvider.CalculateActivation(sumOfWeightedInputs);
             }
 
             return output;
@@ -264,8 +264,8 @@ namespace Sde.NeuralNetworks.Quadratics
         /// <returns>The errors in the outputs from the output layer.</returns>
         private double[] CalculateOutputLayerErrors(double[] expected, double[] output)
         {
-            var outputErrors = new double[this.OutputSize];
-            for (var o = 0; o < this.OutputSize; o++)
+            var outputErrors = new double[OutputSize];
+            for (var o = 0; o < OutputSize; o++)
             {
                 outputErrors[o] = expected[o] - output[o];
             }
@@ -282,13 +282,13 @@ namespace Sde.NeuralNetworks.Quadratics
         /// <returns>The errors in the outputs from the hidden layer.</returns>
         private double[] CalculateHiddenLayerErrors(double[] outputErrors)
         {
-            var hiddenErrors = new double[this.HiddenSize];
-            for (var h = 0; h < this.HiddenSize; h++)
+            var hiddenErrors = new double[HiddenSize];
+            for (var h = 0; h < HiddenSize; h++)
             {
                 double error = 0;
-                for (var o = 0; o < this.OutputSize; o++)
+                for (var o = 0; o < OutputSize; o++)
                 {
-                    error += outputErrors[o] * this.HiddenToOutputWeights[h][o];
+                    error += outputErrors[o] * HiddenToOutputWeights[h][o];
                 }
 
                 hiddenErrors[h] = error;
@@ -307,20 +307,20 @@ namespace Sde.NeuralNetworks.Quadratics
         /// <param name="learningRate">Controls how much the weights and biases can change per iteration.</param>
         private void UpdateOutputLayerWeightsAndBiases(double[] outputErrors, double[] hidden, double learningRate)
         {
-            for (var o = 0; o < this.OutputSize; o++)
+            for (var o = 0; o < OutputSize; o++)
             {
-                for (var i = 0; i < this.HiddenSize; i++)
+                for (var i = 0; i < HiddenSize; i++)
                 {
                     var delta = learningRate * outputErrors[o] * hidden[i];
-                    var momentumTerm = this.Momentum * this.hoPrevWeightsDelta[i][o];
-                    this.HiddenToOutputWeights[i][o] += delta + momentumTerm;
-                    this.hoPrevWeightsDelta[i][o] = delta;
+                    var momentumTerm = Momentum * hoPrevWeightsDelta[i][o];
+                    HiddenToOutputWeights[i][o] += delta + momentumTerm;
+                    hoPrevWeightsDelta[i][o] = delta;
                 }
 
                 var biasDelta = learningRate * outputErrors[o];
-                var biasMomentum = this.Momentum * this.oPrevBiasesDelta[o];
-                this.OutputBiases[o] += biasDelta + biasMomentum;
-                this.oPrevBiasesDelta[o] = biasDelta;
+                var biasMomentum = Momentum * oPrevBiasesDelta[o];
+                OutputBiases[o] += biasDelta + biasMomentum;
+                oPrevBiasesDelta[o] = biasDelta;
             }
         }
 
@@ -334,20 +334,20 @@ namespace Sde.NeuralNetworks.Quadratics
         /// <param name="learningRate">Controls how much the weights and biases can change per iteration.</param>
         private void UpdateHiddenLayerWeightsAndBiases(double[] hiddenErrors, double[] inputs, double learningRate)
         {
-            for (var h = 0; h < this.HiddenSize; h++)
+            for (var h = 0; h < HiddenSize; h++)
             {
-                for (var i = 0; i < this.InputSize; i++)
+                for (var i = 0; i < InputSize; i++)
                 {
                     var delta = learningRate * hiddenErrors[h] * inputs[i];
-                    var momentumTerm = this.Momentum * this.ihPrevWeightsDelta[i][h];
-                    this.InputToHiddenWeights[i][h] += delta + momentumTerm;
-                    this.ihPrevWeightsDelta[i][h] = delta;
+                    var momentumTerm = Momentum * ihPrevWeightsDelta[i][h];
+                    InputToHiddenWeights[i][h] += delta + momentumTerm;
+                    ihPrevWeightsDelta[i][h] = delta;
                 }
 
                 var biasDelta = learningRate * hiddenErrors[h];
-                var biasMomentum = this.Momentum * this.hPrevBiasesDelta[h];
-                this.HiddenBiases[h] += biasDelta + biasMomentum;
-                this.hPrevBiasesDelta[h] = biasDelta;
+                var biasMomentum = Momentum * hPrevBiasesDelta[h];
+                HiddenBiases[h] += biasDelta + biasMomentum;
+                hPrevBiasesDelta[h] = biasDelta;
             }
         }
 
@@ -357,53 +357,53 @@ namespace Sde.NeuralNetworks.Quadratics
         /// </summary>
         private void InitialiseWeights()
         {
-            this.InputToHiddenWeights = new double[this.InputSize][];
-            for (var i = 0; i < this.InputSize; i++)
+            InputToHiddenWeights = new double[InputSize][];
+            for (var i = 0; i < InputSize; i++)
             {
-                this.InputToHiddenWeights[i] = new double[this.HiddenSize];
-                for (var h = 0; h < this.HiddenSize; h++)
+                InputToHiddenWeights[i] = new double[HiddenSize];
+                for (var h = 0; h < HiddenSize; h++)
                 {
-                    this.InputToHiddenWeights[i][h] = (this.random.NextDouble() - 0.5) * 2.0 * 0.1; // [-1..1]
+                    InputToHiddenWeights[i][h] = (random.NextDouble() - 0.5) * 2.0 * 0.1; // [-1..1]
                 }
             }
 
-            this.HiddenBiases = new double[this.HiddenSize];
-            for (var h = 0; h < this.HiddenSize; h++)
+            HiddenBiases = new double[HiddenSize];
+            for (var h = 0; h < HiddenSize; h++)
             {
-                this.HiddenBiases[h] = (this.random.NextDouble() - 0.5) * 2.0 * 0.1; // [-1..1]
+                HiddenBiases[h] = (random.NextDouble() - 0.5) * 2.0 * 0.1; // [-1..1]
             }
 
-            this.HiddenToOutputWeights = new double[this.HiddenSize][];
-            for (var h = 0; h < this.HiddenSize; h++)
+            HiddenToOutputWeights = new double[HiddenSize][];
+            for (var h = 0; h < HiddenSize; h++)
             {
-                this.HiddenToOutputWeights[h] = new double[this.OutputSize];
-                for (var o = 0; o < this.OutputSize; o++)
+                HiddenToOutputWeights[h] = new double[OutputSize];
+                for (var o = 0; o < OutputSize; o++)
                 {
-                    this.HiddenToOutputWeights[h][o] = (this.random.NextDouble() - 0.5) * 2.0 * 0.1; // [-1, 1]
+                    HiddenToOutputWeights[h][o] = (random.NextDouble() - 0.5) * 2.0 * 0.1; // [-1, 1]
                 }
             }
 
-            this.OutputBiases = new double[this.OutputSize];
-            for (var o = 0; o < this.OutputSize; o++)
+            OutputBiases = new double[OutputSize];
+            for (var o = 0; o < OutputSize; o++)
             {
-                this.OutputBiases[o] = (this.random.NextDouble() - 0.5) * 2.0 * 0.1; // [-1, 1]
+                OutputBiases[o] = (random.NextDouble() - 0.5) * 2.0 * 0.1; // [-1, 1]
             }
 
             // Initialise momentum arrays to zero with the same shapes as the weight matrices.
-            this.ihPrevWeightsDelta = new double[this.InputSize][];
-            for (var i = 0; i < this.InputSize; i++)
+            ihPrevWeightsDelta = new double[InputSize][];
+            for (var i = 0; i < InputSize; i++)
             {
-                this.ihPrevWeightsDelta[i] = new double[this.HiddenSize];
+                ihPrevWeightsDelta[i] = new double[HiddenSize];
             }
 
-            this.hPrevBiasesDelta = new double[this.HiddenSize];
-            this.hoPrevWeightsDelta = new double[this.HiddenSize][];
-            for (var h = 0; h < this.HiddenSize; h++)
+            hPrevBiasesDelta = new double[HiddenSize];
+            hoPrevWeightsDelta = new double[HiddenSize][];
+            for (var h = 0; h < HiddenSize; h++)
             {
-                this.hoPrevWeightsDelta[h] = new double[this.OutputSize];
+                hoPrevWeightsDelta[h] = new double[OutputSize];
             }
 
-            this.oPrevBiasesDelta = new double[this.OutputSize];
+            oPrevBiasesDelta = new double[OutputSize];
         }
     }
 }

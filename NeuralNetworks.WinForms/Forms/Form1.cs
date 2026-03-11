@@ -9,7 +9,8 @@ namespace Sde.NeuralNetworks.WinForms
     using System.Diagnostics;
     using System.Text.Json;
     using System.Windows.Forms;
-    using Sde.NeuralNetworks.Quadratics;
+    using Sde.NeuralNetworks.Networks;
+    using Sde.NeuralNetworks.Networks.Older;
     using Sde.NeuralNetworks.WinForms.Forms;
     using Sde.NeuralNetworks.WinForms.ViewModels;
 

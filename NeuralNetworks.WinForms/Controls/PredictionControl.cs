@@ -5,7 +5,7 @@
 namespace Sde.NeuralNetworks.WinForms.Controls
 {
     using System.ComponentModel;
-    using Sde.NeuralNetworks.Quadratics;
+    using Sde.NeuralNetworks.Networks;
 
     /// <summary>
     /// A control which allows the user to input values for a test case and

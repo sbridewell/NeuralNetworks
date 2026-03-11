@@ -5,7 +5,7 @@
 namespace Sde.NeuralNetworks.WinForms
 {
     using System.ComponentModel;
-    using Sde.NeuralNetworks.Quadratics;
+    using Sde.NeuralNetworks.Networks;
 
     /// <summary>
     /// Provides a visualiser for drawingg simple network diagrams, including circles and lines.

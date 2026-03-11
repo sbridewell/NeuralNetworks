@@ -2,7 +2,7 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-namespace Sde.NeuralNetworks.Quadratics
+namespace Sde.NeuralNetworks.Networks.Older
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Text.Json.Serialization;
