@@ -15,13 +15,13 @@ namespace Sde.NeuralNetworks.ActivationFunctionProviders
         /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
-            return (Math.Sqrt(Math.Pow(input, 2) + 1) - 1) / 2 + input;
+            return ((Math.Sqrt(Math.Pow(input, 2) + 1) - 1) / 2) + input;
         }
 
         /// <inheritdoc/>
         public double CalculateGradient(double input)
         {
-            return input / (2 * Math.Sqrt(Math.Pow(input, 2) + 1)) + 1;
+            return (input / (2 * Math.Sqrt(Math.Pow(input, 2) + 1))) + 1;
         }
     }
 }

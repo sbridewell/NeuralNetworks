@@ -21,7 +21,7 @@ namespace Sde.NeuralNetworks.ActivationFunctionProviders
         /// <inheritdoc/>
         public double CalculateGradient(double input)
         {
-            return 1 / Math.Pow(input, 2) + 1;
+            return (1 / Math.Pow(input, 2)) + 1;
         }
     }
 }

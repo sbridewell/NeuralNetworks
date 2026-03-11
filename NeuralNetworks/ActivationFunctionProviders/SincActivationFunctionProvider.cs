@@ -33,7 +33,7 @@ namespace Sde.NeuralNetworks.ActivationFunctionProviders
         {
             return input == 0 ?
                 0 :
-                Math.Cos(input) / input - Math.Sin(input) / Math.Pow(input, 2);
+                (Math.Cos(input) / input) - (Math.Sin(input) / Math.Pow(input, 2));
         }
     }
 }

@@ -5,7 +5,6 @@
 namespace Sde.NeuralNetworks.Quadratics
 {
     using Sde.NeuralNetworks.ActivationFunctionProviders;
-    using Sde.NeuralNetworks.ActivationProviders;
 
     /// <summary>
     /// A simple feedforward neural network for solving quadratic equations from first principles.
