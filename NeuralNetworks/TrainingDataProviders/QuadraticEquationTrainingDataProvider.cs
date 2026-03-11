@@ -1,15 +1,13 @@
-﻿// <copyright file="QuadraticDataProvider.cs" company="Simon Bridewell">
+﻿// <copyright file="QuadraticEquationTrainingDataProvider.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
-
-using Sde.NeuralNetworks.Quadratics;
 
 namespace Sde.NeuralNetworks.TrainingDataProviders
 {
     /// <summary>
     /// Provider of training / test data for solving quadratic equations.
     /// </summary>
-    public class QuadraticDataProvider : DataProvider
+    public class QuadraticEquationTrainingDataProvider : TrainingDataProvider
     {
         /// <inheritdoc/>
         public override string DisplayName => "Solve quadratic equation";

@@ -1,4 +1,4 @@
-﻿// <copyright file="IDataProvider.cs" company="Simon Bridewell">
+﻿// <copyright file="ITrainingDataProvider.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
@@ -9,7 +9,7 @@ namespace Sde.NeuralNetworks.TrainingDataProviders
     /// <summary>
     /// Interface for providers of training / test data for a neural network.
     /// </summary>
-    public interface IDataProvider : IHaveADisplayName
+    public interface ITrainingDataProvider : IHaveADisplayName
     {
         /// <summary>
         /// Gets or sets the percentage of the data to reserve for testing the network.

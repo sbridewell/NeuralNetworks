@@ -25,12 +25,12 @@ namespace Sde.NeuralNetworks.WinForms
             "StyleCop.CSharp.SpacingRules",
             "SA1000:Keywords should be spaced correctly",
             Justification = "Feels like I'm fighting the IDE")]
-        private List<IDataProvider> dataProviders = new();
+        private List<ITrainingDataProvider> dataProviders = new();
         [SuppressMessage(
             "StyleCop.CSharp.SpacingRules",
             "SA1000:Keywords should be spaced correctly",
             Justification = "Feels like I'm fighting the IDE")]
-        private List<ClassListItem<IDataProvider>> dataProviderListItems = new();
+        private List<ClassListItem<ITrainingDataProvider>> dataProviderListItems = new();
         private BindingSource formBindingSource;
         private BindingSource providerBindingSource;
 
@@ -88,18 +88,18 @@ namespace Sde.NeuralNetworks.WinForms
         }
 
         /// <summary>
-        /// Gets the available <see cref="IDataProvider"/> implementations.
+        /// Gets the available <see cref="ITrainingDataProvider"/> implementations.
         /// </summary>
-        public List<IDataProvider> DataProviders
+        public List<ITrainingDataProvider> DataProviders
         {
             get
             {
                 if (this.dataProviders == null || this.dataProviders.Count == 0)
                 {
-                    var assembly = typeof(IDataProvider).Assembly;
+                    var assembly = typeof(ITrainingDataProvider).Assembly;
                     this.dataProviders = assembly.GetTypes()
-                        .Where(t => typeof(IDataProvider).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
-                        .Select(t => (IDataProvider)Activator.CreateInstance(t) !)
+                        .Where(t => typeof(ITrainingDataProvider).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
+                        .Select(t => (ITrainingDataProvider)Activator.CreateInstance(t) !)
                         .ToList();
                 }
 
@@ -110,14 +110,14 @@ namespace Sde.NeuralNetworks.WinForms
         /// <summary>
         /// Gets a list of list items to use as the data source for the data provider combo box.
         /// </summary>
-        public List<ClassListItem<IDataProvider>> DataProviderListItems
+        public List<ClassListItem<ITrainingDataProvider>> DataProviderListItems
         {
             get
             {
                 if (this.dataProviderListItems == null || this.dataProviderListItems.Count == 0)
                 {
                     this.dataProviderListItems = this.DataProviders
-                        .Select(p => new ClassListItem<IDataProvider>(p)).ToList();
+                        .Select(p => new ClassListItem<ITrainingDataProvider>(p)).ToList();
                 }
 
                 return this.dataProviderListItems;
@@ -165,14 +165,14 @@ namespace Sde.NeuralNetworks.WinForms
                 DataMember = nameof(TrainingDataViewModel.DataProvider),
             };
 
-            this.BindNumericUpDown(this.numericUpDownLowerBound, nameof(IDataProvider.InputsLowerBound));
-            this.BindNumericUpDown(this.numericUpDownUpperBound, nameof(IDataProvider.InputsUpperBound));
-            this.BindNumericUpDown(this.numericUpDownIncrement, nameof(IDataProvider.InputsIncrement));
-            this.BindNumericUpDown(this.numericUpDownPercentageOfTrainingData, nameof(IDataProvider.PercentageOfTestData));
+            this.BindNumericUpDown(this.numericUpDownLowerBound, nameof(ITrainingDataProvider.InputsLowerBound));
+            this.BindNumericUpDown(this.numericUpDownUpperBound, nameof(ITrainingDataProvider.InputsUpperBound));
+            this.BindNumericUpDown(this.numericUpDownIncrement, nameof(ITrainingDataProvider.InputsIncrement));
+            this.BindNumericUpDown(this.numericUpDownPercentageOfTrainingData, nameof(ITrainingDataProvider.PercentageOfTestData));
 
             this.comboBoxDataProvider.DataSource = this.DataProviderListItems;
-            this.comboBoxDataProvider.DisplayMember = nameof(ClassListItem<IDataProvider>.DisplayName);
-            this.comboBoxDataProvider.ValueMember = nameof(ClassListItem<IDataProvider>.instance);
+            this.comboBoxDataProvider.DisplayMember = nameof(ClassListItem<ITrainingDataProvider>.DisplayName);
+            this.comboBoxDataProvider.ValueMember = nameof(ClassListItem<ITrainingDataProvider>.instance);
 
             this.comboBoxDataProvider.DataBindings.Add(
                 "SelectedValue",

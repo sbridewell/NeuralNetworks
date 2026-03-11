@@ -13,7 +13,7 @@ namespace Sde.NeuralNetworks.WinForms.ViewModels
     /// </summary>
     public class TrainingDataViewModel : INotifyPropertyChanged
     {
-        private IDataProvider? dataProvider;
+        private ITrainingDataProvider? dataProvider;
 
         /// <summary>
         /// The event which is raised when the value of a property changes.
@@ -23,7 +23,7 @@ namespace Sde.NeuralNetworks.WinForms.ViewModels
         /// <summary>
         /// Gets or sets the data provider to be edited in the form.
         /// </summary>
-        public IDataProvider? DataProvider
+        public ITrainingDataProvider? DataProvider
         {
             get => this.dataProvider;
             set

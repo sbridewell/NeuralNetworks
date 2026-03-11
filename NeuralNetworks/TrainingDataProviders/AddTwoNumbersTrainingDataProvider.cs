@@ -1,4 +1,4 @@
-﻿// <copyright file="AddTwoNumbersDataProvider.cs" company="Simon Bridewell">
+﻿// <copyright file="AddTwoNumbersTrainingDataProvider.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
@@ -7,7 +7,7 @@ namespace Sde.NeuralNetworks.TrainingDataProviders
     /// <summary>
     /// Provider of training / test data for solving the problem of adding two numbers together.
     /// </summary>
-    public class AddTwoNumbersDataProvider : DataProvider
+    public class AddTwoNumbersTrainingDataProvider : TrainingDataProvider
     {
         /// <inheritdoc/>
         public override string DisplayName => "Add two numbers";

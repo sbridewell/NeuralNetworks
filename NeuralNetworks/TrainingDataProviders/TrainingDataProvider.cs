@@ -1,4 +1,4 @@
-﻿// <copyright file="DataProvider.cs" company="Simon Bridewell">
+﻿// <copyright file="TrainingDataProvider.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
@@ -7,9 +7,9 @@ namespace Sde.NeuralNetworks.TrainingDataProviders
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Abstract base class for <see cref="IDataProvider"/> implementations.
+    /// Abstract base class for <see cref="ITrainingDataProvider"/> implementations.
     /// </summary>
-    public abstract class DataProvider : IDataProvider
+    public abstract class TrainingDataProvider : ITrainingDataProvider
     {
         /// <inheritdoc/>
         public abstract string DisplayName { get; }
