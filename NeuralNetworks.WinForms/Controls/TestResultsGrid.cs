@@ -7,7 +7,6 @@ namespace Sde.NeuralNetworks.WinForms
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using Sde.NeuralNetworks.Networks;
-    using Sde.NeuralNetworks.Quadratics;
 
     /// <summary>
     /// A data grid view for displaying the results of tests on a neural network,

@@ -56,8 +56,8 @@ namespace Sde.NeuralNetworks.TrainingDataProviders
             var outputs = new double[inputsAndOutputs.Length][];
             for (int i = 0; i < inputsAndOutputs.Length; i++)
             {
-                inputs[i] = inputsAndOutputs[i].Take(NumberOfInputs).ToArray();
-                outputs[i] = inputsAndOutputs[i].Skip(NumberOfInputs).Take(NumberOfOutputs).ToArray();
+                inputs[i] = inputsAndOutputs[i].Take(this.NumberOfInputs).ToArray();
+                outputs[i] = inputsAndOutputs[i].Skip(this.NumberOfInputs).Take(this.NumberOfOutputs).ToArray();
             }
 
             return (inputs, outputs);

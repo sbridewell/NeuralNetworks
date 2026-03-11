@@ -40,22 +40,22 @@ namespace Sde.NeuralNetworks.TrainingDataProviders
             Justification = "This array is too short to span multiple lines.")]
         public Complex[] SolveForX()
         {
-            if (A < 0.001 && A > -0.001)
+            if (this.A < 0.001 && this.A > -0.001)
             {
-                if (B < 0.001 && B > -0.001)
+                if (this.B < 0.001 && this.B > -0.001)
                 {
                     // c = 0
                 }
 
-                // linear equation bx + c = 0 => x - -c // b
-                return new Complex[] { new Complex(-C / B, 0), new Complex(-C / B, 0) };
+                // linear equation bx + c = 0 => x = -c / b
+                return new Complex[] { new Complex(-this.C / this.B, 0), new Complex(-this.C / this.B, 0) };
             }
 
-            double discriminant = B * B - 4 * A * C;
+            double discriminant = (this.B * this.B) - (4 * this.A * this.C);
             Complex sqrtDiscriminant = Complex.Sqrt(discriminant);
-            Complex root1 = (-B + sqrtDiscriminant) / (2 * A);
-            Complex root2 = (-B - sqrtDiscriminant) / (2 * A);
-            return [root1, root2];
+            Complex root1 = (-this.B + sqrtDiscriminant) / (2 * this.A);
+            Complex root2 = (-this.B - sqrtDiscriminant) / (2 * this.A);
+            return new Complex[] { root1, root2 };
         }
 
         /////// <summary>

@@ -22,11 +22,11 @@ namespace Sde.NeuralNetworks.TrainingDataProviders
         public override void GenerateData()
         {
             var records = new List<double[]>();
-            for (var a = InputsLowerBound; a <= InputsUpperBound; a += InputsIncrement)
+            for (var a = this.InputsLowerBound; a <= this.InputsUpperBound; a += this.InputsIncrement)
             {
-                for (var b = InputsLowerBound; b <= InputsUpperBound; b += InputsIncrement)
+                for (var b = this.InputsLowerBound; b <= this.InputsUpperBound; b += this.InputsIncrement)
                 {
-                    for (var c = InputsLowerBound; c <= InputsUpperBound; c += InputsIncrement)
+                    for (var c = this.InputsLowerBound; c <= this.InputsUpperBound; c += this.InputsIncrement)
                     {
                         if (a < 0.001 && a > -0.001 && b < 0.001 && b > -0.001)
                         {
@@ -51,10 +51,10 @@ namespace Sde.NeuralNetworks.TrainingDataProviders
             }
 
             var inputsAndOutputs = records.Shuffle().ToArray();
-            var numberOfTestRecords = (int)(inputsAndOutputs.Length * PercentageOfTestData / 100);
+            var numberOfTestRecords = (int)(inputsAndOutputs.Length * this.PercentageOfTestData / 100);
             var numberOfTrainingRecords = inputsAndOutputs.Length - numberOfTestRecords;
-            TrainingData = inputsAndOutputs.Take(numberOfTrainingRecords).ToArray();
-            TestData = inputsAndOutputs.Skip(numberOfTrainingRecords).Take(numberOfTestRecords).ToArray();
+            this.TrainingData = inputsAndOutputs.Take(numberOfTrainingRecords).ToArray();
+            this.TestData = inputsAndOutputs.Skip(numberOfTrainingRecords).Take(numberOfTestRecords).ToArray();
         }
     }
 }

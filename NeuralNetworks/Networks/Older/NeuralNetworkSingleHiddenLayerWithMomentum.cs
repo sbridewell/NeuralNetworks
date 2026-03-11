@@ -6,6 +6,7 @@ namespace Sde.NeuralNetworks.Networks.Older
 {
     using Sde.NeuralNetworks.ActivationFunctionProviders;
 
+#pragma warning disable SA1101 // Prefix local calls with this
     /// <summary>
     /// A simple feedforward neural network for solving quadratic equations from first principles.
     /// Has a single hidden layer.
@@ -406,4 +407,5 @@ namespace Sde.NeuralNetworks.Networks.Older
             oPrevBiasesDelta = new double[OutputSize];
         }
     }
+#pragma warning restore SA1101 // Prefix local calls with this
 }
