@@ -1,27 +1,27 @@
-﻿// <copyright file="LinearActivationProvider.cs" company="Simon Bridewell">
+﻿// <copyright file="BipolarActivationFunctionProvider.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
 namespace Sde.NeuralNetworks.ActivationProviders
 {
     /// <summary>
-    /// Linear activation function provider.
+    /// Bipolar activation function provider.
     /// </summary>
-    public class LinearActivationProvider : IActivationFunctionProvider
+    public class BipolarActivationFunctionProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
-        public string DisplayName => "Linear";
+        public string DisplayName => "Bipolar";
 
         /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
-            return input;
+            return input < 0 ? -1 : 1;
         }
 
         /// <inheritdoc/>
         public double CalculateGradient(double input)
         {
-            return 1;
+            return 0;
         }
     }
 }

@@ -75,19 +75,19 @@ namespace Sde.NeuralNetworks.Test.ActivationFunctionProviders
 #pragma warning disable SA1402 // File may only contain a single type
 #pragma warning disable SA1600 // Elements should be documented
 #pragma warning disable SA1502 // Element should not be on a single line
-    public class ArctangentActivationProviderTest : ActivationFunctionProviderTest<ArctangentActivationProvider> { }
-    public class BentIdentityActivationProviderTest : ActivationFunctionProviderTest<BentIdentityActivationProvider> { }
-    public class BipolarActivationProviderTest : ActivationFunctionProviderTest<BipolarActivationProvider> { }
-    public class BipolarSigmoidActivationProviderTest : ActivationFunctionProviderTest<BipolarSigmoidActivationProvider> { }
-    public class GaussianActivationProviderTest : ActivationFunctionProviderTest<GaussianActivationProvider> { }
-    public class HyperbolicTangentActivationProviderTest : ActivationFunctionProviderTest<HyperbolicTangentActivationProvider> { }
-    public class LinearActivationProviderTest : ActivationFunctionProviderTest<LinearActivationProvider> { }
-    public class LogisticActivationProviderTest : ActivationFunctionProviderTest<LogisticActivationProvider> { }
-    public class RectifiedLinearUnitActivationProviderTest : ActivationFunctionProviderTest<RectifiedLinearUnitActivationProvider> { }
+    public class ArctangentActivationProviderTest : ActivationFunctionProviderTest<ArctangentActivationFunctionProvider> { }
+    public class BentIdentityActivationProviderTest : ActivationFunctionProviderTest<BentIdentityActivationFunctionProvider> { }
+    public class BipolarActivationProviderTest : ActivationFunctionProviderTest<BipolarActivationFunctionProvider> { }
+    public class BipolarSigmoidActivationProviderTest : ActivationFunctionProviderTest<BipolarSigmoidActivationFunctionProvider> { }
+    public class GaussianActivationProviderTest : ActivationFunctionProviderTest<GaussianActivationFunctionProvider> { }
+    public class HyperbolicTangentActivationProviderTest : ActivationFunctionProviderTest<HyperbolicTangentActivationFunctionProvider> { }
+    public class LinearActivationProviderTest : ActivationFunctionProviderTest<LinearActivationFunctionProvider> { }
+    public class LogisticActivationProviderTest : ActivationFunctionProviderTest<LogisticActivationFunctionProvider> { }
+    public class RectifiedLinearUnitActivationProviderTest : ActivationFunctionProviderTest<RectifiedLinearUnitActivationFunctionProvider> { }
     ////public class SigmoidActivationProviderTest : ActivationFunctionProviderTest<SigmoidActivationProvider> { }
-    public class SincActivationProviderTest : ActivationFunctionProviderTest<SincActivationProvider> { }
-    public class SinusoidalActivationProviderTest : ActivationFunctionProviderTest<SinusoidalActivationProvider> { }
-    public class SoftPlusActivationProviderTest : ActivationFunctionProviderTest<SoftPlusActivationProvider> { }
+    public class SincActivationProviderTest : ActivationFunctionProviderTest<SincActivationFunctionProvider> { }
+    public class SinusoidalActivationProviderTest : ActivationFunctionProviderTest<SinusoidalActivationFunctionProvider> { }
+    public class SoftPlusActivationProviderTest : ActivationFunctionProviderTest<SoftPlusActivationFunctionProvider> { }
 #pragma warning restore SA1502 // Element should not be on a single line
 #pragma warning restore SA1600 // Elements should be documented
 #pragma warning restore SA1402 // File may only contain a single type

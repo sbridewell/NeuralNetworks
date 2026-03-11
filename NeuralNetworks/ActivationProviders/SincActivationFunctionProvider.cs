@@ -1,4 +1,4 @@
-﻿// <copyright file="SincActivationProvider.cs" company="Simon Bridewell">
+﻿// <copyright file="SincActivationFunctionProvider.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
@@ -9,7 +9,7 @@ namespace Sde.NeuralNetworks.ActivationProviders
     /// <summary>
     /// Sinc activation function provider.
     /// </summary>
-    public class SincActivationProvider : IActivationFunctionProvider
+    public class SincActivationFunctionProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
         public string DisplayName => "Sinc";

@@ -1,4 +1,4 @@
-﻿// <copyright file="BentIdentityActivationProvider.cs" company="Simon Bridewell">
+﻿// <copyright file="BentIdentityActivationFunctionProvider.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
@@ -7,7 +7,7 @@ namespace Sde.NeuralNetworks.ActivationProviders
     /// <summary>
     /// Bent identity activation function provider.
     /// </summary>
-    public class BentIdentityActivationProvider : IActivationFunctionProvider
+    public class BentIdentityActivationFunctionProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
         public string DisplayName => "Bent identity";

@@ -42,10 +42,10 @@ namespace Sde.NeuralNetworks.Quadratics
         }
 
         /// <inheritdoc/>
-        public IActivationFunctionProvider HiddenActivationFunctionProvider { get; set; } = new LinearActivationProvider();
+        public IActivationFunctionProvider HiddenActivationFunctionProvider { get; set; } = new LinearActivationFunctionProvider();
 
         /// <inheritdoc/>
-        public IActivationFunctionProvider OutputActivationFunctionProvider { get; set; } = new LinearActivationProvider();
+        public IActivationFunctionProvider OutputActivationFunctionProvider { get; set; } = new LinearActivationFunctionProvider();
 
         /// <inheritdoc/>
         public string HiddenActivationFunctionProviderName => this.HiddenActivationFunctionProvider.GetType().Name;

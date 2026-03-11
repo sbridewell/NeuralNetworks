@@ -1,4 +1,4 @@
-﻿// <copyright file="SigmoidActivationProvider.cs" company="Simon Bridewell">
+﻿// <copyright file="SigmoidActivationFunctionProvider.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
@@ -8,7 +8,7 @@
 ////    /// <summary>
 ////    /// Sigmoid activation function provider.
 ////    /// </summary>
-////    public class SigmoidActivationProvider : IActivationFunctionProvider
+////    public class SigmoidActivationFunctionProvider : IActivationFunctionProvider
 ////    {
 ////        /// <inheritdoc/>
 ////        public double CalculateActivation(double input)

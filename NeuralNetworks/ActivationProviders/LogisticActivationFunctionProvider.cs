@@ -1,4 +1,4 @@
-﻿// <copyright file="LogisticActivationProvider.cs" company="Simon Bridewell">
+﻿// <copyright file="LogisticActivationFunctionProvider.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
@@ -7,7 +7,7 @@ namespace Sde.NeuralNetworks.ActivationProviders
     /// <summary>
     /// Logistic activation function provider.
     /// </summary>
-    public class LogisticActivationProvider : IActivationFunctionProvider
+    public class LogisticActivationFunctionProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
         public string DisplayName => "Logistic";

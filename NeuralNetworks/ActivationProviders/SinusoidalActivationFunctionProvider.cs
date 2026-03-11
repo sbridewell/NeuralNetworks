@@ -1,27 +1,27 @@
-﻿// <copyright file="HyperbolicTangentActivationProvider.cs" company="Simon Bridewell">
+﻿// <copyright file="SinusoidalActivationFunctionProvider.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
 namespace Sde.NeuralNetworks.ActivationProviders
 {
     /// <summary>
-    /// Hyperbolic tangent activation function provider.
+    /// Sinusoidal activation function provider.
     /// </summary>
-    public class HyperbolicTangentActivationProvider : IActivationFunctionProvider
+    public class SinusoidalActivationFunctionProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
-        public string DisplayName => "Hyperbolic tangent";
+        public string DisplayName => "Sinusoidal";
 
         /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
-            return Math.Tanh(input);
+            return Math.Sin(input);
         }
 
         /// <inheritdoc/>
         public double CalculateGradient(double input)
         {
-            return 1 - Math.Pow(Math.Tanh(input), 2);
+            return Math.Cos(input);
         }
     }
 }

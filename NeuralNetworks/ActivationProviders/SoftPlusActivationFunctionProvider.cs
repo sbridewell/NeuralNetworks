@@ -1,27 +1,27 @@
-﻿// <copyright file="GaussianActivationProvider.cs" company="Simon Bridewell">
+﻿// <copyright file="SoftPlusActivationFunctionProvider.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
 namespace Sde.NeuralNetworks.ActivationProviders
 {
     /// <summary>
-    /// Gaussian activation function provider.
+    /// SoftPlus activation function provider.
     /// </summary>
-    public class GaussianActivationProvider : IActivationFunctionProvider
+    public class SoftPlusActivationFunctionProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
-        public string DisplayName => "Gaussian";
+        public string DisplayName => "Soft plus";
 
         /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
-            return Math.Exp(Math.Pow(-input, 2));
+            return Math.Log(1 + Math.Exp(input));
         }
 
         /// <inheritdoc/>
         public double CalculateGradient(double input)
         {
-            return 2 * input * Math.Exp(Math.Pow(-input, 2));
+            return 1 / (1 + Math.Exp(-input));
         }
     }
 }

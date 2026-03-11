@@ -1,27 +1,27 @@
-﻿// <copyright file="RectifiedLinearUnitActivationProvider.cs" company="Simon Bridewell">
+﻿// <copyright file="GaussianActivationFunctionProvider.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
 namespace Sde.NeuralNetworks.ActivationProviders
 {
     /// <summary>
-    /// Rectified Linear Unit (ReLU) activation function provider.
+    /// Gaussian activation function provider.
     /// </summary>
-    public class RectifiedLinearUnitActivationProvider : IActivationFunctionProvider
+    public class GaussianActivationFunctionProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
-        public string DisplayName => "Rectified linear unit";
+        public string DisplayName => "Gaussian";
 
         /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
-            return input < 0 ? 0 : input;
+            return Math.Exp(Math.Pow(-input, 2));
         }
 
         /// <inheritdoc/>
         public double CalculateGradient(double input)
         {
-            return input < 0 ? 0 : 1;
+            return 2 * input * Math.Exp(Math.Pow(-input, 2));
         }
     }
 }
