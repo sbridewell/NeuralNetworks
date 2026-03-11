@@ -5,7 +5,7 @@
 namespace Sde.NeuralNetworks.WinForms
 {
     using System.Data;
-    using Sde.NeuralNetworks.ActivationProviders;
+    using Sde.NeuralNetworks.ActivationFunctionProviders;
 
     /// <summary>
     /// User control to select an activation function provider and display its activation and gradient functions.

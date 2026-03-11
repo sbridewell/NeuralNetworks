@@ -4,6 +4,7 @@
 
 namespace Sde.NeuralNetworks.Quadratics
 {
+    using Sde.NeuralNetworks.ActivationFunctionProviders;
     using Sde.NeuralNetworks.ActivationProviders;
 
     /// <summary>

@@ -5,7 +5,7 @@
 namespace Sde.NeuralNetworks.WinForms
 {
     using System.Windows.Forms.DataVisualization.Charting;
-    using Sde.NeuralNetworks.ActivationProviders;
+    using Sde.NeuralNetworks.ActivationFunctionProviders;
 
     /// <summary>
     /// User control to display the graphs of an activation function and its gradient.

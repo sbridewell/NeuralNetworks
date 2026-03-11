@@ -4,7 +4,7 @@
 
 namespace Sde.NeuralNetworks.WinForms.Forms
 {
-    using Sde.NeuralNetworks.ActivationProviders;
+    using Sde.NeuralNetworks.ActivationFunctionProviders;
 
     /// <summary>
     /// Form which allows the user to select activation function providers.

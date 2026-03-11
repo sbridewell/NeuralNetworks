@@ -6,7 +6,7 @@ namespace Sde.NeuralNetworks.Test.ActivationFunctionProviders
 {
     using System.Text;
     using FluentAssertions;
-    using Sde.NeuralNetworks.ActivationProviders;
+    using Sde.NeuralNetworks.ActivationFunctionProviders;
 
     /// <summary>
     /// Unit tests for <see cref="IActivationFunctionProvider"/> implementations.

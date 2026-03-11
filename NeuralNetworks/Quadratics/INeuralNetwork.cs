@@ -6,7 +6,7 @@ namespace Sde.NeuralNetworks.Quadratics
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Text.Json.Serialization;
-    using Sde.NeuralNetworks.ActivationProviders;
+    using Sde.NeuralNetworks.ActivationFunctionProviders;
 
     /// <summary>
     /// Interface for a neural network intended to solve quadratic equations,

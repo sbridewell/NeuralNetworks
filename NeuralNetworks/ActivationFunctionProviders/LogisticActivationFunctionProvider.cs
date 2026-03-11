@@ -2,7 +2,12 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-namespace Sde.NeuralNetworks.ActivationProviders
+
+// <copyright file="LogisticActivationFunctionProvider.cs" company="Simon Bridewell">
+// Copyright (c) Simon Bridewell. All rights reserved.
+// </copyright>
+
+namespace Sde.NeuralNetworks.ActivationFunctionProviders
 {
     /// <summary>
     /// Logistic activation function provider.
@@ -21,7 +26,7 @@ namespace Sde.NeuralNetworks.ActivationProviders
         /// <inheritdoc/>
         public double CalculateGradient(double input)
         {
-            return this.CalculateActivation(input) * (1 - this.CalculateActivation(input));
+            return CalculateActivation(input) * (1 - CalculateActivation(input));
         }
     }
 }

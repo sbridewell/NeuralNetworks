@@ -2,7 +2,7 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-namespace Sde.NeuralNetworks.ActivationProviders
+namespace Sde.NeuralNetworks.ActivationFunctionProviders
 {
     /// <summary>
     /// Arctangent activation function provider.
@@ -21,7 +21,7 @@ namespace Sde.NeuralNetworks.ActivationProviders
         /// <inheritdoc/>
         public double CalculateGradient(double input)
         {
-            return (1 / Math.Pow(input, 2)) + 1;
+            return 1 / Math.Pow(input, 2) + 1;
         }
     }
 }

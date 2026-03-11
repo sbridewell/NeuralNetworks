@@ -2,7 +2,7 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-namespace Sde.NeuralNetworks.ActivationProviders
+namespace Sde.NeuralNetworks.ActivationFunctionProviders
 {
     using System.Diagnostics.CodeAnalysis;
 
@@ -33,7 +33,7 @@ namespace Sde.NeuralNetworks.ActivationProviders
         {
             return input == 0 ?
                 0 :
-                (Math.Cos(input) / input) - (Math.Sin(input) / Math.Pow(input, 2));
+                Math.Cos(input) / input - Math.Sin(input) / Math.Pow(input, 2);
         }
     }
 }

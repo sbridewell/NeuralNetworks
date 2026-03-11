@@ -5,7 +5,7 @@
 namespace Sde.NeuralNetworks.OtherImplementations.SingleNeuron
 {
     using System.Text;
-    using Sde.NeuralNetworks.ActivationProviders;
+    using Sde.NeuralNetworks.ActivationFunctionProviders;
 
 #pragma warning disable SA1407 // Arithmetic expressions should declare precedence
 #pragma warning disable SA1101 // Prefix local calls with this

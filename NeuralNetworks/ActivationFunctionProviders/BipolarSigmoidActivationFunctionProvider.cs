@@ -2,7 +2,7 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-namespace Sde.NeuralNetworks.ActivationProviders
+namespace Sde.NeuralNetworks.ActivationFunctionProviders
 {
     /// <summary>
     /// Bipolar sigmoid activation function provider.
@@ -21,7 +21,7 @@ namespace Sde.NeuralNetworks.ActivationProviders
         /// <inheritdoc/>
         public double CalculateGradient(double input)
         {
-            double activatedValue = this.CalculateActivation(input);
+            double activatedValue = CalculateActivation(input);
             return 0.5 * (1 + activatedValue) * (1 - activatedValue);
         }
     }

@@ -2,7 +2,7 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-namespace Sde.NeuralNetworks.ActivationProviders
+namespace Sde.NeuralNetworks.ActivationFunctionProviders
 {
     /// <summary>
     /// Bipolar activation function provider.
