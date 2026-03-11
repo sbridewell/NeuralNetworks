@@ -6,7 +6,7 @@ namespace Sde.NeuralNetworks.WinForms.ViewModels
 {
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
-    using Sde.NeuralNetworks.Quadratics;
+    using Sde.NeuralNetworks.TrainingDataProviders;
 
     /// <summary>
     /// View model for the training data properties form.

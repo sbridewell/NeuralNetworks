@@ -2,7 +2,7 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-namespace Sde.NeuralNetworks.Quadratics
+namespace Sde.NeuralNetworks.TrainingDataProviders
 {
     using System.Diagnostics.CodeAnalysis;
 

@@ -8,7 +8,7 @@ namespace Sde.NeuralNetworks.WinForms
     using System.ComponentModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Sde.NeuralNetworks.Quadratics;
+    using Sde.NeuralNetworks.TrainingDataProviders;
     using Sde.NeuralNetworks.WinForms.ViewModels;
 
     /// <summary>

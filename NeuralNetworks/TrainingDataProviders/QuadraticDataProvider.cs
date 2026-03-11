@@ -2,7 +2,9 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-namespace Sde.NeuralNetworks.Quadratics
+using Sde.NeuralNetworks.Quadratics;
+
+namespace Sde.NeuralNetworks.TrainingDataProviders
 {
     /// <summary>
     /// Provider of training / test data for solving quadratic equations.
@@ -22,11 +24,11 @@ namespace Sde.NeuralNetworks.Quadratics
         public override void GenerateData()
         {
             var records = new List<double[]>();
-            for (var a = this.InputsLowerBound; a <= this.InputsUpperBound; a += this.InputsIncrement)
+            for (var a = InputsLowerBound; a <= InputsUpperBound; a += InputsIncrement)
             {
-                for (var b = this.InputsLowerBound; b <= this.InputsUpperBound; b += this.InputsIncrement)
+                for (var b = InputsLowerBound; b <= InputsUpperBound; b += InputsIncrement)
                 {
-                    for (var c = this.InputsLowerBound; c <= this.InputsUpperBound; c += this.InputsIncrement)
+                    for (var c = InputsLowerBound; c <= InputsUpperBound; c += InputsIncrement)
                     {
                         if (a < 0.001 && a > -0.001 && b < 0.001 && b > -0.001)
                         {
@@ -51,10 +53,10 @@ namespace Sde.NeuralNetworks.Quadratics
             }
 
             var inputsAndOutputs = records.Shuffle().ToArray();
-            var numberOfTestRecords = (int)(inputsAndOutputs.Length * this.PercentageOfTestData / 100);
+            var numberOfTestRecords = (int)(inputsAndOutputs.Length * PercentageOfTestData / 100);
             var numberOfTrainingRecords = inputsAndOutputs.Length - numberOfTestRecords;
-            this.TrainingData = inputsAndOutputs.Take(numberOfTrainingRecords).ToArray();
-            this.TestData = inputsAndOutputs.Skip(numberOfTrainingRecords).Take(numberOfTestRecords).ToArray();
+            TrainingData = inputsAndOutputs.Take(numberOfTrainingRecords).ToArray();
+            TestData = inputsAndOutputs.Skip(numberOfTrainingRecords).Take(numberOfTestRecords).ToArray();
         }
     }
 }

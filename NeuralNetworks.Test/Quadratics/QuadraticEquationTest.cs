@@ -7,7 +7,7 @@ namespace Sde.NeuralNetworks.Test.Quadratics
     using System.Diagnostics.CodeAnalysis;
     using System.Numerics;
     using FluentAssertions;
-    using Sde.NeuralNetworks.Quadratics;
+    using Sde.NeuralNetworks.TrainingDataProviders;
 
     /// <summary>
     /// Unit tests for the <see cref="QuadraticEquation"/> class.
