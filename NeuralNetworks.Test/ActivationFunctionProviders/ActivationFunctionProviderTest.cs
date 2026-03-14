@@ -80,26 +80,26 @@ namespace Sde.NeuralNetworks.Test.ActivationFunctionProviders
         : ActivationFunctionProviderTest<ArctangentActivationFunctionProvider>(helper) { }
     public class BentIdentityActivationProviderTest(ITestOutputHelper helper)
         : ActivationFunctionProviderTest<BentIdentityActivationFunctionProvider>(helper) { }
-    public class BipolarActivationProviderTest (ITestOutputHelper helper)
+    public class BipolarActivationProviderTest(ITestOutputHelper helper)
         : ActivationFunctionProviderTest<BipolarActivationFunctionProvider>(helper) { }
-    public class BipolarSigmoidActivationProviderTest (ITestOutputHelper helper)
+    public class BipolarSigmoidActivationProviderTest(ITestOutputHelper helper)
         : ActivationFunctionProviderTest<BipolarSigmoidActivationFunctionProvider>(helper) { }
-    public class GaussianActivationProviderTest (ITestOutputHelper helper)
+    public class GaussianActivationProviderTest(ITestOutputHelper helper)
         : ActivationFunctionProviderTest<GaussianActivationFunctionProvider>(helper) { }
-    public class HyperbolicTangentActivationProviderTest (ITestOutputHelper helper)
+    public class HyperbolicTangentActivationProviderTest(ITestOutputHelper helper)
         : ActivationFunctionProviderTest<HyperbolicTangentActivationFunctionProvider>(helper) { }
-    public class LinearActivationProviderTest (ITestOutputHelper helper)
+    public class LinearActivationProviderTest(ITestOutputHelper helper)
         : ActivationFunctionProviderTest<LinearActivationFunctionProvider>(helper) { }
-    public class LogisticActivationProviderTest (ITestOutputHelper helper)
+    public class LogisticActivationProviderTest(ITestOutputHelper helper)
         : ActivationFunctionProviderTest<LogisticActivationFunctionProvider>(helper) { }
-    public class RectifiedLinearUnitActivationProviderTest (ITestOutputHelper helper)
+    public class RectifiedLinearUnitActivationProviderTest(ITestOutputHelper helper)
         : ActivationFunctionProviderTest<RectifiedLinearUnitActivationFunctionProvider>(helper) { }
     ////public class SigmoidActivationProviderTest : ActivationFunctionProviderTest<SigmoidActivationProvider> { }
-    public class SincActivationProviderTest (ITestOutputHelper helper)
+    public class SincActivationProviderTest(ITestOutputHelper helper)
         : ActivationFunctionProviderTest<SincActivationFunctionProvider>(helper) { }
-    public class SinusoidalActivationProviderTest (ITestOutputHelper helper)
+    public class SinusoidalActivationProviderTest(ITestOutputHelper helper)
         : ActivationFunctionProviderTest<SinusoidalActivationFunctionProvider>(helper) { }
-    public class SoftPlusActivationProviderTest (ITestOutputHelper helper)
+    public class SoftPlusActivationProviderTest(ITestOutputHelper helper)
         : ActivationFunctionProviderTest<SoftPlusActivationFunctionProvider>(helper) { }
 #pragma warning restore SA1502 // Element should not be on a single line
 #pragma warning restore SA1600 // Elements should be documented
