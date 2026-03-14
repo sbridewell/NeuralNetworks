@@ -16,8 +16,8 @@ namespace Sde.NeuralNetworks.Benchmarks
         [Params(1000, 10000)]
         public int Length { get; set; }
 
-        private Vector vA = null!;
-        private Vector vB = null!;
+        private Vector vA;
+        private Vector vB;
         private double[] arrA = null!;
         private double[] arrB = null!;
         private double[][] jagged = null!;
