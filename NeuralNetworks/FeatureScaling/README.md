@@ -1,0 +1,3 @@
+﻿# FeatureScaling folder
+
+This folder contains different implementations of feature scaling algorithms. Feature scaling is a technique used to normalize the range of independent variables or features of data. In machine learning, it is often necessary to scale features to ensure that they are on the same scale. For example if one feature is age and another is salary, without scaling the salary feature would dominate the calculations because its values are so much larger.
