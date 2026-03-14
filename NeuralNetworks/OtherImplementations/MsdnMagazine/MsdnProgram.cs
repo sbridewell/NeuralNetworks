@@ -6,11 +6,13 @@
 namespace Sde.NeuralNetworks.OtherImplementations.MsdnMagazine
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
 #pragma warning disable SA1407 // Arithmetic expressions should declare precedence
     /// <summary>
     /// Class containing the main entry point for the MSDN back-propagation demo.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class MsdnProgram
     {
         /// <summary>

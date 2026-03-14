@@ -12,7 +12,7 @@ namespace Sde.NeuralNetworks.Test.ActivationFunctionProviders
     /// Unit tests for <see cref="IActivationFunctionProvider"/> implementations.
     /// </summary>
     /// <typeparam name="T">The type of activation function provider being tested.</typeparam>
-    public abstract class ActivationFunctionProviderTest<T>
+    public abstract class ActivationFunctionProviderTest<T>(ITestOutputHelper output)
         where T : IActivationFunctionProvider, new()
     {
         /// <summary>
@@ -38,6 +38,7 @@ namespace Sde.NeuralNetworks.Test.ActivationFunctionProviders
             const double absoluteTolerance = 1e-6;
             const double relativeTolerance = 1e-3; // 0.1%
             var provider = new T();
+            output.WriteLine($"Display name: '{provider.DisplayName}'");
             var providerName = provider.GetType().Name;
             var fPlus = provider.CalculateActivation(input + h);
             var fMinus = provider.CalculateActivation(input - h);
@@ -75,19 +76,31 @@ namespace Sde.NeuralNetworks.Test.ActivationFunctionProviders
 #pragma warning disable SA1402 // File may only contain a single type
 #pragma warning disable SA1600 // Elements should be documented
 #pragma warning disable SA1502 // Element should not be on a single line
-    public class ArctangentActivationProviderTest : ActivationFunctionProviderTest<ArctangentActivationFunctionProvider> { }
-    public class BentIdentityActivationProviderTest : ActivationFunctionProviderTest<BentIdentityActivationFunctionProvider> { }
-    public class BipolarActivationProviderTest : ActivationFunctionProviderTest<BipolarActivationFunctionProvider> { }
-    public class BipolarSigmoidActivationProviderTest : ActivationFunctionProviderTest<BipolarSigmoidActivationFunctionProvider> { }
-    public class GaussianActivationProviderTest : ActivationFunctionProviderTest<GaussianActivationFunctionProvider> { }
-    public class HyperbolicTangentActivationProviderTest : ActivationFunctionProviderTest<HyperbolicTangentActivationFunctionProvider> { }
-    public class LinearActivationProviderTest : ActivationFunctionProviderTest<LinearActivationFunctionProvider> { }
-    public class LogisticActivationProviderTest : ActivationFunctionProviderTest<LogisticActivationFunctionProvider> { }
-    public class RectifiedLinearUnitActivationProviderTest : ActivationFunctionProviderTest<RectifiedLinearUnitActivationFunctionProvider> { }
+    public class ArctangentActivationProviderTest(ITestOutputHelper helper)
+        : ActivationFunctionProviderTest<ArctangentActivationFunctionProvider>(helper) { }
+    public class BentIdentityActivationProviderTest(ITestOutputHelper helper)
+        : ActivationFunctionProviderTest<BentIdentityActivationFunctionProvider>(helper) { }
+    public class BipolarActivationProviderTest (ITestOutputHelper helper)
+        : ActivationFunctionProviderTest<BipolarActivationFunctionProvider>(helper) { }
+    public class BipolarSigmoidActivationProviderTest (ITestOutputHelper helper)
+        : ActivationFunctionProviderTest<BipolarSigmoidActivationFunctionProvider>(helper) { }
+    public class GaussianActivationProviderTest (ITestOutputHelper helper)
+        : ActivationFunctionProviderTest<GaussianActivationFunctionProvider>(helper) { }
+    public class HyperbolicTangentActivationProviderTest (ITestOutputHelper helper)
+        : ActivationFunctionProviderTest<HyperbolicTangentActivationFunctionProvider>(helper) { }
+    public class LinearActivationProviderTest (ITestOutputHelper helper)
+        : ActivationFunctionProviderTest<LinearActivationFunctionProvider>(helper) { }
+    public class LogisticActivationProviderTest (ITestOutputHelper helper)
+        : ActivationFunctionProviderTest<LogisticActivationFunctionProvider>(helper) { }
+    public class RectifiedLinearUnitActivationProviderTest (ITestOutputHelper helper)
+        : ActivationFunctionProviderTest<RectifiedLinearUnitActivationFunctionProvider>(helper) { }
     ////public class SigmoidActivationProviderTest : ActivationFunctionProviderTest<SigmoidActivationProvider> { }
-    public class SincActivationProviderTest : ActivationFunctionProviderTest<SincActivationFunctionProvider> { }
-    public class SinusoidalActivationProviderTest : ActivationFunctionProviderTest<SinusoidalActivationFunctionProvider> { }
-    public class SoftPlusActivationProviderTest : ActivationFunctionProviderTest<SoftPlusActivationFunctionProvider> { }
+    public class SincActivationProviderTest (ITestOutputHelper helper)
+        : ActivationFunctionProviderTest<SincActivationFunctionProvider>(helper) { }
+    public class SinusoidalActivationProviderTest (ITestOutputHelper helper)
+        : ActivationFunctionProviderTest<SinusoidalActivationFunctionProvider>(helper) { }
+    public class SoftPlusActivationProviderTest (ITestOutputHelper helper)
+        : ActivationFunctionProviderTest<SoftPlusActivationFunctionProvider>(helper) { }
 #pragma warning restore SA1502 // Element should not be on a single line
 #pragma warning restore SA1600 // Elements should be documented
 #pragma warning restore SA1402 // File may only contain a single type

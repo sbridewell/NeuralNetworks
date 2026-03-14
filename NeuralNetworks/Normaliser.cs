@@ -9,6 +9,8 @@ namespace Sde.NeuralNetworks
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
+    // TODO: should be able to replace this with Euclidian normalisation
+
     /// <summary>
     /// Helper methods for normalising data to fit a given range of values
     /// whilst preserving the distribution of the data.

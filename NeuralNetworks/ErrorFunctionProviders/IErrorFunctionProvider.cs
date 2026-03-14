@@ -16,13 +16,15 @@ namespace Sde.NeuralNetworks.ErrorFunctionProviders
         /// </summary>
         /// <param name="expectedOutput">The expected output value.</param>
         /// <param name="actualOutput">The actual output value.</param>
-        /// <param name="stabilityEpsilon">
-        /// Small positive value used to avoid division by zero and improve numerical stability.
-        /// Defaults to 1e-12.
-        /// </param>
         /// <returns>The calculated error.</returns>
-        double CalculateError(double expectedOutput, double actualOutput/*, double stabilityEpsilon = 1e-12*/);
+        double CalculateError(double expectedOutput, double actualOutput);
 
-        double CalculateGradient(double expectedOutput, double actualOutput/*, double stabilityEpsilon = 1e-12*/);
+        /// <summary>
+        /// Calculates the error gradient between an expected value and an actual value.
+        /// </summary>
+        /// <param name="expectedOutput">The expected output value.</param>
+        /// <param name="actualOutput">The actual output value.</param>
+        /// <returns>The calculated error.</returns>
+        double CalculateGradient(double expectedOutput, double actualOutput);
     }
 }

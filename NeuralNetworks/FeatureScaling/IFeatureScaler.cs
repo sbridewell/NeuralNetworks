@@ -6,6 +6,8 @@ namespace Sde.NeuralNetworks.FeatureScaling
 {
     using System.Diagnostics.CodeAnalysis;
 
+    // TODO: read https://www.freecodecamp.org/news/learn-linear-algebra-for-machine-learning
+
     /// <summary>
     /// Interface for a feature scaler, which is class of stastical techniques
     /// for ensuring that the values of data items (features) in a data set
@@ -35,32 +37,11 @@ namespace Sde.NeuralNetworks.FeatureScaling
     public interface IFeatureScaler
     {
         /// <summary>
-        /// Scales the given unscaled values, which are expected to be in the form
-        /// of a 2D array, where each row corresponds to an instance of the type of
-        /// object in the population and sample data, and each column corresponds
-        /// to a feature (data item).
+        /// Scales the supplied vector.
         /// </summary>
-        /// <param name="unscaledValues">The unscaled values to scale.</param>
-        /// <returns>The scaled values.</returns>
-        /// <remarks>
-        /// This method is only really implemented for benchmark testing against
-        /// the Matrix class.
-        /// </remarks>
-        [SuppressMessage(
-            "Blocker Code Smell",
-            "S2368:Public methods should not have multidimensional array parameters",
-            Justification = "By design")]
-        double[,] Scale(double[,] unscaledValues);
-
-        /// <summary>
-        /// Scales the given unscaled values, which are expected to be in the form
-        /// of a matrix, where each row corresponds to an instance of the type of
-        /// object in the population and sample data, and each column corresponds
-        /// to a feature (data item).
-        /// </summary>
-        /// <param name="unscaledValues">The unscaled values to scale.</param>
-        /// <returns>The scaled values.</returns>
-        Matrix Scale(Matrix unscaledValues);
+        /// <param name="unscaledVector">The vector to scale.</param>
+        /// <returns>The scaled vector.</returns>
+        Vector Scale(Vector unscaledVector);
 
         // TODO: ScaleBack method, which is the inverse function of the Scale method.
     }

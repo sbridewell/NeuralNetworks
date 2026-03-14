@@ -4,6 +4,7 @@
 
 namespace Sde.NeuralNetworks.OtherImplementations.SingleNeuron
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using Sde.NeuralNetworks.ActivationFunctionProviders;
 
@@ -13,6 +14,7 @@ namespace Sde.NeuralNetworks.OtherImplementations.SingleNeuron
     /// A neural network consisting of a single neuron (perceptron), which
     /// allows injection of different activation functions.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class SingleNeuronNetwork
     {
         private readonly IActivationFunctionProvider activationProvider;

@@ -4,12 +4,14 @@
 
 namespace Sde.NeuralNetworks.OtherImplementations.SingleNeuron
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
 #pragma warning disable SA1101 // Prefix local calls with this
     /// <summary>
     /// A single item in a set of data used to train a neural network.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class TrainingDatum
     {
         /// <summary>

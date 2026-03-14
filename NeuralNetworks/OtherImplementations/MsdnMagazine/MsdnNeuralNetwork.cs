@@ -14,6 +14,7 @@ namespace Sde.NeuralNetworks.OtherImplementations.MsdnMagazine
     /// A neural network with back propagation, as described in MSDN Magazine.
     /// Has an input layer, one hidden layer, and an output layer.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class MsdnNeuralNetwork
     {
         /// <summary>
