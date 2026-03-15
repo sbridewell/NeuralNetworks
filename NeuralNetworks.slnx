@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/Demos/" />
+  <Folder Name="/Demos/Month 1/">
+    <Project Path="VectorDemo.Winforms/VectorDemo.Winforms.csproj" Id="414d18b4-7434-45ba-a0ea-69a2ce780d4a" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".github/copilot-instructions.md" />
     <File Path=".gitignore" />
