@@ -5,6 +5,7 @@
 namespace Sde.NeuralNetworks.Test
 {
     using System;
+    using System.Security.AccessControl;
     using FluentAssertions;
     using Sde.NeuralNetworks;
     using Xunit;
@@ -14,88 +15,628 @@ namespace Sde.NeuralNetworks.Test
     /// </summary>
     public class MatrixTest
     {
+        #region test case record definitions
+
         /// <summary>
-        /// Verifies that row and column counts and the indexer get and set values correctly.
+        /// Test case for equality or inequality of two matrices.
         /// </summary>
-        [Fact]
-        public void RowAndColumnAndIndexer_GetAndSet_WorksAsExpected()
+        /// <param name="left">The left hand side matrix.</param>
+        /// <param name="right">The right hand side matrix.</param>
+        /// <param name="shouldBeEqual">
+        /// True if the matrices should be considered equal, otherwise false.
+        /// </param>
+        public record MatrixEqualityTestCase(Matrix left, Matrix right, bool shouldBeEqual);
+
+        /// <summary>
+        /// Test case for an operation which takes a matrix as input and produces a matrix as output.
+        /// </summary>
+        /// <param name="inputMatrix">The input matrix.</param>
+        /// <param name="expectedResult">The expected result of the operation.</param>
+        public record MatrixMatrixTestCase(Matrix inputMatrix, Matrix expectedResult);
+
+        /// <summary>
+        /// Test case for an operation which takes two matrices as input and produces a matrix as output.
+        /// such as addition or multiplication.
+        /// </summary>
+        /// <param name="left">The left hand operand.</param>
+        /// <param name="right">The right hand operand.</param>
+        /// <param name="expectedResult">The expected result of the operation.</param>
+        public record MatrixMatrixMatrixTestCase(Matrix left, Matrix right, Matrix expectedResult);
+
+        /// <summary>
+        /// Test case for an operation which takes a matrix and a scalar as input and produces a matrix as output.
+        /// </summary>
+        /// <param name="matrix">The input matrix</param>
+        /// <param name="scalar">The input scalar.</param>
+        /// <param name="expectedResult">The expected result of the operation.</param>
+        public record MatrixScalarMatrixTestCase(Matrix matrix, double scalar, Matrix expectedResult);
+
+        /// <summary>
+        /// Test case for an operation which takes a matrix as input and produces an array of vectors as output.
+        /// </summary>
+        /// <param name="inputMatrix">The input matrix.</param>
+        /// <param name="expectedVectors">The expected result of the operation.</param>
+        public record MatrixVectorArrrayTestCase(Matrix inputMatrix, Vector[] expectedVectors);
+
+        #endregion
+
+        #region test case names
+
+        /// <summary>
+        /// Gets the names of the equality test cases.
+        /// </summary>
+        public static TheoryData<string> EqualityTestCaseNames => new TheoryData<string>(EqualityTestCases.Keys);
+
+        /// <summary>
+        /// Gets the names of the column vector test cases.
+        /// </summary>
+        public static TheoryData<string> ColumnVectorsTestCaseNames => new TheoryData<string>(ColumnVectorsTestCases.Keys);
+
+        /// <summary>
+        /// Gets the names of the row vector test cases.
+        /// </summary>
+        public static TheoryData<string> RowVectorsTestCaseNames => new TheoryData<string>(RowVectorsTestCases.Keys);
+
+        /// <summary>
+        /// Gets the names of the addition test cases.
+        /// </summary>
+        public static TheoryData<string> AdditionTestCaseNames => new TheoryData<string>(AdditionTestCases.Keys);
+
+        /// <summary>
+        /// Gets the names of the subtraction test cases.
+        /// </summary>
+        public static TheoryData<string> SubtractionTestCaseNames => new TheoryData<string>(SubtractionTestCases.Keys);
+
+        /// <summary>
+        /// Gets the names of the scalar multiplication test cases.
+        /// </summary>
+        public static TheoryData<string> ScalarMultiplicationTestCaseNames => new TheoryData<string>(ScalarMultiplicationTestCases.Keys);
+
+        /// <summary>
+        /// Gets the names of the element-wise multiplication test cases.
+        /// </summary>
+        public static TheoryData<string> ElementWiseMultiplicationTestCaseNames
+            => new TheoryData<string>(ElementWiseMultiplicationTestCases.Keys);
+
+        /// <summary>
+        /// Gets the names of the transpose test cases.
+        /// </summary>
+        public static TheoryData<string> TransposeTestCaseNames => new TheoryData<string>(TransponseTestCases.Keys);
+
+        #endregion
+
+        #region test cases
+
+        private static Dictionary<string, MatrixEqualityTestCase> EqualityTestCases
         {
-            // Arrange
-            var data = new double[,]
+            get
             {
-                { 1.0, 2.0, 3.0 },
-                { 4.0, 5.0, 6.0 },
+                var data = new Dictionary<string, MatrixEqualityTestCase>();
+                var sameInstance = CreateMatrix(new double[,] { { 1.0 } });
+                data.Add(
+                    "Same instance",
+                    new MatrixEqualityTestCase(
+                        left: sameInstance,
+                        right: sameInstance,
+                        shouldBeEqual: true));
+                data.Add(
+                    "Right hand side is null",
+                    new MatrixEqualityTestCase(
+                        left: CreateMatrix(new double[,] { { 1.0 } }),
+                        right: null!,
+                        shouldBeEqual: false));
+                data.Add(
+                    "Same dimensions and values",
+                    new MatrixEqualityTestCase(
+                        left: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0 },
+                            { 3.0, 4.0 },
+                        }),
+                        right: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0 },
+                            { 3.0, 4.0 },
+                        }),
+                        shouldBeEqual: true));
+                data.Add(
+                    "Same dimensions different values",
+                    new MatrixEqualityTestCase(
+                        left: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0 },
+                            { 3.0, 4.0 },
+                        }),
+                        right: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0 },
+                            { 3.0, 5.0 },
+                        }),
+                        shouldBeEqual: false));
+                data.Add(
+                    "Different row counts",
+                    new MatrixEqualityTestCase(
+                        left: CreateMatrix(new double[,]
+                        {
+                            { 1.0 },
+                        }),
+                        right: CreateMatrix(new double[,]
+                        {
+                            { 1.0 },
+                            { 2.0 },
+                        }),
+                        shouldBeEqual: false));
+                data.Add(
+                    "Different column counts",
+                    new MatrixEqualityTestCase(
+                        left: CreateMatrix(new double[,]
+                        {
+                            { 1.0 },
+                        }),
+                        right: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0 },
+                        }),
+                        shouldBeEqual: false));
+                return data;
+            }
+        }
+
+#pragma warning disable SA1118 // Parameter should not span multiple lines
+        private static Dictionary<string, MatrixVectorArrrayTestCase> ColumnVectorsTestCases
+        {
+            get
+            {
+                var data = new Dictionary<string, MatrixVectorArrrayTestCase>();
+                data.Add(
+                    "2x2",
+                    new MatrixVectorArrrayTestCase(
+                        inputMatrix: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0 },
+                            { 3.0, 4.0 },
+                        }),
+                        expectedVectors: new[]
+                        {
+                            new Vector(new double[] { 1.0, 3.0 }),
+                            new Vector(new double[] { 2.0, 4.0 }),
+                        }));
+                data.Add(
+                    "2x3",
+                    new MatrixVectorArrrayTestCase(
+                        inputMatrix: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0, 3.0 },
+                            { 4.0, 5.0, 6.0 },
+                        }),
+                        expectedVectors: new[]
+                        {
+                            new Vector(new double[] { 1.0, 4.0 }),
+                            new Vector(new double[] { 2.0, 5.0 }),
+                            new Vector(new double[] { 3.0, 6.0 }),
+                        }));
+                return data;
+            }
+        }
+
+        private static Dictionary<string, MatrixVectorArrrayTestCase> RowVectorsTestCases
+        {
+            get
+            {
+                var data = new Dictionary<string, MatrixVectorArrrayTestCase>();
+                data.Add(
+                    "2x2",
+                    new MatrixVectorArrrayTestCase(
+                        inputMatrix: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0 },
+                            { 3.0, 4.0 },
+                        }),
+                        expectedVectors: new[]
+                        {
+                            new Vector(new double[] { 1.0, 2.0 }),
+                            new Vector(new double[] { 3.0, 4.0 }),
+                        }));
+                data.Add(
+                    "2x3",
+                    new MatrixVectorArrrayTestCase(
+                        inputMatrix: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0, 3.0 },
+                            { 4.0, 5.0, 6.0 },
+                        }),
+                        expectedVectors: new[]
+                        {
+                            new Vector(new double[] { 1.0, 2.0, 3.0 }),
+                            new Vector(new double[] { 4.0, 5.0, 6.0 }),
+                        }));
+                return data;
+            }
+        }
+#pragma warning restore SA1118 // Parameter should not span multiple lines
+
+        private static Dictionary<string, MatrixMatrixMatrixTestCase> AdditionTestCases
+        {
+            get
+            {
+                var data = new Dictionary<string, MatrixMatrixMatrixTestCase>();
+                data.Add(
+                    "2x2",
+                    new MatrixMatrixMatrixTestCase(
+                        left: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0 },
+                            { 3.0, 4.0 },
+                        }),
+                        right: CreateMatrix(new double[,]
+                        {
+                            { 5.0, 6.0 },
+                            { 7.0, 8.0 },
+                        }),
+                        expectedResult: CreateMatrix(new double[,]
+                        {
+                            { 6.0, 8.0 },
+                            { 10.0, 12.0 },
+                        })));
+                data.Add(
+                    "2x3",
+                    new MatrixMatrixMatrixTestCase(
+                        left: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0, 3.0 },
+                            { 4.0, 5.0, 6.0 },
+                        }),
+                        right: CreateMatrix(new double[,]
+                        {
+                            { 7.0, 8.0, 9.0 },
+                            { 10.0, 11.0, 12.0 },
+                        }),
+                        expectedResult: CreateMatrix(new double[,]
+                        {
+                            { 8.0, 10.0, 12.0 },
+                            { 14.0, 16.0, 18.0 },
+                        })));
+                return data;
+            }
+        }
+
+        private static Dictionary<string, MatrixMatrixMatrixTestCase> SubtractionTestCases
+        {
+            get
+            {
+                var data = new Dictionary<string, MatrixMatrixMatrixTestCase>();
+                data.Add(
+                    "2x2",
+                    new MatrixMatrixMatrixTestCase(
+                        left: CreateMatrix(new double[,]
+                        {
+                            { 2.0, 4.0 },
+                            { 6.0, 8.0 },
+                        }),
+                        right: CreateMatrix(new double[,]
+                        {
+                            { 5.0, 6.0 },
+                            { 7.0, 8.0 },
+                        }),
+                        expectedResult: CreateMatrix(new double[,]
+                        {
+                            { -3.0, -2.0 },
+                            { -1.0, 0.0 },
+                        })));
+                data.Add(
+                    "2x3",
+                    new MatrixMatrixMatrixTestCase(
+                        left: CreateMatrix(new double[,]
+                        {
+                            { 2.0, 4.0, 6.0 },
+                            { 8.0, 10.0, 12.0 },
+                        }),
+                        right: CreateMatrix(new double[,]
+                        {
+                            { 7.0, 8.0, 9.0 },
+                            { 10.0, 11.0, 12.0 },
+                        }),
+                        expectedResult: CreateMatrix(new double[,]
+                        {
+                            { -5.0, -4.0, -3.0 },
+                            { -2.0, -1.0, 0.0 },
+                        })));
+                return data;
+            }
+        }
+
+        private static Dictionary<string, MatrixScalarMatrixTestCase> ScalarMultiplicationTestCases
+        {
+            get
+            {
+                var data = new Dictionary<string, MatrixScalarMatrixTestCase>();
+                data.Add(
+                    "2x2 times 2.0",
+                    new MatrixScalarMatrixTestCase(
+                        matrix: CreateMatrix(new double[,]
+                        {
+                            { 1.5, -2.0 },
+                            { 0.0, 4.0 },
+                        }),
+                        scalar: 2.0,
+                        expectedResult: CreateMatrix(new double[,]
+                        {
+                            { 3.0, -4.0 },
+                            { 0.0, 8.0 },
+                        })));
+                data.Add(
+                    "2x3 times -1.5",
+                    new MatrixScalarMatrixTestCase(
+                        matrix: CreateMatrix(new double[,]
+                        {
+                            { 1.0, -2.0, 3.0 },
+                            { -4.0, 5.0, -6.0 },
+                        }),
+                        scalar: -1.5,
+                        expectedResult: CreateMatrix(new double[,]
+                        {
+                            { -1.5, 3.0, -4.5 },
+                            { 6.0, -7.5, 9.0 },
+                        })));
+                return data;
+            }
+        }
+
+        private static Dictionary<string, MatrixMatrixMatrixTestCase> ElementWiseMultiplicationTestCases
+        {
+            get
+            {
+                var data = new Dictionary<string, MatrixMatrixMatrixTestCase>();
+                data.Add(
+                    "2x2",
+                    new MatrixMatrixMatrixTestCase(
+                        left: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0 },
+                            { 3.0, 4.0 },
+                        }),
+                        right: CreateMatrix(new double[,]
+                        {
+                            { 5.0, 6.0 },
+                            { 7.0, 8.0 },
+                        }),
+                        expectedResult: CreateMatrix(new double[,]
+                        {
+                            { 5.0, 12.0 },
+                            { 21.0, 32.0 },
+                        })));
+                data.Add(
+                    "2x3",
+                    new MatrixMatrixMatrixTestCase(
+                        left: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0, 3.0 },
+                            { 4.0, 5.0, 6.0 },
+                        }),
+                        right: CreateMatrix(new double[,]
+                        {
+                            { 7.0, 8.0, 9.0 },
+                            { 10.0, 11.0, 12.0 },
+                        }),
+                        expectedResult: CreateMatrix(new double[,]
+                        {
+                            { 7.0, 16.0, 27.0 },
+                            { 40.0, 55.0, 72.0 },
+                        })));
+                return data;
+            }
+        }
+
+        private static Dictionary<string, MatrixMatrixTestCase> TransponseTestCases
+        {
+            get
+            {
+                var data = new Dictionary<string, MatrixMatrixTestCase>();
+                data.Add(
+                    "2x2",
+                    new MatrixMatrixTestCase(
+                        inputMatrix: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0 },
+                            { 3.0, 4.0 },
+                        }),
+                        expectedResult: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 3.0 },
+                            { 2.0, 4.0 },
+                        })));
+                data.Add(
+                    "2x3",
+                    new MatrixMatrixTestCase(
+                        inputMatrix: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0, 3.0 },
+                            { 4.0, 5.0, 6.0 },
+                        }),
+                        expectedResult: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 4.0 },
+                            { 2.0, 5.0 },
+                            { 3.0, 6.0 },
+                        })));
+                return data;
+            }
+        }
+
+        #endregion
+
+        #region constructor tests
+
+        /// <summary>
+        /// Tests that the constructor throws the correct exception when not all of
+        /// the supplied row vectors have the same dimension.
+        /// </summary>
+        [Fact]
+        public void Constructor_RowVectorsNotTheSameLength_Throws()
+        {
+            // Arrange
+            var rowVectors = new[]
+            {
+                new Vector(new double[] { 1.0, 2.0 }),
+                new Vector(new double[] { 3.0 }),
             };
-            var m = new Matrix(data);
 
             // Act
-            var rows = m.RowCount;
-            var cols = m.ColumnCount;
-            var first = m[0, 0];
-            var middle = m[0, 1];
-            var last = m[1, 2];
-            m[0, 1] = 9.5;
-            var updated = m[0, 1];
+            Action act = () => new Matrix(rowVectors);
 
             // Assert
-            rows.Should().Be(2);
-            cols.Should().Be(3);
-            first.Should().Be(1.0);
-            middle.Should().Be(2.0);
-            last.Should().Be(6.0);
-            updated.Should().Be(9.5);
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        #endregion
+
+        #region ColumnVectors and RowVectors tests
+
+        /// <summary>
+        /// Tests that the ColumnVectors property returns the expected column vectors for a given input matrix.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(ColumnVectorsTestCaseNames))]
+        public void ColumnVectors_ReturnsExpectedVectors(string testCaseName)
+        {
+            // Arrange
+            var testCase = ColumnVectorsTestCases[testCaseName];
+
+            // Act
+            var actualColumnVectors = testCase.inputMatrix.ColumnVectors;
+
+            // Assert
+            for (var vectorIndex = 0; vectorIndex < testCase.expectedVectors.Length; vectorIndex++)
+            {
+                actualColumnVectors[vectorIndex].Elements.Should().BeEquivalentTo(
+                    testCase.expectedVectors[vectorIndex].Elements,
+                    because: $"at vector {vectorIndex}");
+            }
         }
 
         /// <summary>
-        /// Verifies that the indexer throws when indices are out of range.
+        /// Tests that the RowVectors property returns the expected row vectors for a given input matrix.
         /// </summary>
-        [Fact]
-        public void Indexer_OutOfRange_ThrowsIndexOutOfRangeException()
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(RowVectorsTestCaseNames))]
+        public void RowVectors_ReturnsExpectedVectors(string testCaseName)
         {
             // Arrange
-            var m = new Matrix(new double[,] { { 1.0 } });
+            var testCase = RowVectorsTestCases[testCaseName];
 
             // Act
-            Action negRow = () => { _ = m[-1, 0]; };
-            Action negCol = () => { _ = m[0, -1]; };
-            Action tooLargeRow = () => { _ = m[1, 0]; };
-            Action tooLargeCol = () => { _ = m[0, 1]; };
+            var actualRowVectors = testCase.inputMatrix.RowVectors;
 
             // Assert
-            negRow.Should().Throw<IndexOutOfRangeException>();
-            negCol.Should().Throw<IndexOutOfRangeException>();
-            tooLargeRow.Should().Throw<IndexOutOfRangeException>();
-            tooLargeCol.Should().Throw<IndexOutOfRangeException>();
+            for (var vectorIndex = 0; vectorIndex < testCase.expectedVectors.Length; vectorIndex++)
+            {
+                actualRowVectors[vectorIndex].Elements.Should().BeEquivalentTo(
+                    testCase.expectedVectors[vectorIndex].Elements,
+                    because: $"at vector {vectorIndex}");
+            }
+        }
+
+        #endregion
+
+        #region equality tests
+
+        /// <summary>
+        /// Verifies that the Equals method returns the expected result for the specified test case.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(EqualityTestCaseNames))]
+        public void Equals_ReturnsCorrectValue(string testCaseName)
+        {
+            // Arrange
+            var testCase = EqualityTestCases[testCaseName];
+
+            // Act
+            var actualResult = testCase.left.Equals(testCase.right);
+
+            // Assert
+            actualResult.Should().Be(testCase.shouldBeEqual);
         }
 
         /// <summary>
-        /// Ensures adding two matrices of the same dimensions returns an element-wise sum.
+        /// Verifie that the != operator returns the expected result for the specified test case.
         /// </summary>
-        [Fact]
-        public void Add_SameDimensions_ReturnsElementWiseSum()
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(EqualityTestCaseNames))]
+        public void InequalityOperator_ReturnsCorrectValue(string testCaseName)
         {
             // Arrange
-            var a = new Matrix(new double[,]
+            var testCase = EqualityTestCases[testCaseName];
+
+            // Act
+            var actualResult = testCase.left != testCase.right;
+
+            // Assert
+            actualResult.Should().Be(!testCase.shouldBeEqual);
+        }
+
+        /// <summary>
+        /// Tests that using the == operator with a null value on the left hand side returns false.
+        /// </summary>
+        [Fact]
+        public void EqualsOperator_LeftHandSideIsNull_ReturnsFalse()
+        {
+            // Arrange
+            Matrix? a = null;
+            var b = CreateMatrix(new double[,]
             {
                 { 1.0, 2.0 },
                 { 3.0, 4.0 },
             });
-            var b = new Matrix(new double[,]
-            {
-                { 5.0, 6.0 },
-                { 7.0, 8.0 },
-            });
 
             // Act
-            var sum = a.Add(b);
+            var areEqual = a! == b;
 
             // Assert
-            sum.RowCount.Should().Be(2);
-            sum.ColumnCount.Should().Be(2);
-            sum[0, 0].Should().Be(6.0);
-            sum[0, 1].Should().Be(8.0);
-            sum[1, 0].Should().Be(10.0);
-            sum[1, 1].Should().Be(12.0);
+            areEqual.Should().BeFalse();
+        }
+
+        #endregion
+
+        #region addition tests
+
+        /// <summary>
+        /// Ensures adding two matrices of the same dimensions returns an element-wise sum.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(AdditionTestCaseNames))]
+        public void Add_HappyPath_ReturnsElementWiseSum(string testCaseName)
+        {
+            // Arrange
+            var testCase = AdditionTestCases[testCaseName];
+
+            // Act
+            var actualResult = testCase.left.Add(testCase.right);
+
+            // Assert
+            actualResult.Should().BeEquivalentTo(testCase.expectedResult);
+        }
+
+        /// <summary>
+        /// Ensures adding two matrices of the same dimensions using the + operator returns an element-wise sum.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(AdditionTestCaseNames))]
+        public void AddOperator_HappyPath_ReturnsElementWiseSum(string testCaseName)
+        {
+            // Arrange
+            var testCase = AdditionTestCases[testCaseName];
+
+            // Act
+            var actualResult = testCase.left + testCase.right;
+
+            // Assert
+            actualResult.Should().BeEquivalentTo(testCase.expectedResult);
         }
 
         /// <summary>
@@ -105,144 +646,254 @@ namespace Sde.NeuralNetworks.Test
         public void Add_DifferentDimensions_ThrowsArgumentException()
         {
             // Arrange
-            var a = new Matrix(new double[,] { { 1.0, 2.0 } });
-            var b = new Matrix(new double[,]
+            var left = CreateMatrix(new double[,]
+            {
+                { 1.0, 2.0 },
+            });
+            var right = CreateMatrix(new double[,]
             {
                 { 1.0 },
                 { 2.0 },
             });
 
             // Act
-            Action act = () => a.Add(b);
+            Action act = () => left.Add(right);
 
             // Assert
-            act.Should().Throw<ArgumentException>();
+            act.Should().ThrowExactly<ArgumentException>();
         }
 
+        #endregion
+
+        #region subtraction tests
+
         /// <summary>
-        /// Ensures multiplying a matrix by a scalar scales every element.
+        /// Ensures subtracting two matrices of the same dimensions returns an element-wise difference.
         /// </summary>
-        [Fact]
-        public void Multiply_Scalar_ReturnsScaledMatrix()
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(SubtractionTestCaseNames))]
+        public void Subtract_HappyPath_ReturnsElementWiseDifference(string testCaseName)
         {
             // Arrange
-            var a = new Matrix(new double[,]
-            {
-                { 1.5, -2.0 },
-                { 0.0, 4.0 },
-            });
+            var testCase = SubtractionTestCases[testCaseName];
 
             // Act
-            var scaled = a.Multiply(2.0);
+            var actualResult = testCase.left.Subtract(testCase.right);
 
             // Assert
-            scaled[0, 0].Should().BeApproximately(3.0, 1e-9);
-            scaled[0, 1].Should().BeApproximately(-4.0, 1e-9);
-            scaled[1, 0].Should().BeApproximately(0.0, 1e-9);
-            scaled[1, 1].Should().BeApproximately(8.0, 1e-9);
+            actualResult.Should().BeEquivalentTo(testCase.expectedResult);
         }
 
         /// <summary>
-        /// Confirms matrix multiplication produces the expected result for conforming dimensions.
+        /// Ensures subtracting two matrices of the same dimensions using
+        /// the - operator returns an element-wise difference.
         /// </summary>
-        [Fact]
-        public void Multiply_Matrix_ValidDimensions_ReturnsProduct()
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(SubtractionTestCaseNames))]
+        public void SubtractOperator_HappyPath_ReturnsElementWiseDifference(string testCaseName)
         {
             // Arrange
-            var a = new Matrix(new double[,]
-            {
-                { 1.0, 2.0, 3.0 },
-                { 4.0, 5.0, 6.0 },
-            }); // 2x3
-            var b = new Matrix(new double[,]
-            {
-                { 7.0, 8.0 },
-                { 9.0, 10.0 },
-                { 11.0, 12.0 },
-            }); // 3x2
+            var testCase = SubtractionTestCases[testCaseName];
 
             // Act
-            var product = a.Multiply(b); // expected 2x2
+            var actualResult = testCase.left - testCase.right;
 
             // Assert
-            product.RowCount.Should().Be(2);
-            product.ColumnCount.Should().Be(2);
-            product[0, 0].Should().BeApproximately(58.0, 1e-9);
-            product[0, 1].Should().BeApproximately(64.0, 1e-9);
-            product[1, 0].Should().BeApproximately(139.0, 1e-9);
-            product[1, 1].Should().BeApproximately(154.0, 1e-9);
+            actualResult.Should().BeEquivalentTo(testCase.expectedResult);
         }
 
         /// <summary>
-        /// Verifies that multiplying matrices with incompatible dimensions throws an <see cref="ArgumentException"/>.
+        /// Verifies that subtracting matrices of differing dimensions throws an <see cref="ArgumentException"/>.
         /// </summary>
         [Fact]
-        public void Multiply_Matrix_InvalidDimensions_ThrowsArgumentException()
+        public void Subtract_DifferentDimensions_ThrowsArgumentException()
         {
             // Arrange
-            var a = new Matrix(new double[,]
+            var left = CreateMatrix(new double[,]
             {
                 { 1.0, 2.0 },
-                { 3.0, 4.0 },
-            }); // 2x2
-            var b = new Matrix(new double[,]
+            });
+            var right = CreateMatrix(new double[,]
             {
-                { 1.0, 2.0 },
-                { 3.0, 4.0 },
-                { 5.0, 6.0 },
-            }); // 3x2
-
-            // Act
-            Action act = () => a.Multiply(b);
-
-            // Assert
-            act.Should().Throw<ArgumentException>();
-        }
-
-        /// <summary>
-        /// Happy path test for the GetRow method.
-        /// </summary>
-        [Fact]
-        public void GetRow_ReturnsCorrectRow()
-        {
-            // Arrange
-            var m = new Matrix(new double[,]
-            {
-                { 1.0, 2.0, 3.0 },
-                { 4.0, 5.0, 6.0 },
+                { 1.0 },
+                { 2.0 },
             });
 
             // Act
-            var row0 = m.GetRow(0);
-            var row1 = m.GetRow(1);
+            Action act = () => left.Subtract(right);
 
             // Assert
-            row0.Should().Equal(1.0, 2.0, 3.0);
-            row1.Should().Equal(4.0, 5.0, 6.0);
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        #endregion
+
+        #region multiplication tests
+
+        /// <summary>
+        /// Tests that multiplying a matrix by a scalar scales every element.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(ScalarMultiplicationTestCaseNames))]
+        public void Multiply_Scalar_ReturnsScaledMatrix(string testCaseName)
+        {
+            // Arrange
+            var testCase = ScalarMultiplicationTestCases[testCaseName];
+
+            // Act
+            var actualResult = testCase.matrix.Multiply(testCase.scalar);
+
+            // Assert
+            actualResult.Should().BeEquivalentTo(testCase.expectedResult);
         }
 
         /// <summary>
-        /// Happy path test for the GetColumn method.
+        /// Tests that element-wise multiplication of two matrices retuns the expected result.
         /// </summary>
-        [Fact]
-        public void GetColumn_ReturnsCorrectColumn()
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(ElementWiseMultiplicationTestCaseNames))]
+        public void MultiplyElementWise_ReturnsCorrectMatric(string testCaseName)
         {
             // Arrange
-            var m = new Matrix(new double[,]
-            {
-                { 1.0, 2.0, 3.0 },
-                { 4.0, 5.0, 6.0 },
-            });
+            var testCase = ElementWiseMultiplicationTestCases[testCaseName];
 
             // Act
-            var col0 = m.GetColumn(0);
-            var col1 = m.GetColumn(1);
-            var col2 = m.GetColumn(2);
+            var actualResult = testCase.left.MultiplyElementWise(testCase.right);
 
             // Assert
-            col0.Should().Equal(1.0, 4.0);
-            col1.Should().Equal(2.0, 5.0);
-            col2.Should().Equal(3.0, 6.0);
+            actualResult.Should().BeEquivalentTo(testCase.expectedResult);
+        }
+
+        /// <summary>
+        /// Tests that element-wise multiplication of two matrices is commutative,
+        /// i.e. that multiplying left by right produces the same result as multiplying
+        /// right by left.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(ElementWiseMultiplicationTestCaseNames))]
+        public void MultiplyElementWise_IsCommutative(string testCaseName)
+        {
+            // Arrange
+            var testCase = ElementWiseMultiplicationTestCases[testCaseName];
+
+            // Act
+            var actualResult = testCase.right.MultiplyElementWise(testCase.left);
+
+            // Assert
+            actualResult.Should().BeEquivalentTo(testCase.expectedResult);
+        }
+
+        #endregion
+
+        #region transpose tests
+
+        /// <summary>
+        /// Tests that the Transpose method returns the expected result for a given input matrix.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(TransposeTestCaseNames))]
+        public void Transpose_ReturnsExpectedMatrix(string testCaseName)
+        {
+            // Arrange
+            var testCase = TransponseTestCases[testCaseName];
+
+            // Act
+            var actualResult = testCase.inputMatrix.Transpose();
+
+            // Assert
+            actualResult.Should().BeEquivalentTo(testCase.expectedResult);
+        }
+
+        /// <summary>
+        /// Proves that transposing a matrix and then transposing the result returns the
+        /// original matrix, i.e. that (A^T)^T = A.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(TransposeTestCaseNames))]
+        public void Transpose_Twice_ReturnsOriginalMatrix(string testCaseName)
+        {
+            // Arrange
+            var testCase = TransponseTestCases[testCaseName];
+
+            // Act
+            var actualResult = testCase.inputMatrix.Transpose().Transpose();
+
+            // Assert
+            actualResult.Should().BeEquivalentTo(testCase.inputMatrix);
+        }
+
+        /// <summary>
+        /// Proves that transposing the sum of two matrices produces the same result as
+        /// transposing each matrix and then adding the results, i.e. that (A + B)^T = A^T + B^T.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(TransposeTestCaseNames))]
+        public void Transpose_DistributesOverAddition(string testCaseName)
+        {
+            // Arrange
+            var testCase = TransponseTestCases[testCaseName];
+
+            // Act
+            var leftHandSide = testCase.inputMatrix.Add(testCase.inputMatrix).Transpose();
+            var rightHandSide = testCase.inputMatrix.Transpose().Add(testCase.inputMatrix.Transpose());
+
+            // Assert
+            leftHandSide.Should().BeEquivalentTo(rightHandSide);
+        }
+
+        /// <summary>
+        /// Proves that transposing a scalar multiple of a matrix produces the same result as
+        /// multiplying the transpose of the matrix by the same scalar, i.e. that (cA)^T = c(A^T).
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(TransposeTestCaseNames))]
+        public void Transpose_DistributesOverScalarMultiplication(string testCaseName)
+        {
+            // Arrange
+            var testCase = TransponseTestCases[testCaseName];
+            var scalar = 2.0;
+
+            // Act
+            var leftHandSide = testCase.inputMatrix.Multiply(scalar).Transpose();
+            var rightHandSide = testCase.inputMatrix.Transpose().Multiply(scalar);
+
+            // Assert
+            leftHandSide.Should().BeEquivalentTo(rightHandSide);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Helper method to simplify the syntax of creating matrices in the test data.
+        /// </summary>
+        /// <param name="data">Data to populate the matrix with.</param>
+        /// <returns>The populated matrix.</returns>
+        private static Matrix CreateMatrix(double[,] data)
+        {
+            var rowCount = data.GetLength(0);
+            var columnCount = data.GetLength(1);
+            var rowVectors = new List<Vector>();
+            for (var rowIndex = 0; rowIndex < rowCount; rowIndex++)
+            {
+                var rowValues = new double[columnCount];
+                for (var colIndex = 0; colIndex < data.GetLength(1); colIndex++)
+                {
+                    rowValues[colIndex] = data[rowIndex, colIndex];
+                }
+
+                rowVectors.Add(new Vector(rowValues));
+            }
+
+            return new Matrix(rowVectors.ToArray());
         }
     }
 }

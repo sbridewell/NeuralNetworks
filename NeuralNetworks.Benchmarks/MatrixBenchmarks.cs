@@ -16,8 +16,9 @@ namespace Sde.NeuralNetworks.Benchmarks
         [Params(64, 128)]
         public int N { get; set; }
 
-        private Matrix mA = null!;
-        private Matrix mB = null!;
+        // TODO: update benchmark to reflect current Matrix implementation
+        private Matrix mA; // = null!;
+        private Matrix mB; // = null!;
         private double[,] arr2D_A = null!;
         private double[,] arr2D_B = null!;
         private double[][] jaggedA = null!;
@@ -56,8 +57,9 @@ namespace Sde.NeuralNetworks.Benchmarks
                 }
             }
 
-            mA = new Matrix(arr2D_A);
-            mB = new Matrix(arr2D_B);
+            // TODO: update benchmark to reflect current Matrix implementation
+            //mA = new Matrix(arr2D_A);
+            //mB = new Matrix(arr2D_B);
         }
 
         /// <summary>
