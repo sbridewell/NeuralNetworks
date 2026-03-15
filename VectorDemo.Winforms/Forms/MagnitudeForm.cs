@@ -4,7 +4,7 @@
 
 namespace Sde.VectorDemo.Winforms.Forms
 {
-    using Sde.NeuralNetworks;
+    using Sde.NeuralNetworks.LinearAlgebra;
 
     /// <summary>
     /// Form to demonstrate calculating the magnitude of a vector.

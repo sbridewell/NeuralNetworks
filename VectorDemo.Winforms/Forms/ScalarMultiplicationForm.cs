@@ -4,7 +4,7 @@
 
 namespace Sde.VectorDemo.Winforms
 {
-    using Sde.NeuralNetworks;
+    using Sde.NeuralNetworks.LinearAlgebra;
 
     /// <summary>
     /// Form to demonstrate scalar multiplication of a vector.

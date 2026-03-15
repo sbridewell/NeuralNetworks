@@ -2,6 +2,7 @@
 namespace Sde.NeuralNetworks.Benchmarks
 {
     using BenchmarkDotNet.Attributes;
+    using Sde.NeuralNetworks.LinearAlgebra;
 
     /// <summary>
     /// Benchmarks comparing the <see cref="Vector"/> class to equivalent array-based

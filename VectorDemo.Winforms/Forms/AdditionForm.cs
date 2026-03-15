@@ -5,7 +5,7 @@
 namespace Sde.VectorDemo.Winforms.Forms
 {
     using System;
-    using Sde.NeuralNetworks;
+    using Sde.NeuralNetworks.LinearAlgebra;
 
     /// <summary>
     /// Form to demonstrate vector addition.

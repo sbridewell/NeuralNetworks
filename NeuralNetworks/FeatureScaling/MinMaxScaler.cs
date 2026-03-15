@@ -4,6 +4,8 @@
 
 namespace Sde.NeuralNetworks.FeatureScaling
 {
+    using Sde.NeuralNetworks.LinearAlgebra;
+
     /// <summary>
     /// Min-max normalisation is defined as (x - min(x)) / (max(x) - min(x)).
     /// </summary>

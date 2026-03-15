@@ -6,6 +6,7 @@ namespace Sde.NeuralNetworks.Test.FeatureScaling
 {
     using FluentAssertions;
     using Sde.NeuralNetworks.FeatureScaling;
+    using Sde.NeuralNetworks.LinearAlgebra;
 
     /// <summary>
     /// Unit tests for the <see cref="MinMaxScaler"/> class.

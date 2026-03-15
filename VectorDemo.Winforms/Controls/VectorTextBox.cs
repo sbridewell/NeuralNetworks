@@ -6,7 +6,7 @@ namespace Sde.VectorDemo.Winforms.Controls
 {
     using System;
     using System.ComponentModel;
-    using Sde.NeuralNetworks;
+    using Sde.NeuralNetworks.LinearAlgebra;
     using Sde.NeuralNetworks.Parsers;
 
     /// <summary>

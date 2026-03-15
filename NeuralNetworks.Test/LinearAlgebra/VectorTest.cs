@@ -2,13 +2,13 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-namespace Sde.NeuralNetworks.Test
+namespace Sde.NeuralNetworks.Test.LinearAlgebra
 {
     using System;
     using FluentAssertions;
     using Moq;
-    using Sde.NeuralNetworks;
     using Sde.NeuralNetworks.FeatureScaling;
+    using Sde.NeuralNetworks.LinearAlgebra;
     using Xunit;
 
     /// <summary>

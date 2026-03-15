@@ -2,6 +2,8 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
+using Sde.NeuralNetworks.LinearAlgebra;
+
 namespace Sde.NeuralNetworks.FeatureScaling
 {
     /// <summary>

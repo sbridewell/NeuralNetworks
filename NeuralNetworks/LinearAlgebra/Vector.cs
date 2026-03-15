@@ -2,7 +2,7 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-namespace Sde.NeuralNetworks
+namespace Sde.NeuralNetworks.LinearAlgebra
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Text;

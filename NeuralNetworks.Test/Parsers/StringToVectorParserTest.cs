@@ -5,6 +5,7 @@
 namespace Sde.NeuralNetworks.Test.Parsers
 {
     using FluentAssertions;
+    using Sde.NeuralNetworks.LinearAlgebra;
     using Sde.NeuralNetworks.Parsers;
 
     /// <summary>

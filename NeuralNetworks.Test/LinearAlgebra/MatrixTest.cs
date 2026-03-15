@@ -2,12 +2,12 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-namespace Sde.NeuralNetworks.Test
+namespace Sde.NeuralNetworks.Test.LinearAlgebra
 {
     using System;
     using System.Security.AccessControl;
     using FluentAssertions;
-    using Sde.NeuralNetworks;
+    using Sde.NeuralNetworks.LinearAlgebra;
     using Xunit;
 
     /// <summary>

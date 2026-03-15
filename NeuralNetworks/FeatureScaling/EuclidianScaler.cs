@@ -4,6 +4,8 @@
 
 namespace Sde.NeuralNetworks.FeatureScaling
 {
+    using Sde.NeuralNetworks.LinearAlgebra;
+
     /// <summary>
     /// Scales a vector so that its Euclidian magnitude becomes 1.
     /// The elements of the scaled array will be within the range -1..1,

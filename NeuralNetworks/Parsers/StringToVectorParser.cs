@@ -4,6 +4,8 @@
 
 namespace Sde.NeuralNetworks.Parsers
 {
+    using Sde.NeuralNetworks.LinearAlgebra;
+
     /// <summary>
     /// Parses a string representation of a <see cref="Vector"/>.
     /// The string must consist of a sequence of <see cref="double"/>

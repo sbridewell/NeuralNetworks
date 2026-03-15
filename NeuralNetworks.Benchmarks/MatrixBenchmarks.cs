@@ -1,5 +1,6 @@
 ﻿
 using BenchmarkDotNet.Attributes;
+using Sde.NeuralNetworks.LinearAlgebra;
 
 namespace Sde.NeuralNetworks.Benchmarks
 {
