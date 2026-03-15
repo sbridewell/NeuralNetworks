@@ -1,16 +1,16 @@
-﻿// <copyright file="NewtonsMethod.cs" company="Simon Bridewell">
+﻿// <copyright file="IRootFinder.cs" company="Simon Bridewell">
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
 namespace Sde.NeuralNetworks.TrainingDataProviders
 {
     /// <summary>
-    /// Implementation of Newton's method for finding roots of a function.
+    /// Interface for classes that can find the root of a function, i.e. the value of x for which f(x) = 0.
     /// </summary>
-    public class NewtonsMethod : IRootFinder
+    public interface IRootFinder
     {
         /// <summary>
-        /// Finds a root of the given function using Newton's method.
+        /// Attempts to find a root of the given function.
         /// </summary>
         /// <param name="functionToFindRootOf">
         /// The function to find the root of.
@@ -35,35 +35,14 @@ namespace Sde.NeuralNetworks.TrainingDataProviders
         /// exception.
         /// </param>
         /// <returns>
-        /// A root of the function, or an approximation of a root if the method converges.
+        /// A root of the function, or an approximation of a root, if the method converges.
         /// </returns>
-        public double FindRoot(
+        double FindRoot(
             Func<double, double> functionToFindRootOf,
             Func<double, double> derivativeOfFunction,
             double initialGuess,
             double tolerance = 1e-7,
             double epsilon = 1e-10,
-            int maxIterations = 1000)
-        {
-            var x = initialGuess;
-            for (var i = 0; i < maxIterations; i++)
-            {
-                var fx = functionToFindRootOf(x);
-                if (Math.Abs(fx) < tolerance)
-                {
-                    return x; // Found a root
-                }
-
-                var fpx = derivativeOfFunction(x);
-                if (fpx < epsilon)
-                {
-                    throw new InvalidOperationException("Derivative is too close to zero. No solution found.");
-                }
-
-                x = x - (fx / fpx); // Update guess using Newton's method formula
-            }
-
-            throw new InvalidOperationException("Maximum iterations reached. No solution found.");
-        }
+            int maxIterations = 1000);
     }
 }
