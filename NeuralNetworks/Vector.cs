@@ -371,6 +371,11 @@ namespace Sde.NeuralNetworks
         /// </returns>
         public override string ToString()
         {
+            if (this.Elements is null)
+            {
+                return string.Empty;
+            }
+
             var sb = new StringBuilder();
             sb.Append("[");
             foreach (var element in this.Elements)
@@ -406,9 +411,9 @@ namespace Sde.NeuralNetworks
             if (array.Length != otherVector.Dimension)
             {
                 throw new ArgumentException(
-                    $"Vectors must have the same length. "
-                    + "Length of the current vector: {this.Length}. "
-                    + "Length of the other vector: {otherVector.Length}");
+                    $"Vectors must have the same dimension. "
+                    + $"Dimension of the current vector: {this.Dimension}. "
+                    + $"Dimension of the other vector: {otherVector.Dimension}");
             }
         }
 
