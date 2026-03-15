@@ -10,6 +10,7 @@ namespace Sde.NeuralNetworks.OtherImplementations.MsdnMagazine
 
 #pragma warning disable SA1407 // Arithmetic expressions should declare precedence
 #pragma warning disable SA1101 // Prefix local calls with this
+#pragma warning disable SA1108 // Block statements should not contain embedded comments
     /// <summary>
     /// A neural network with back propagation, as described in MSDN Magazine.
     /// Has an input layer, one hidden layer, and an output layer.
@@ -685,4 +686,5 @@ namespace Sde.NeuralNetworks.OtherImplementations.MsdnMagazine
     }
 #pragma warning restore SA1101 // Prefix local calls with this
 #pragma warning restore SA1407 // Arithmetic expressions should declare precedence
+#pragma warning restore SA1108 // Block statements should not contain embedded comments
 }

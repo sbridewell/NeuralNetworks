@@ -9,6 +9,7 @@ namespace Sde.NeuralNetworks.OtherImplementations.MsdnMagazine
     using System.Diagnostics.CodeAnalysis;
 
 #pragma warning disable SA1407 // Arithmetic expressions should declare precedence
+#pragma warning disable SA1108 // Block statements should not contain embedded comments
     /// <summary>
     /// Class containing the main entry point for the MSDN back-propagation demo.
     /// </summary>
@@ -284,4 +285,5 @@ namespace Sde.NeuralNetworks.OtherImplementations.MsdnMagazine
         } // SplitTrainTest
     } // Program
 #pragma warning restore SA1407 // Arithmetic expressions should declare precedence
+#pragma warning restore SA1108 // Block statements should not contain embedded comments
 } // ns
