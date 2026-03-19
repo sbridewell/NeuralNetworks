@@ -2,13 +2,13 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-using Sde.NeuralNetworks.LinearAlgebra;
-
 namespace Sde.NeuralNetworks.FeatureScaling
 {
+    using Sde.NeuralNetworks.LinearAlgebra;
+
     /// <summary>
     /// <remarks>
-    /// Standardsation is defined as standardised value = (original value - mean) / standard deviation.
+    /// Standardisation is defined as standardised value = (original value - mean) / standard deviation.
     /// Greek letters mu and sigma are often used to represent mean and standard deviation
     /// respectively, so this can be written as standardised value = (original value - mu) / sigma.
     /// The result of standardisation is sometimes called z scores.

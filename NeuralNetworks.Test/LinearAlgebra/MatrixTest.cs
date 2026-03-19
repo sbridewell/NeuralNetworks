@@ -5,7 +5,6 @@
 namespace Sde.NeuralNetworks.Test.LinearAlgebra
 {
     using System;
-    using System.Security.AccessControl;
     using FluentAssertions;
     using Sde.NeuralNetworks.LinearAlgebra;
     using Xunit;
@@ -13,7 +12,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
     /// <summary>
     /// Unit tests for the <see cref="Matrix"/> class.
     /// </summary>
-    public class MatrixTest
+    public class MatrixTest(ITestOutputHelper output)
     {
         #region test case record definitions
 
@@ -57,6 +56,13 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
         /// <param name="inputMatrix">The input matrix.</param>
         /// <param name="expectedVectors">The expected result of the operation.</param>
         public record MatrixVectorArrrayTestCase(Matrix inputMatrix, Vector[] expectedVectors);
+
+        /// <summary>
+        /// Test case for the ToString method of the Matrix class.
+        /// </summary>
+        /// <param name="inputMatrix">The matrix to represent as a string.</param>
+        /// <param name="expectedString">The expected string representation.</param>
+        public record ToStringTestCase(Matrix inputMatrix, string expectedString);
 
         #endregion
 
@@ -102,6 +108,11 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
         /// Gets the names of the transpose test cases.
         /// </summary>
         public static TheoryData<string> TransposeTestCaseNames => new TheoryData<string>(TransponseTestCases.Keys);
+
+        /// <summary>
+        /// Gets the names of the ToString test cases.
+        /// </summary>
+        public static TheoryData<string> ToStringTestCaseNames => new TheoryData<string>(ToStringTestCases.Keys);
 
         #endregion
 
@@ -463,9 +474,116 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             }
         }
 
+        private static Dictionary<string, ToStringTestCase> ToStringTestCases
+        {
+            get
+            {
+                var data = new Dictionary<string, ToStringTestCase>();
+                var expectedString = string.Empty;
+                data.Add(
+                    "No rows",
+                    new ToStringTestCase(
+                        inputMatrix: new Matrix(new Vector[] { }),
+                        expectedString: string.Empty));
+                data.Add(
+                    "2x2",
+                    new ToStringTestCase(
+                        inputMatrix: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0 },
+                            { 3.0, 4.0 },
+                        }),
+                        expectedString: $"1, 2{Environment.NewLine}3, 4"));
+                data.Add(
+                    "2x3",
+                    new ToStringTestCase(
+                        inputMatrix: CreateMatrix(new double[,]
+                        {
+                            { 1.0, 2.0, 3.0 },
+                            { 4.0, 5.0, 6.0 },
+                        }),
+                        expectedString: $"1, 2, 3{Environment.NewLine}4, 5, 6"));
+                expectedString
+                    = $" 100, 1000{Environment.NewLine}"
+                    + $"1000,  100";
+                data.Add(
+                    "Largeish numbers",
+                    new ToStringTestCase(
+                        inputMatrix: CreateMatrix(new double[,]
+                        {
+                            { 100, 1000 },
+                            { 1000, 100 },
+                        }),
+                        expectedString));
+                expectedString
+                    = $"  100, 1000, 1E+04{Environment.NewLine}"
+                    + $"1E+04, 1000,   100";
+                data.Add(
+                    "Large numbers",
+                    new ToStringTestCase(
+                        inputMatrix: CreateMatrix(new double[,]
+                        {
+                            { 100, 1000, 10000 },
+                            { 10000, 1000, 100 },
+                        }),
+                        expectedString));
+                expectedString
+                    = $"    1,  0.1, 0.01, 0.001{Environment.NewLine}"
+                    + $"0.001, 0.01,  0.1,     1";
+                data.Add(
+                    "Smallish numbers",
+                    new ToStringTestCase(
+                        inputMatrix: CreateMatrix(new double[,]
+                        {
+                            { 1, 0.1, 0.01, 0.001 },
+                            { 0.001, 0.01, 0.1, 1 },
+                        }),
+                        expectedString));
+                expectedString
+                    = $"    1,   0.1,   0.01, 0.001, 0.0001, 1E-05, 1E-06{Environment.NewLine}"
+                    + $"1E-06, 1E-05, 0.0001, 0.001,   0.01,   0.1,     1";
+                data.Add(
+                    "Small numbers",
+                    new ToStringTestCase(
+                        inputMatrix: CreateMatrix(new double[,]
+                        {
+                            { 1, 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001 },
+                            { 0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1 },
+                        }),
+                        expectedString));
+                expectedString
+                    = $"        0,         1,   234, 3.457{Environment.NewLine}"
+                    + $"4.321E+07, 5.432E-08, 6.543,     7";
+                data.Add(
+                    "Variable width",
+                    new ToStringTestCase(
+                        inputMatrix: CreateMatrix(new double[,]
+                        {
+                            { 0, 1, 234, 3.456789 },
+                            { 43210987, 0.000000054321, 6.54321, 7 },
+                        }),
+                        expectedString));
+                return data;
+            }
+        }
+
         #endregion
 
         #region constructor tests
+
+        /// <summary>
+        /// Tests that the correct exception is thrown when a null array of
+        /// row vectors is passed to the constructor.
+        /// </summary>
+        [Fact]
+        public void Constructor_RowVectorsNull_Throws()
+        {
+            // Act
+            Action act = () => new Matrix((Vector[])null!);
+
+            // Assert
+            act.Should().ThrowExactly<ArgumentNullException>();
+        }
 
         /// <summary>
         /// Tests that the constructor throws the correct exception when not all of
@@ -868,6 +986,30 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
 
             // Assert
             leftHandSide.Should().BeEquivalentTo(rightHandSide);
+        }
+
+        #endregion
+
+        #region ToString tests
+
+        /// <summary>
+        /// Tests that the ToString method returns the expected string representation
+        /// of the matrix for a given input matrix.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(ToStringTestCaseNames))]
+        public void ToString_ReturnsExpectedString(string testCaseName)
+        {
+            // Arrange
+            var testCase = ToStringTestCases[testCaseName];
+
+            // Act
+            var actualString = testCase.inputMatrix.ToString();
+
+            // Assert
+            output.WriteLine(actualString);
+            actualString.Should().Be(testCase.expectedString);
         }
 
         #endregion

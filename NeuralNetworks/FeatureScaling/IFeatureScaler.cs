@@ -5,7 +5,6 @@
 namespace Sde.NeuralNetworks.FeatureScaling
 {
     using Sde.NeuralNetworks.LinearAlgebra;
-    using System.Diagnostics.CodeAnalysis;
 
     // TODO: read https://www.freecodecamp.org/news/learn-linear-algebra-for-machine-learning
 

@@ -4,7 +4,9 @@
 
 namespace Sde.NeuralNetworks.LinearAlgebra
 {
+    // TODO: SquareMatrix subclass with Eigenvalues and Eigenvectors pproperties / methods
     using System.Diagnostics.CodeAnalysis;
+    using System.Text;
 
     /// <summary>
     /// A matrix represents a two-dimensional array of floating point numbers and
@@ -83,6 +85,12 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         public Matrix(Vector[] rowVectors)
         {
             ArgumentNullException.ThrowIfNull(rowVectors);
+            if (rowVectors.Length == 0)
+            {
+                this.array = new double[0, 0];
+                return;
+            }
+
             var rowCount = this.RowCount = rowVectors.Length;
             var columnCount = this.ColumnCount = rowVectors[0].Dimension;
             if (!rowVectors.All(v => v.Dimension == columnCount))
@@ -374,8 +382,6 @@ namespace Sde.NeuralNetworks.LinearAlgebra
             return new Matrix(newRowVectors);
         }
 
-        // TODO: is there another way of multiplying two matrices together, in the same way that vectors can be element-wise or dot product multiplied?
-
         /// <summary>
         /// Multiplies the current matrix by the supplied matrix element-wise and returns the result
         /// as a new matrix.
@@ -385,6 +391,7 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// <returns>The result of the multiplication.</returns>
         public Matrix MultiplyElementWise(Matrix otherMatrix)
         {
+            // TODO: rename MultiplyElementWise to CalculateHadamardProduct
             ArgumentNullException.ThrowIfNull(otherMatrix);
             this.ThrowIfDimensionMismatch(otherMatrix);
             var newRowVectors = new Vector[this.RowCount];
@@ -402,6 +409,8 @@ namespace Sde.NeuralNetworks.LinearAlgebra
             return new Matrix(newRowVectors);
         }
 
+        // TODO: Multiply method (made of dot products of rows from one with columns from the other)
+
         /// <summary>
         /// Flips the matrix along its top-left to bottom-right diagonal, returning a new matrix
         /// where the rows of the original matrix become the columns and the columns of the original
@@ -418,6 +427,47 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         {
             var columnVectors = this.ColumnVectors;
             return new Matrix(columnVectors);
+        }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            if (this.RowCount == 0 || this.ColumnCount == 0)
+            {
+                return string.Empty;
+            }
+
+            var elementsAsStrings = new string[this.RowCount, this.ColumnCount];
+            var maxWidths = new int[this.ColumnCount];
+            for (var rowIndex = 0; rowIndex < this.RowCount; rowIndex++)
+            {
+                for (var columnIndex = 0; columnIndex < this.ColumnCount; columnIndex++)
+                {
+                    var elementAsString = this.array[rowIndex, columnIndex].ToString("G4");
+                    elementsAsStrings[rowIndex, columnIndex] = elementAsString;
+                    maxWidths[columnIndex] = Math.Max(maxWidths[columnIndex], elementAsString.Length);
+                }
+            }
+
+            var sb = new StringBuilder();
+            for (var rowIndex = 0; rowIndex < this.RowCount; rowIndex++)
+            {
+                for (var columnIndex = 0; columnIndex < this.ColumnCount; columnIndex++)
+                {
+                    sb.Append(elementsAsStrings[rowIndex, columnIndex].PadLeft(maxWidths[columnIndex]));
+                    if (columnIndex < this.ColumnCount - 1)
+                    {
+                        sb.Append(", ");
+                    }
+                }
+
+                if (rowIndex < this.RowCount - 1)
+                {
+                    sb.AppendLine();
+                }
+            }
+
+            return sb.ToString();
         }
 
         #endregion
