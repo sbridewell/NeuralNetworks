@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Demos/" />
   <Folder Name="/Demos/Month 1/">
+    <Project Path="MatrixDemo/MatrixDemo.csproj" Id="b1c9ea2c-1b72-4fd7-b6cc-13d844d4ef59" />
     <Project Path="VectorDemo.Winforms/VectorDemo.Winforms.csproj" Id="414d18b4-7434-45ba-a0ea-69a2ce780d4a" />
   </Folder>
   <Folder Name="/Solution Items/">

@@ -15,7 +15,6 @@ namespace Sde.NeuralNetworks.Parsers
     public class StringToMatrixParser : IStringToMatrixParser
     {
         private readonly char[] lineSeparators = new char[] { '\n', '\r' };
-        private readonly char[] valueSeparators = new char[] { ',', ' ', '|', '[', ']', '{', '}' };
 
         /// <inheritdoc/>
         public Matrix Parse(string value)
