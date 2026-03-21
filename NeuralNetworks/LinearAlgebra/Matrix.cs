@@ -268,6 +268,88 @@ namespace Sde.NeuralNetworks.LinearAlgebra
             return left.Subtract(right);
         }
 
+        #region scalar multiplication operators
+
+        /// <summary>
+        /// Multiplies a matrix by a scalar value and returns the result as a new matrix.
+        /// </summary>
+        /// <param name="left">The matrix to multiply.</param>
+        /// <param name="right">The scalar value to multiply by.</param>
+        /// <returns>The result oof the multiplication.</returns>
+        [ExcludeFromCodeCoverage]
+        public static Matrix operator *(Matrix left, double right)
+        {
+            ArgumentNullException.ThrowIfNull(left);
+            return left.Multiply(right);
+        }
+
+        /// <summary>
+        /// Multiplies a matrix by a scalar value and returns the result as a new matrix.
+        /// </summary>
+        /// <param name="left">The matrix to multiply.</param>
+        /// <param name="right">The scalar value to multiply by.</param>
+        /// <returns>The result oof the multiplication.</returns>
+        [ExcludeFromCodeCoverage]
+        public static Matrix operator *(Matrix left, int right)
+        {
+            ArgumentNullException.ThrowIfNull(left);
+            return left.Multiply(right);
+        }
+
+        /// <summary>
+        /// Multiplies a matrix by a scalar value and returns the result as a new matrix.
+        /// </summary>
+        /// <param name="left">The matrix to multiply.</param>
+        /// <param name="right">The scalar value to multiply by.</param>
+        /// <returns>The result oof the multiplication.</returns>
+        [ExcludeFromCodeCoverage]
+        public static Matrix operator *(Matrix left, decimal right)
+        {
+            ArgumentNullException.ThrowIfNull(left);
+            return left.Multiply(right);
+        }
+
+        /// <summary>
+        /// Multiplies a scalar value by a matrix and returns the result as a new matrix.
+        /// </summary>
+        /// <param name="left">The scalar value to multiply.</param>
+        /// <param name="right">The matrix to multiply by.</param>
+        /// <returns>The result oof the multiplication.</returns>
+        [ExcludeFromCodeCoverage]
+        public static Matrix operator *(double left, Matrix right)
+        {
+            ArgumentNullException.ThrowIfNull(right);
+            return right.Multiply(left);
+        }
+
+        /// <summary>
+        /// Multiplies a scalar value by a matrix and returns the result as a new matrix.
+        /// </summary>
+        /// <param name="left">The scalar value to multiply.</param>
+        /// <param name="right">The matrix to multiply by.</param>
+        /// <returns>The result oof the multiplication.</returns>
+        [ExcludeFromCodeCoverage]
+        public static Matrix operator *(int left, Matrix right)
+        {
+            ArgumentNullException.ThrowIfNull(right);
+            return right.Multiply(left);
+        }
+
+        /// <summary>
+        /// Multiplies a scalar value by a matrix and returns the result as a new matrix.
+        /// </summary>
+        /// <param name="left">The scalar value to multiply.</param>
+        /// <param name="right">The matrix to multiply by.</param>
+        /// <returns>The result oof the multiplication.</returns>
+        [ExcludeFromCodeCoverage]
+        public static Matrix operator *(decimal left, Matrix right)
+        {
+            ArgumentNullException.ThrowIfNull(right);
+            return right.Multiply(left);
+        }
+
+        #endregion
+
         #endregion
 
         #region public methods
@@ -366,6 +448,8 @@ namespace Sde.NeuralNetworks.LinearAlgebra
             return new Matrix(newRowVectors.ToArray());
         }
 
+        #region scalar multiplication methods
+
         /// <summary>
         /// Multiplies this matrix by the supplied scalar value and returns the result as a new matrix.
         /// </summary>
@@ -392,6 +476,30 @@ namespace Sde.NeuralNetworks.LinearAlgebra
 
             return new Matrix(newRowVectors);
         }
+
+        /// <summary>
+        /// Multiplies this matrix by the supplied scalar value and returns the result as a new matrix.
+        /// </summary>
+        /// <param name="scalar">The value to multiply by.</param>
+        /// <returns>The result of the multiplication.</returns>
+        [ExcludeFromCodeCoverage]
+        public Matrix Multiply(int scalar)
+        {
+            return this.Multiply((double)scalar);
+        }
+
+        /// <summary>
+        /// Multiplies this matrix by the supplied scalar value and returns the result as a new matrix.
+        /// </summary>
+        /// <param name="scalar">The value to multiply by.</param>
+        /// <returns>The result of the multiplication.</returns>
+        [ExcludeFromCodeCoverage]
+        public Matrix Multiply(decimal scalar)
+        {
+            return this.Multiply((double)scalar);
+        }
+
+        #endregion
 
         /// <summary>
         /// Multiplies the current matrix by the supplied matrix element-wise and returns the result
