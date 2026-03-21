@@ -508,7 +508,7 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// </summary>
         /// <param name="otherMatrix">The matrix to multiply by.</param>
         /// <returns>The result of the multiplication.</returns>
-        public Matrix MultiplyElementWise(Matrix otherMatrix)
+        public Matrix CalculateHadamardProduct(Matrix otherMatrix)
         {
             // TODO: rename MultiplyElementWise to CalculateHadamardProduct
             ArgumentNullException.ThrowIfNull(otherMatrix);

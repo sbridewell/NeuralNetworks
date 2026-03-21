@@ -101,8 +101,8 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
         /// <summary>
         /// Gets the names of the element-wise multiplication test cases.
         /// </summary>
-        public static TheoryData<string> ElementWiseMultiplicationTestCaseNames
-            => new TheoryData<string>(ElementWiseMultiplicationTestCases.Keys);
+        public static TheoryData<string> HadamardProductTestCaseNames
+            => new TheoryData<string>(HadamardProductTestCases.Keys);
 
         /// <summary>
         /// Gets the names of the transpose test cases.
@@ -393,7 +393,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             }
         }
 
-        private static Dictionary<string, MatrixMatrixMatrixTestCase> ElementWiseMultiplicationTestCases
+        private static Dictionary<string, MatrixMatrixMatrixTestCase> HadamardProductTestCases
         {
             get
             {
@@ -869,38 +869,38 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
         }
 
         /// <summary>
-        /// Tests that element-wise multiplication of two matrices retuns the expected result.
+        /// Tests that the Hadamard product (element-wise multiplication) of two matrices retuns the expected result.
         /// </summary>
         /// <param name="testCaseName">Name of the test case.</param>
         [Theory]
-        [MemberData(nameof(ElementWiseMultiplicationTestCaseNames))]
-        public void MultiplyElementWise_ReturnsCorrectMatric(string testCaseName)
+        [MemberData(nameof(HadamardProductTestCaseNames))]
+        public void CalculateHadamardProduct_ReturnsCorrectMatric(string testCaseName)
         {
             // Arrange
-            var testCase = ElementWiseMultiplicationTestCases[testCaseName];
+            var testCase = HadamardProductTestCases[testCaseName];
 
             // Act
-            var actualResult = testCase.left.MultiplyElementWise(testCase.right);
+            var actualResult = testCase.left.CalculateHadamardProduct(testCase.right);
 
             // Assert
             actualResult.Should().BeEquivalentTo(testCase.expectedResult);
         }
 
         /// <summary>
-        /// Tests that element-wise multiplication of two matrices is commutative,
+        /// Tests that the Hadamard product of two matrices is commutative,
         /// i.e. that multiplying left by right produces the same result as multiplying
         /// right by left.
         /// </summary>
         /// <param name="testCaseName">Name of the test case.</param>
         [Theory]
-        [MemberData(nameof(ElementWiseMultiplicationTestCaseNames))]
-        public void MultiplyElementWise_IsCommutative(string testCaseName)
+        [MemberData(nameof(HadamardProductTestCaseNames))]
+        public void CalculateHadamardProduct_IsCommutative(string testCaseName)
         {
             // Arrange
-            var testCase = ElementWiseMultiplicationTestCases[testCaseName];
+            var testCase = HadamardProductTestCases[testCaseName];
 
             // Act
-            var actualResult = testCase.right.MultiplyElementWise(testCase.left);
+            var actualResult = testCase.right.CalculateHadamardProduct(testCase.left);
 
             // Assert
             actualResult.Should().BeEquivalentTo(testCase.expectedResult);
