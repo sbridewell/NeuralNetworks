@@ -4,7 +4,7 @@
 
 namespace Sde.NeuralNetworks.LinearAlgebra
 {
-    // TODO: SquareMatrix subclass with Eigenvalues and Eigenvectors pproperties / methods
+    // TODO: NeuralNetworkLayer class with forward propagation (intentionally incomplete, need to add backpropagation later
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
@@ -95,7 +95,18 @@ namespace Sde.NeuralNetworks.LinearAlgebra
             var columnCount = this.ColumnCount = rowVectors[0].Dimension;
             if (!rowVectors.All(v => v.Dimension == columnCount))
             {
-                var msg = "All row vectors must have the same dimension (number of elements).";
+                var sb = new StringBuilder();
+                for (var vectorIndex = 0; vectorIndex < rowVectors.Length; vectorIndex++)
+                {
+                    sb.Append($"{rowVectors[vectorIndex].Dimension}");
+                    if (vectorIndex < rowVectors.Length - 1)
+                    {
+                        sb.Append(", ");
+                    }
+                }
+
+                var msg = "All row vectors must have the same dimension (number of elements). "
+                    + $"The supplied vectors have dimensions {sb.ToString()}";
                 throw new ArgumentException(msg);
             }
 
