@@ -36,4 +36,10 @@
     <ProjectReference Include="..\NeuralNetworks\NeuralNetworks.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Forms\MatrixSubtractionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

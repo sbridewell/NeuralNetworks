@@ -4,6 +4,8 @@
 
 namespace MatrixDemo
 {
+    using Sde.MatrixDemo.Forms;
+
     /// <summary>
     /// Main form in the matrix demo application.
     /// </summary>
@@ -19,32 +21,32 @@ namespace MatrixDemo
 
         private void ButtonAddition_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Addition not implemented yet.");
+            new MatrixAdditionForm().Show();
         }
 
         private void ButtonSubtraction_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Subtraction not implemented yet.");
+            new MatrixSubtractionForm().Show();
         }
 
-        private void ButtonVectorMultiplication_Click(object sender, EventArgs e)
+        private void ButtonScalarMultiplication_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Vector multiplication not implemented yet.");
+            new ScalarMultiplicationForm().Show();
         }
 
         private void ButtonHadamardProduct_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Hadamard product not implemented yet.");
+            new HadamardProductForm().Show();
         }
 
         private void ButtonMatrixMultiplication_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Matrix multiplication not implemented yet.");
+            new MatrixMultiplicationForm().Show();
         }
 
         private void ButtonTranspose_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Transpose not implemented yet.");
+            new TransposeForm().Show();
         }
     }
 }

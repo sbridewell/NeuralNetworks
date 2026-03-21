@@ -23,6 +23,10 @@ namespace Sde.MatrixDemo.Controls
             this.InitializeComponent();
             this.Text = this.Value.ToString();
             this.Validating += this.MatrixTextBox_Validating;
+            this.Multiline = true;
+            this.ScrollBars = ScrollBars.Vertical;
+            this.TextAlign = HorizontalAlignment.Center;
+            this.Font = new Font("Consolas", 14f);
         }
 
         /// <summary>
@@ -52,16 +56,24 @@ namespace Sde.MatrixDemo.Controls
         private void MatrixTextBox_Validating(object? sender, CancelEventArgs e)
         {
             var parser = new StringToMatrixParser();
-            var success = parser.TryParse(this.Text, out Matrix matrix);
-            if (success)
+            try
             {
-                this.Value = matrix;
+                var success = parser.TryParse(this.Text, out Matrix matrix);
+                if (success)
+                {
+                    this.Value = matrix;
+                }
+                else
+                {
+                    e.Cancel = true;
+                    var msg = "Please enter a valid matrix value, which must consist of vector lines separated by line breaks.";
+                    MessageBox.Show(msg, "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-            else
+            catch (Exception ex)
             {
                 e.Cancel = true;
-                var msg = "Please enter a valid matrix value, which must consist of vector lines separated by line breaks.";
-                MessageBox.Show(msg, "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error Parsing Matrix", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

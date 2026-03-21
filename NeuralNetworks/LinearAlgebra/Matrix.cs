@@ -138,6 +138,8 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// </summary>
         public int ColumnCount { get; }
 
+        // TODO: if RowVectors and ColumnVectors are called multiple times, consider caching them - better speed but more memory use
+
         /// <summary>
         /// Gets an array of vectors, each of which represents a row of the matrix.
         /// </summary>
@@ -145,7 +147,6 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         {
             get
             {
-                // TODO: if this is called multiple times, consider caching it - better speed but more memory use
                 var rowVectors = new Vector[this.RowCount];
                 for (var rowIndex = 0; rowIndex < this.RowCount; rowIndex++)
                 {
@@ -169,7 +170,6 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         {
             get
             {
-                // TODO: if this is called multiple times, consider caching it - better speed but more memory use
                 var columnVectors = new Vector[this.ColumnCount];
                 for (var columnIndex = 0; columnIndex < this.ColumnCount; columnIndex++)
                 {
