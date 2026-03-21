@@ -502,6 +502,63 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         #endregion
 
         /// <summary>
+        /// Multiplies the current matrix by the supplied matrix and returns the result as a new matrix.
+        /// </summary>
+        /// <param name="otherMatrix">The matrix to multiply by.</param>
+        /// <returns>
+        /// A matrix composed of the dot products of the rows of the current matrix with the columns
+        /// of the supplied matrix.
+        /// </returns>
+        /// <remarks>
+        /// Matrix multiplication is associative, i.e. (AB)C = A(BC).
+        /// Matrix multiplication is distributive, i.e. A(B + C) = AB + AC.
+        /// Matrix multiplication is not commutative, i.e. AB does not necessarily equal BA.
+        /// The non-commutativity is not a limitation, it reflects reality.
+        /// Rotating an image and then scaling it does not produce the same result as scaling it and then
+        /// rotating it, so the order of operations matters.
+        /// </remarks>
+        /// <exception cref="ArgumentException">
+        /// The matrices cannot be multiplied because the number of columns in the first matrix does not equal the
+        /// number of rows in the second matrix, or the number of rows in the first matrix does not equal the
+        /// number of columns in the second matrix.
+        /// </exception>
+        public Matrix Multiply(Matrix otherMatrix)
+        {
+            ArgumentNullException.ThrowIfNull(otherMatrix);
+            if (this.RowCount != otherMatrix.ColumnCount || this.ColumnCount != otherMatrix.RowCount)
+            {
+                var msg = "In order to multiply two matrices, the number of columns in the first matrix must equal the "
+                    + "number of rows in the second matrix and the number of rows in the first matrix must equal the number "
+                    + "of columns in the second matrix. "
+                    + $"The first matrix has dimensions {this.RowCount}x{this.ColumnCount}, but the second matrix has "
+                    + $"dimensions {otherMatrix.RowCount}x{otherMatrix.ColumnCount}.";
+                throw new ArgumentException(msg);
+            }
+
+            var resultRowCount = this.RowCount;
+            var resultColumnCount = otherMatrix.ColumnCount;
+            var thisRows = this.RowVectors;
+            var otherColumns = otherMatrix.ColumnVectors;
+            var resultRowVectors = new Vector[resultRowCount];
+            for (var resultRowIndex = 0; resultRowIndex < resultRowCount; resultRowIndex++)
+            {
+                var resultRow = new double[resultColumnCount];
+                for (var resultColumnIndex = 0; resultColumnIndex < resultColumnCount; resultColumnIndex++)
+                {
+                    var thisRow = thisRows[resultRowIndex];
+                    var otherColumn = otherColumns[resultColumnIndex];
+                    var dotProduct = thisRow.MultiplyUsingDotProduct(otherColumn);
+                    resultRow[resultColumnIndex] = dotProduct;
+                }
+
+                resultRowVectors[resultRowIndex] = new Vector(resultRow);
+            }
+
+            var result = new Matrix(resultRowVectors);
+            return result;
+        }
+
+        /// <summary>
         /// Multiplies the current matrix by the supplied matrix element-wise and returns the result
         /// as a new matrix.
         /// Also known as the Hadamard product.
@@ -510,7 +567,6 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// <returns>The result of the multiplication.</returns>
         public Matrix CalculateHadamardProduct(Matrix otherMatrix)
         {
-            // TODO: rename MultiplyElementWise to CalculateHadamardProduct
             ArgumentNullException.ThrowIfNull(otherMatrix);
             this.ThrowIfDimensionMismatch(otherMatrix);
             var newRowVectors = new Vector[this.RowCount];
@@ -527,8 +583,6 @@ namespace Sde.NeuralNetworks.LinearAlgebra
 
             return new Matrix(newRowVectors);
         }
-
-        // TODO: Multiply method (made of dot products of rows from one with columns from the other)
 
         /// <summary>
         /// Flips the matrix along its top-left to bottom-right diagonal, returning a new matrix

@@ -5,6 +5,7 @@
 namespace Sde.NeuralNetworks.Test.LinearAlgebra
 {
     using System;
+    using System.Security.AccessControl;
     using FluentAssertions;
     using Sde.NeuralNetworks.LinearAlgebra;
     using Xunit;
@@ -103,6 +104,12 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
         /// </summary>
         public static TheoryData<string> HadamardProductTestCaseNames
             => new TheoryData<string>(HadamardProductTestCases.Keys);
+
+        /// <summary>
+        /// Gets the names of the matrix multiplication test cases.
+        /// </summary>
+        public static TheoryData<string> MatrixMultiplicationTestCaseNames
+            => new TheoryData<string>(MatrixMultiplicationTestCases.Keys);
 
         /// <summary>
         /// Gets the names of the transpose test cases.
@@ -433,6 +440,34 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
                         {
                             { 7.0, 16.0, 27.0 },
                             { 40.0, 55.0, 72.0 },
+                        })));
+                return data;
+            }
+        }
+
+        private static Dictionary<string, MatrixMatrixMatrixTestCase> MatrixMultiplicationTestCases
+        {
+            get
+            {
+                var data = new Dictionary<string, MatrixMatrixMatrixTestCase>();
+                data.Add(
+                    "2 by 3 times 3 by 2",
+                    new MatrixMatrixMatrixTestCase(
+                        left: CreateMatrix(new double[,]
+                        {
+                            { 1, 2, 3 },
+                            { 4, 5, 6 },
+                        }),
+                        right: CreateMatrix(new double[,]
+                        {
+                            { 7, 8 },
+                            { 9, 10 },
+                            { 11, 12 },
+                        }),
+                        expectedResult: CreateMatrix(new double[,]
+                        {
+                            { 58, 64 },
+                            { 139, 154 },
                         })));
                 return data;
             }
@@ -850,6 +885,8 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
 
         #region multiplication tests
 
+        #region scalar multiplication
+
         /// <summary>
         /// Tests that multiplying a matrix by a scalar scales every element.
         /// </summary>
@@ -867,6 +904,132 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             actualResult.Should().BeEquivalentTo(testCase.expectedResult);
         }
+
+        #endregion
+
+        #region matrix multiplication
+
+        /// <summary>
+        /// Tests that the Multiply method which accepts a Matrix returns the expected Matrix.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test cases.</param>
+        [Theory]
+        [MemberData(nameof(MatrixMultiplicationTestCaseNames))]
+        public void Multiply_Matrix_ReturnsCorrectMatrix(string testCaseName)
+        {
+            // Arrange
+            var testCase = MatrixMultiplicationTestCases[testCaseName];
+
+            // Act
+            var actualResult = testCase.left.Multiply(testCase.right);
+
+            // Assert
+            actualResult.Should().BeEquivalentTo(testCase.expectedResult);
+        }
+
+        /// <summary>
+        /// Tests that the Multiply method which accepts a Matrix throws the correct
+        /// exception when the two arrays have mismatched dimmensions.
+        /// </summary>
+        [Fact]
+        public void Multiply_Matrix_MismatchedDimensions_Throws()
+        {
+            // Arrange
+            var left = CreateMatrix(new double[,]
+            {
+                { 1.0, 2.0 },
+                { 3.0, 4.0 },
+            });
+            var right = CreateMatrix(new double[,]
+            {
+                { 1.0, 2.0, 3.0 },
+                { 4.0, 5.0, 6.0 },
+            });
+
+            // Act
+            Action act = () => left.Multiply(right);
+
+            // Assert
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        /// <summary>
+        /// Proves that matrix multiplication is associative, i.e. that (AB)C = A(BC).
+        /// </summary>
+        [Fact]
+        public void Multiply_Matrix_IsAssociative()
+        {
+            // Arrange
+            var a = CreateMatrix(new double[,]
+            {
+                { 1.0, 2.0 },
+                { 3.0, 4.0 },
+            });
+            var b = CreateMatrix(new double[,]
+            {
+                { 5.0, 6.0 },
+                { 7.0, 8.0 },
+            });
+            var c = CreateMatrix(new double[,]
+            {
+                { 9.0, 10.0 },
+                { 11.0, 12.0 },
+            });
+
+            // Act
+            var leftHandSide = a.Multiply(b).Multiply(c);
+            var rightHandSide = a.Multiply(b.Multiply(c));
+
+            // Assert
+            leftHandSide.Should().BeEquivalentTo(rightHandSide);
+        }
+
+        /// <summary>
+        /// Proves that matrix multiplication is distributive, i.e. that A(B + C) = AB + AC.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(MatrixMultiplicationTestCaseNames))]
+        public void Multiply_Matrix_IsDistributive(string testCaseName)
+        {
+            // Arrange
+            var testCase = MatrixMultiplicationTestCases[testCaseName];
+
+            // Act
+            var leftHandSide = testCase.left.Multiply(testCase.right.Add(testCase.right));
+            var rightHandSide = testCase.left.Multiply(testCase.right).Add(testCase.left.Multiply(testCase.right));
+
+            // Assert
+            leftHandSide.Should().BeEquivalentTo(rightHandSide);
+        }
+
+        /// <summary>
+        /// Proves that multiplication is not commutative, i.e. AB != BA.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(MatrixMultiplicationTestCaseNames))]
+        public void Multiply_Matrix_IsNotCommutative(string testCaseName)
+        {
+            // Arrange
+            var testCase = MatrixMultiplicationTestCases[testCaseName];
+            if (testCase.left == testCase.right)
+            {
+                // If the left and right matrices are the same, then multiplication will be commutative, so skip this test case.
+                return;
+            }
+
+            // Act
+            var ab = testCase.right.Multiply(testCase.left);
+            var ba = testCase.left.Multiply(testCase.right);
+
+            // Assert
+            ab.Should().NotBeEquivalentTo(ba);
+        }
+
+        #endregion
+
+        #region Hadamard product
 
         /// <summary>
         /// Tests that the Hadamard product (element-wise multiplication) of two matrices retuns the expected result.
@@ -905,6 +1068,8 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             actualResult.Should().BeEquivalentTo(testCase.expectedResult);
         }
+
+        #endregion
 
         #endregion
 

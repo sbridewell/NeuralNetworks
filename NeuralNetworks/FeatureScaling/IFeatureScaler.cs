@@ -6,8 +6,6 @@ namespace Sde.NeuralNetworks.FeatureScaling
 {
     using Sde.NeuralNetworks.LinearAlgebra;
 
-    // TODO: read https://www.freecodecamp.org/news/learn-linear-algebra-for-machine-learning
-
     /// <summary>
     /// Interface for a feature scaler, which is class of stastical techniques
     /// for ensuring that the values of data items (features) in a data set
