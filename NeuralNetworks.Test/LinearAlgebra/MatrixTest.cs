@@ -826,6 +826,25 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             actualResult.Should().BeEquivalentTo(testCase.expectedResult);
         }
 
+        /// <summary>
+        /// Tests that the AddInPlace method correctly modifies the left hand operand to be the
+        /// element-wise sum of the left and right hand operands.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(AdditionTestCaseNames))]
+        public void AddInPlace_HappyPath_ReturnsElementWiseSum(string testCaseName)
+        {
+            // Arrange
+            var testCase = AdditionTestCases[testCaseName];
+
+            // Act
+            testCase.left.AddInPlace(testCase.right);
+
+            // Assert
+            testCase.left.Should().BeEquivalentTo(testCase.expectedResult);
+        }
+
 #if DEBUG
         /// <summary>
         /// Verifies that adding matrices of differing dimensions throws an <see cref="ArgumentException"/>.
@@ -891,6 +910,25 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
 
             // Assert
             actualResult.Should().BeEquivalentTo(testCase.expectedResult);
+        }
+
+        /// <summary>
+        /// Tests that the SubtractInPlace method correctly modifies the left hand operand to be the
+        /// element-wise difference of the left and right hand operands.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(SubtractionTestCaseNames))]
+        public void SubtractInPlace_HappyPath_ReturnsElementWiseSum(string testCaseName)
+        {
+            // Arrange
+            var testCase = SubtractionTestCases[testCaseName];
+
+            // Act
+            testCase.left.SubtractInPlace(testCase.right);
+
+            // Assert
+            testCase.left.Should().BeEquivalentTo(testCase.expectedResult);
         }
 
 #if DEBUG

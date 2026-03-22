@@ -169,6 +169,22 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         }
 
         /// <summary>
+        /// Adds an array to the current vector, mutating the current vector in place.
+        /// </summary>
+        /// <param name="otherVector">The vector to add.</param>
+        public void AddInPlace(Vector otherVector)
+        {
+#if DEBUG
+            this.ThrowIfLengthMismatch(otherVector);
+#endif
+            var length = array.Length;
+            for (var i = 0; i < length; i++)
+            {
+                array[i] += otherVector[i];
+            }
+        }
+
+        /// <summary>
         /// Subtracts another vector from this vector and returns the resulting vector.
         /// This method does not mutate the original vector.
         /// </summary>
@@ -189,6 +205,22 @@ namespace Sde.NeuralNetworks.LinearAlgebra
             }
 
             return new Vector(resultArray);
+        }
+
+        /// <summary>
+        /// Subtracts a vector from the current vector, mutating the current vector in place.
+        /// </summary>
+        /// <param name="otherVector">The vector to subtract.</param>
+        public void SubtractInPlace(Vector otherVector)
+        {
+#if DEBUG
+            this.ThrowIfLengthMismatch(otherVector);
+#endif
+            var length = array.Length;
+            for (var i = 0; i < length; i++)
+            {
+                array[i] -= otherVector[i];
+            }
         }
 
         /// <summary>

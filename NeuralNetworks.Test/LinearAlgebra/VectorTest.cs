@@ -575,6 +575,24 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             sum.Elements.Should().BeEquivalentTo(testCase.expectedResult.Elements);
         }
 
+        /// <summary>
+        /// Verifies that the AddInPlace method returns the element-wise sum when adding two vectors of the same length.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(AdditionTestCaseNames))]
+        public void AddInPlace_SameLengthVectors_ReturnsElementWiseSum(string testCaseName)
+        {
+            // Arrange
+            var testCase = AdditionTestCases[testCaseName];
+
+            // Act
+            testCase.left.AddInPlace(testCase.right);
+
+            // Assert
+            testCase.left.Elements.Should().BeEquivalentTo(testCase.expectedResult.Elements);
+        }
+
 #if DEBUG
         /// <summary>
         /// Verifies that adding vectors of different lengths using the
@@ -617,6 +635,25 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
 
             // Assert
             difference.Elements.Should().BeEquivalentTo(testCase.expectedResult.Elements);
+        }
+
+        /// <summary>
+        /// Verifies that the SubtractInPlace method returns the element-wise sum when
+        /// subtracting two vectors of the same length.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(SubtractionTestCaseNames))]
+        public void SubtractInPlace_SameLengthVectors_ReturnsElementWiseDifference(string testCaseName)
+        {
+            // Arrange
+            var testCase = SubtractionTestCases[testCaseName];
+
+            // Act
+            testCase.left.SubtractInPlace(testCase.right);
+
+            // Assert
+            testCase.left.Elements.Should().BeEquivalentTo(testCase.expectedResult.Elements);
         }
 
 #if DEBUG

@@ -442,6 +442,33 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         }
 
         /// <summary>
+        /// Adds the elements of the specified matrix to the current matrix, modifying the current matrix in place.
+        /// </summary>
+        /// <param name="otherMatrix">The matrix to add.</param>
+        public void AddInPlace(Matrix otherMatrix)
+        {
+#if DEBUG
+            ArgumentNullException.ThrowIfNull(otherMatrix);
+            this.ThrowIfDimensionMismatch(otherMatrix);
+#endif
+            //var newRowVectors = new List<Vector>();
+            for (var rowIndex = 0; rowIndex < this.RowCount; rowIndex++)
+            {
+                //double[] elements = new double[this.ColumnCount];
+                //for (var columnIndex = 0; columnIndex < this.ColumnCount; columnIndex++)
+                //{
+                //    elements[columnIndex] = this.array[rowIndex, columnIndex] + otherMatrix.array[rowIndex, columnIndex];
+                //}
+
+                //newRowVectors.Add(new Vector(elements));
+                for (var columnIndex = 0; columnIndex < this.ColumnCount; columnIndex++)
+                {
+                    this.array[rowIndex, columnIndex] += otherMatrix.array[rowIndex, columnIndex];
+                }
+            }
+        }
+
+        /// <summary>
         /// Subtracts the supplied matrix from this matrix and returns the result as a new matrix.
         /// </summary>
         /// <param name="otherMatrix">The matrix to subtract from the current matrix.</param>
@@ -469,6 +496,33 @@ namespace Sde.NeuralNetworks.LinearAlgebra
             }
 
             return new Matrix(newRowVectors.ToArray());
+        }
+
+        /// <summary>
+        /// Subtracts the elements of the specified matrix from the current matrix, modifying the current matrix in place.
+        /// </summary>
+        /// <param name="otherMatrix">The matrix to subtract.</param>
+        public void SubtractInPlace(Matrix otherMatrix)
+        {
+#if DEBUG
+            ArgumentNullException.ThrowIfNull(otherMatrix);
+            this.ThrowIfDimensionMismatch(otherMatrix);
+#endif
+            //var newRowVectors = new List<Vector>();
+            for (var rowIndex = 0; rowIndex < this.RowCount; rowIndex++)
+            {
+                //double[] elements = new double[this.ColumnCount];
+                //for (var columnIndex = 0; columnIndex < this.ColumnCount; columnIndex++)
+                //{
+                //    elements[columnIndex] = this.array[rowIndex, columnIndex] + otherMatrix.array[rowIndex, columnIndex];
+                //}
+
+                //newRowVectors.Add(new Vector(elements));
+                for (var columnIndex = 0; columnIndex < this.ColumnCount; columnIndex++)
+                {
+                    this.array[rowIndex, columnIndex] -= otherMatrix.array[rowIndex, columnIndex];
+                }
+            }
         }
 
         #region scalar multiplication methods
