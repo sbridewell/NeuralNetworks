@@ -83,7 +83,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// </param>
         public Matrix(Vector[] rowVectors)
         {
+#if DEBUG
             ArgumentNullException.ThrowIfNull(rowVectors);
+#endif
             if (rowVectors.Length == 0)
             {
                 this.array = new double[0, 0];
@@ -92,6 +94,7 @@ namespace Sde.NeuralNetworks.LinearAlgebra
 
             var rowCount = this.RowCount = rowVectors.Length;
             var columnCount = this.ColumnCount = rowVectors[0].Dimension;
+#if DEBUG
             if (!rowVectors.All(v => v.Dimension == columnCount))
             {
                 var sb = new StringBuilder();
@@ -108,6 +111,7 @@ namespace Sde.NeuralNetworks.LinearAlgebra
                     + $"The supplied vectors have dimensions {sb.ToString()}";
                 throw new ArgumentException(msg);
             }
+#endif
 
             this.array = new double[rowCount, columnCount];
             for (var rowIndex = 0; rowIndex < rowCount; rowIndex++)
@@ -251,7 +255,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// <returns>The element-wise sum of the two matrices.</returns>
         public static Matrix operator +(Matrix left, Matrix right)
         {
+#if DEBUG
             ArgumentNullException.ThrowIfNull(left);
+#endif
             return left.Add(right);
         }
 
@@ -263,7 +269,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// <returns>The element-wise difference between the two matrices.</returns>
         public static Matrix operator -(Matrix left, Matrix right)
         {
+#if DEBUG
             ArgumentNullException.ThrowIfNull(left);
+#endif
             return left.Subtract(right);
         }
 
@@ -278,7 +286,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         [ExcludeFromCodeCoverage]
         public static Matrix operator *(Matrix left, double right)
         {
+#if DEBUG
             ArgumentNullException.ThrowIfNull(left);
+#endif
             return left.Multiply(right);
         }
 
@@ -291,7 +301,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         [ExcludeFromCodeCoverage]
         public static Matrix operator *(Matrix left, int right)
         {
+#if DEBUG
             ArgumentNullException.ThrowIfNull(left);
+#endif
             return left.Multiply(right);
         }
 
@@ -304,7 +316,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         [ExcludeFromCodeCoverage]
         public static Matrix operator *(Matrix left, decimal right)
         {
+#if DEBUG
             ArgumentNullException.ThrowIfNull(left);
+#endif
             return left.Multiply(right);
         }
 
@@ -317,7 +331,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         [ExcludeFromCodeCoverage]
         public static Matrix operator *(double left, Matrix right)
         {
+#if DEBUG
             ArgumentNullException.ThrowIfNull(right);
+#endif
             return right.Multiply(left);
         }
 
@@ -330,7 +346,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         [ExcludeFromCodeCoverage]
         public static Matrix operator *(int left, Matrix right)
         {
+#if DEBUG
             ArgumentNullException.ThrowIfNull(right);
+#endif
             return right.Multiply(left);
         }
 
@@ -343,7 +361,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         [ExcludeFromCodeCoverage]
         public static Matrix operator *(decimal left, Matrix right)
         {
+#if DEBUG
             ArgumentNullException.ThrowIfNull(right);
+#endif
             return right.Multiply(left);
         }
 
@@ -402,8 +422,10 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// <returns>The sum of the two matrices.</returns>
         public Matrix Add(Matrix otherMatrix)
         {
+#if DEBUG
             ArgumentNullException.ThrowIfNull(otherMatrix);
             this.ThrowIfDimensionMismatch(otherMatrix);
+#endif
             var newRowVectors = new List<Vector>();
             for (var rowIndex = 0; rowIndex < this.RowCount; rowIndex++)
             {
@@ -430,8 +452,10 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// </remarks>
         public Matrix Subtract(Matrix otherMatrix)
         {
+#if DEBUG
             ArgumentNullException.ThrowIfNull(otherMatrix);
             this.ThrowIfDimensionMismatch(otherMatrix);
+#endif
             var newRowVectors = new List<Vector>();
             for (var rowIndex = 0; rowIndex < this.RowCount; rowIndex++)
             {
@@ -509,6 +533,7 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// <returns>A vector with 1 element per row of the current matrix.</returns>
         public Vector Multiply(Vector vector)
         {
+#if DEBUG
             if (this.ColumnCount != vector.Dimension)
             {
                 var msg = "In order to multiply a matrix by a vector, the number of columns in the matrix must equal the "
@@ -516,6 +541,7 @@ namespace Sde.NeuralNetworks.LinearAlgebra
                     + $"The matrix has {this.ColumnCount} columns, but the vector has dimension {vector.Dimension}.";
                 throw new ArgumentException(msg);
             }
+#endif
 
             var resultElements = new double[this.RowCount];
             for (var rowIndex = 0; rowIndex < this.RowCount; rowIndex++)
@@ -555,6 +581,7 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// </exception>
         public Matrix Multiply(Matrix otherMatrix)
         {
+#if DEBUG
             ArgumentNullException.ThrowIfNull(otherMatrix);
             if (this.RowCount != otherMatrix.ColumnCount || this.ColumnCount != otherMatrix.RowCount)
             {
@@ -565,6 +592,7 @@ namespace Sde.NeuralNetworks.LinearAlgebra
                     + $"dimensions {otherMatrix.RowCount}x{otherMatrix.ColumnCount}.";
                 throw new ArgumentException(msg);
             }
+#endif
 
             var resultRowCount = this.RowCount;
             var resultColumnCount = otherMatrix.ColumnCount;
@@ -600,8 +628,10 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// <returns>The result of the multiplication.</returns>
         public Matrix CalculateHadamardProduct(Matrix otherMatrix)
         {
+#if DEBUG
             ArgumentNullException.ThrowIfNull(otherMatrix);
             this.ThrowIfDimensionMismatch(otherMatrix);
+#endif
             var newRowVectors = new Vector[this.RowCount];
             for (var rowIndex = 0; rowIndex < this.RowCount; rowIndex++)
             {
@@ -680,6 +710,7 @@ namespace Sde.NeuralNetworks.LinearAlgebra
 
         #region private methods
 
+#if DEBUG
         private void ThrowIfDimensionMismatch(Matrix otherMatrix)
         {
             if (this.RowCount != otherMatrix.RowCount || this.ColumnCount != otherMatrix.ColumnCount)
@@ -690,6 +721,7 @@ namespace Sde.NeuralNetworks.LinearAlgebra
                     $"but the other matrix has dimensions {otherMatrix.RowCount}x{otherMatrix.ColumnCount}.");
             }
         }
+#endif
 
         #endregion
     }

@@ -441,6 +441,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             result.Should().Be(testCase.expectedResult);
         }
 
+#if DEBUG
         /// <summary>
         /// Tests that the correct exception is thrown when the <see cref="Vector.IsValueEqualTo"/>
         /// method is called on two vectors of different dimension.
@@ -459,6 +460,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             act.Should().ThrowExactly<ArgumentException>();
         }
+#endif
 
         #endregion
 
@@ -533,6 +535,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             sum.Elements.Should().BeEquivalentTo(testCase.expectedResult.Elements);
         }
 
+#if DEBUG
         /// <summary>
         /// Verifies that adding vectors of different lengths throws an
         /// <see cref="ArgumentException"/>.
@@ -551,6 +554,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             act.Should().ThrowExactly<ArgumentException>();
         }
+#endif
 
         /// <summary>
         /// Ensures that adding two vectors of the same length using the + operator
@@ -571,6 +575,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             sum.Elements.Should().BeEquivalentTo(testCase.expectedResult.Elements);
         }
 
+#if DEBUG
         /// <summary>
         /// Verifies that adding vectors of different lengths using the
         /// + operator throws an <see cref="ArgumentException"/>.
@@ -589,6 +594,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             act.Should().ThrowExactly<ArgumentException>();
         }
+#endif
 
         #endregion
 
@@ -613,6 +619,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             difference.Elements.Should().BeEquivalentTo(testCase.expectedResult.Elements);
         }
 
+#if DEBUG
         /// <summary>
         /// Verifies that the Subtract method throws an ArgumentException when called
         /// with operands of different lengths.
@@ -631,6 +638,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             act.Should().ThrowExactly<ArgumentException>();
         }
+#endif
 
         /// <summary>
         /// Tests that subtracting two vectors of the same length using the minus
@@ -651,6 +659,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             difference.Elements.Should().BeEquivalentTo(testCase.expectedResult.Elements);
         }
 
+#if DEBUG
         /// <summary>
         /// Verifies that the minus operator throws an ArgumentException when called
         /// with operands of different lengths.
@@ -669,6 +678,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             act.Should().ThrowExactly<ArgumentException>();
         }
+#endif
 
         #endregion
 
@@ -693,6 +703,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             result.Should().BeApproximately(testCase.expectedResult, 1e-9);
         }
 
+#if DEBUG
         /// <summary>
         /// Tests that the correct exception is thrown when trying to perform dot
         /// product multiplication on vectors of different lengths.
@@ -711,6 +722,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             act.Should().ThrowExactly<ArgumentException>();
         }
+#endif
 
         #endregion
 
@@ -734,6 +746,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             result.Elements.Should().BeEquivalentTo(testCase.expectedResult.Elements);
         }
 
+#if DEBUG
         /// <summary>
         /// Verifies that the MultiplyElementWise method throws an ArgumentException when called with arrays of
         /// different lengths.
@@ -754,6 +767,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             act.Should().ThrowExactly<ArgumentException>();
         }
+#endif
 
         #endregion
 
@@ -878,6 +892,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             similarity.Should().BeApproximately(testCase.expectedResult, 1e-9);
         }
 
+#if DEBUG
         /// <summary>
         /// Tests that the GetCosineSimilarity method throws the correct exception
         /// when comparing vectors of different lengths..
@@ -896,6 +911,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             act.Should().ThrowExactly<ArgumentException>();
         }
+#endif
 
         #endregion
 
@@ -1020,7 +1036,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
         #region ToString tests
 
         /// <summary>
-        /// Tests that the ToString method returns the expected string representation..
+        /// Tests that the ToString method returns the expected string representation.
         /// </summary>
         /// <param name="testCaseName">Name of the test case.</param>
         [Theory]
@@ -1035,6 +1051,23 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
 
             // Assert
             actualString.Should().Be(testCase.expectedString);
+        }
+
+        /// <summary>
+        /// Tests that the ToString method returns an empty string when the vector has
+        /// null elements.
+        /// </summary>
+        [Fact]
+        public void ToString_NullElements_ReturnsEmptyString()
+        {
+            // Arrange
+            var vector = new Vector(null!);
+
+            // Act
+            var actualString = vector.ToString();
+
+            // Assert
+            actualString.Should().Be(string.Empty);
         }
         #endregion
     }

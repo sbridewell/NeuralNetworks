@@ -638,6 +638,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
 
         #region constructor tests
 
+#if DEBUG
         /// <summary>
         /// Tests that the correct exception is thrown when a null array of
         /// row vectors is passed to the constructor.
@@ -672,6 +673,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             act.Should().ThrowExactly<ArgumentException>();
         }
+#endif
 
         #endregion
 
@@ -824,6 +826,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             actualResult.Should().BeEquivalentTo(testCase.expectedResult);
         }
 
+#if DEBUG
         /// <summary>
         /// Verifies that adding matrices of differing dimensions throws an <see cref="ArgumentException"/>.
         /// </summary>
@@ -847,8 +850,9 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             act.Should().ThrowExactly<ArgumentException>();
         }
+#endif
 
-        #endregion
+#endregion
 
         #region subtraction tests
 
@@ -889,6 +893,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             actualResult.Should().BeEquivalentTo(testCase.expectedResult);
         }
 
+#if DEBUG
         /// <summary>
         /// Verifies that subtracting matrices of differing dimensions throws an <see cref="ArgumentException"/>.
         /// </summary>
@@ -912,8 +917,9 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             act.Should().ThrowExactly<ArgumentException>();
         }
+#endif
 
-        #endregion
+#endregion
 
         #region multiplication tests
 
@@ -959,6 +965,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             actualResult.Elements.Should().BeEquivalentTo(testCase.expectedVector.Elements);
         }
 
+#if DEBUG
         /// <summary>
         /// Tests that the correct exception is thrown when attempting to multiply a matrix by a
         /// vector with mismatched dimensions.
@@ -980,6 +987,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             act.Should().ThrowExactly<ArgumentException>();
         }
+#endif
 
         #endregion
 
@@ -1003,6 +1011,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             actualResult.Should().BeEquivalentTo(testCase.expectedResult);
         }
 
+#if DEBUG
         /// <summary>
         /// Tests that the Multiply method which accepts a Matrix throws the correct
         /// exception when the two arrays have mismatched dimmensions.
@@ -1028,6 +1037,7 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             // Assert
             act.Should().ThrowExactly<ArgumentException>();
         }
+#endif
 
         /// <summary>
         /// Proves that matrix multiplication is associative, i.e. that (AB)C = A(BC).

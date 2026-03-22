@@ -48,13 +48,17 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         {
             get
             {
+#if DEBUG
                 this.ThrowIfIndexOutOfRange(index);
+#endif
                 return array[index];
             }
 
             set
             {
+#if DEBUG
                 this.ThrowIfIndexOutOfRange(index);
+#endif
                 array[index] = value;
             }
         }
@@ -125,7 +129,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// </exception>"
         public bool IsValueEqualTo(Vector otherVector, double tolerance = 1e-7)
         {
+#if DEBUG
             this.ThrowIfLengthMismatch(otherVector);
+#endif
             for (var i = 0; i < array.Length; i++)
             {
                 if (Math.Abs(array[i] - otherVector[i]) > tolerance)
@@ -149,7 +155,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// <returns>The sum of the two vectors.</returns>
         public Vector Add(Vector otherVector)
         {
+#if DEBUG
             this.ThrowIfLengthMismatch(otherVector);
+#endif
             var length = array.Length;
             var resultArray = new double[length];
             for (var i = 0; i < length; i++)
@@ -170,7 +178,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// </returns>
         public Vector Subtract(Vector otherVector)
         {
+#if DEBUG
             this.ThrowIfLengthMismatch(otherVector);
+#endif
             var length = array.Length;
             var resultArray = new double[length];
             for (var i = 0; i < length; i++)
@@ -190,7 +200,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// <returns>The dot product of the two vectors.</returns>
         public double MultiplyUsingDotProduct(Vector otherVector)
         {
+#if DEBUG
             this.ThrowIfLengthMismatch(otherVector);
+#endif
             var length = array.Length;
             var result = 0.0;
             for (var i = 0; i < length; i++)
@@ -211,7 +223,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// </returns>
         public Vector MultiplyElementWise(Vector otherVector)
         {
+#if DEBUG
             this.ThrowIfLengthMismatch(otherVector);
+#endif
             var length = array.Length;
             var resultArray = new double[length];
             for (var i = 0; i < length; i++)
@@ -252,7 +266,9 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         /// <returns>The cosnie similarity.</returns>
         public double GetCosineSimilarity(Vector otherVector)
         {
+#if DEBUG
             this.ThrowIfLengthMismatch(otherVector);
+#endif
             var dotProduct = 0.0;
             var magnitudeA = 0.0;
             var magnitudeB = 0.0;
@@ -393,6 +409,7 @@ namespace Sde.NeuralNetworks.LinearAlgebra
 
         #region private methods
 
+#if DEBUG
         [SuppressMessage(
             "Major Code Smell",
             "S112:General or reserved exceptions should never be thrown",
@@ -416,7 +433,8 @@ namespace Sde.NeuralNetworks.LinearAlgebra
                     + $"Dimension of the other vector: {otherVector.Dimension}");
             }
         }
+#endif
 
-        #endregion
+    #endregion
     }
 }
