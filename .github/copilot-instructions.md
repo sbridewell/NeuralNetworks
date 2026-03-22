@@ -10,7 +10,7 @@ Just so that I know that you're reading these instructions, please start each re
   - Colour, not color
   - Grey, not gray
   - Serialise, not serialize
-  - **Exception**: Constructor documentation comments must use US English spelling for the word "Initializes" to comply with StyleCop analysis rules (e.g., "Initializes a new instance of the class").
+  - **Exception**: Constructor documentation comments must use US English spelling for the word "Initializes" to comply with StyleCop analysis rules (e.g., "Initializes a new instance").
 - Code must meet the following complexity requirements:
   - Methods must not have a cyclomatic complexity greater than 10.
   - Methods must not have more than 50 lines of code.
@@ -18,8 +18,4 @@ Just so that I know that you're reading these instructions, please start each re
  
 # Suggesting changes to existing code
 
-- When asked to suggest changes to existing code, do not provide the whole of the updated class, instead provide a diff of the relevant code sections with the proposed changes. Use the following format for the diff:
-  ```diff
-  - // Original code line
-  + // Modified code line
-  ```
+- When asked to suggest changes to existing code, do not provide the whole of the updated class, instead provide a diff of the relevant code sections with the proposed changes.
