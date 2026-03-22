@@ -4,7 +4,6 @@
 
 namespace Sde.NeuralNetworks.LinearAlgebra
 {
-    // TODO: NeuralNetworkLayer class with forward propagation (intentionally incomplete, need to add backpropagation later
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
@@ -501,6 +500,38 @@ namespace Sde.NeuralNetworks.LinearAlgebra
 
         #endregion
 
+        #region multiply this matrix by a vector
+
+        /// <summary>
+        /// Multiplies the current matrix by the supplied vector and returns the result as a new vector.
+        /// </summary>
+        /// <param name="vector">The vector to multiply by.</param>
+        /// <returns>A vector with 1 element per row of the current matrix.</returns>
+        public Vector Multiply(Vector vector)
+        {
+            if (this.ColumnCount != vector.Dimension)
+            {
+                var msg = "In order to multiply a matrix by a vector, the number of columns in the matrix must equal the "
+                    + "dimension of the vector. "
+                    + $"The matrix has {this.ColumnCount} columns, but the vector has dimension {vector.Dimension}.";
+                throw new ArgumentException(msg);
+            }
+
+            var resultElements = new double[this.RowCount];
+            for (var rowIndex = 0; rowIndex < this.RowCount; rowIndex++)
+            {
+                var thisRow = this.RowVectors[rowIndex];
+                var dotProduct = thisRow.MultiplyUsingDotProduct(vector);
+                resultElements[rowIndex] = dotProduct;
+            }
+
+            return new Vector(resultElements);
+        }
+
+        #endregion
+
+        #region matrix multiplication
+
         /// <summary>
         /// Multiplies the current matrix by the supplied matrix and returns the result as a new matrix.
         /// </summary>
@@ -557,6 +588,8 @@ namespace Sde.NeuralNetworks.LinearAlgebra
             var result = new Matrix(resultRowVectors);
             return result;
         }
+
+        #endregion
 
         /// <summary>
         /// Multiplies the current matrix by the supplied matrix element-wise and returns the result

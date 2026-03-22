@@ -59,6 +59,14 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
         public record MatrixVectorArrrayTestCase(Matrix inputMatrix, Vector[] expectedVectors);
 
         /// <summary>
+        /// Test case for an operation which takes a matrix and a vector as input and produces a vector as output.
+        /// </summary>
+        /// <param name="inputMatrix">The input matrix.</param>
+        /// <param name="inputVector">The input vector.</param>
+        /// <param name="expectedVector">The expected result of the operation.</param>
+        public record MatrixVectorVectorTestCase(Matrix inputMatrix, Vector inputVector, Vector expectedVector);
+
+        /// <summary>
         /// Test case for the ToString method of the Matrix class.
         /// </summary>
         /// <param name="inputMatrix">The matrix to represent as a string.</param>
@@ -98,6 +106,11 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
         /// Gets the names of the scalar multiplication test cases.
         /// </summary>
         public static TheoryData<string> ScalarMultiplicationTestCaseNames => new TheoryData<string>(ScalarMultiplicationTestCases.Keys);
+
+        /// <summary>
+        /// Gets the names of the vector multiplication test cases.
+        /// </summary>
+        public static TheoryData<string> VectorMultiplicationTestCaseNames => new TheoryData<string>(VectorMultiplicationTestCases.Keys);
 
         /// <summary>
         /// Gets the names of the element-wise multiplication test cases.
@@ -396,6 +409,25 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
                             { -1.5, 3.0, -4.5 },
                             { 6.0, -7.5, 9.0 },
                         })));
+                return data;
+            }
+        }
+
+        private static Dictionary<string, MatrixVectorVectorTestCase> VectorMultiplicationTestCases
+        {
+            get
+            {
+                var data = new Dictionary<string, MatrixVectorVectorTestCase>();
+                data.Add(
+                    "2 by 2 times 2 elements",
+                    new MatrixVectorVectorTestCase(
+                        CreateMatrix(new double[,]
+                        {
+                            { 0.5, 0.3 },
+                            { 0.8, 0.1 },
+                        }),
+                        new Vector(new double[] { 2, 4 }),
+                        new Vector(new double[] { 2.2, 2 })));
                 return data;
             }
         }
@@ -903,6 +935,50 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
 
             // Assert
             actualResult.Should().BeEquivalentTo(testCase.expectedResult);
+        }
+
+        #endregion
+
+        #region vector multiplication
+
+        /// <summary>
+        /// Tests that multiplying a matrix by a vector returns the expected result.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(VectorMultiplicationTestCaseNames))]
+        public void Multiply_Vector_ReturnsCorrectVector(string testCaseName)
+        {
+            // Arrange
+            var testCase = VectorMultiplicationTestCases[testCaseName];
+
+            // Act
+            var actualResult = testCase.inputMatrix.Multiply(testCase.inputVector);
+
+            // Assert
+            actualResult.Elements.Should().BeEquivalentTo(testCase.expectedVector.Elements);
+        }
+
+        /// <summary>
+        /// Tests that the correct exception is thrown when attempting to multiply a matrix by a
+        /// vector with mismatched dimensions.
+        /// </summary>
+        [Fact]
+        public void Multiply_Vector_MismatchedDimensions_Throws()
+        {
+            // Arrange
+            var matrix = CreateMatrix(new double[,]
+            {
+                { 1.0, 2.0 },
+                { 3.0, 4.0 },
+            });
+            var vector = new Vector(new double[] { 1.0 });
+
+            // Act
+            Action act = () => matrix.Multiply(vector);
+
+            // Assert
+            act.Should().ThrowExactly<ArgumentException>();
         }
 
         #endregion
