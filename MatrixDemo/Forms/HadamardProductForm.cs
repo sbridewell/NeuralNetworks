@@ -2,7 +2,6 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-
 namespace Sde.MatrixDemo.Forms
 {
     /// <summary>
