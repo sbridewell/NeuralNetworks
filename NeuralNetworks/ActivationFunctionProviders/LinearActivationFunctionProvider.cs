@@ -6,6 +6,7 @@ namespace Sde.NeuralNetworks.ActivationFunctionProviders
 {
     /// <summary>
     /// Linear activation function provider.
+    /// The activation function is f(x) = x, and the gradient is f'(x) = 1.
     /// </summary>
     public class LinearActivationFunctionProvider : IActivationFunctionProvider
     {

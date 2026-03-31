@@ -1,11 +1,9 @@
 ﻿namespace Sde.NeuralNetworks.Benchmarks
 {
-    using BenchmarkDotNet.Attributes;
     using BenchmarkDotNet.Configs;
     using BenchmarkDotNet.Jobs;
     using BenchmarkDotNet.Running;
     using BenchmarkDotNet.Toolchains.InProcess.NoEmit;
-    using Sde.NeuralNetworks;
 
     /// <summary>
     /// Class containing the entry point for the benchmark application.
@@ -29,8 +27,10 @@
             // Run benchmarks for vector and matrix implementations.
             //var switcher = BenchmarkSwitcher.FromTypes(new[] { typeof(VectorBenchmarks), typeof(MatrixBenchmarks) });
             //switcher.Run(args);
-            BenchmarkRunner.Run<VectorBenchmarks>();
-            BenchmarkRunner.Run<MatrixBenchmarks>();
+            //BenchmarkRunner.Run<VectorBenchmarks>();
+            //BenchmarkRunner.Run<MatrixBenchmarks>();
+
+            BenchmarkRunner.Run<ActivationFunctionProviderIterationBenchmarks>(config);
         }
     }
 
