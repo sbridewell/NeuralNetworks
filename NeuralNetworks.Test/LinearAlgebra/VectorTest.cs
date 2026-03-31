@@ -462,6 +462,41 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
         }
 #endif
 
+        /// <summary>
+        /// Tests that the Equals method returns false when comparing a Vector to an object of a different type.
+        /// </summary>
+        [Fact]
+        public void Equals_DifferentTypes_ReturnsFalse()
+        {
+            // Arrange
+            var vector = new Vector(new double[] { 1.0, 2.0 });
+            var notAVector = "I am not a vector";
+
+            // Act
+            var result = vector.Equals(notAVector);
+
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        /// <summary>
+        /// Tests that the Equals method returns false when comparing two vectors of different dimension.
+        /// </summary>
+        /// <param name="testCaseName">Name of the test case.</param>
+        [Theory]
+        [MemberData(nameof(DifferentDimensionTestCaseNames))]
+        public void Equals_DifferentDimensions_ReturnsFalse(string testCaseName)
+        {
+            // Arrange
+            var testCase = DifferentDimensionTestCases[testCaseName];
+
+            // Act
+            var result = testCase.left.Equals(testCase.right);
+
+            // Assert
+            result.Should().BeFalse();
+        }
+
         #endregion
 
         #region indexer tests

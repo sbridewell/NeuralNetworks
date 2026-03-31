@@ -112,6 +112,7 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         }
 
         // TODO: If the * operator is used on two vectors, should the result be the dot product or element-wise multiplication?
+
         #endregion
 
         #region equality
@@ -141,6 +142,51 @@ namespace Sde.NeuralNetworks.LinearAlgebra
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is value-equal to this vector.
+        /// Uses <see cref="IsValueEqualTo(Vector,double)"/> with the default tolerance.
+        /// </summary>
+        /// <param name="obj">The object to compare with this vector.</param>
+        /// <returns>True when the supplied object is a <see cref="Vector"/> and is value-equal, otherwise false.</returns>
+        public override bool Equals(object? obj)
+        {
+            if (obj is not Vector other)
+            {
+                return false;
+            }
+
+#if DEBUG
+            // In DEBUG builds the length mismatch check is asserted by IsValueEqualTo, but
+            // checking here avoids calling IsValueEqualTo when dimensions differ.
+            if (this.Dimension != other.Dimension)
+            {
+                return false;
+            }
+#endif
+
+            return this.IsValueEqualTo(other);
+        }
+
+        /// <summary>
+        /// Returns a hash code consistent with the value-equality used by <see cref="Equals(object?)"/>.
+        /// Elements are quantised to 1e-7 to match the default tolerance used by <see cref="IsValueEqualTo(Vector,double)"/>.
+        /// </summary>
+        /// <returns>A hash code for the current vector.</returns>
+        [ExcludeFromCodeCoverage]
+        public override int GetHashCode()
+        {
+            const int precision = 7; // must match IsValueEqualTo tolerance of 1e-7
+            var hc = default(HashCode);
+            hc.Add(this.Dimension);
+            for (var i = 0; i < this.Elements.Length; i++)
+            {
+                var rounded = Math.Round(this.Elements[i], precision);
+                hc.Add(rounded);
+            }
+
+            return hc.ToHashCode();
         }
 
         #endregion

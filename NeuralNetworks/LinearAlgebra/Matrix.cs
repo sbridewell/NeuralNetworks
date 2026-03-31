@@ -75,6 +75,8 @@ namespace Sde.NeuralNetworks.LinearAlgebra
 
         #region constructor
 
+        // TODO: constructor which accepts a params array of arrays, e.g. new Matrix({ 1, 2 }, { 3, 4 });
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix"/> class.
         /// </summary>
@@ -451,16 +453,8 @@ namespace Sde.NeuralNetworks.LinearAlgebra
             ArgumentNullException.ThrowIfNull(otherMatrix);
             this.ThrowIfDimensionMismatch(otherMatrix);
 #endif
-            //var newRowVectors = new List<Vector>();
             for (var rowIndex = 0; rowIndex < this.RowCount; rowIndex++)
             {
-                //double[] elements = new double[this.ColumnCount];
-                //for (var columnIndex = 0; columnIndex < this.ColumnCount; columnIndex++)
-                //{
-                //    elements[columnIndex] = this.array[rowIndex, columnIndex] + otherMatrix.array[rowIndex, columnIndex];
-                //}
-
-                //newRowVectors.Add(new Vector(elements));
                 for (var columnIndex = 0; columnIndex < this.ColumnCount; columnIndex++)
                 {
                     this.array[rowIndex, columnIndex] += otherMatrix.array[rowIndex, columnIndex];
@@ -508,16 +502,8 @@ namespace Sde.NeuralNetworks.LinearAlgebra
             ArgumentNullException.ThrowIfNull(otherMatrix);
             this.ThrowIfDimensionMismatch(otherMatrix);
 #endif
-            //var newRowVectors = new List<Vector>();
             for (var rowIndex = 0; rowIndex < this.RowCount; rowIndex++)
             {
-                //double[] elements = new double[this.ColumnCount];
-                //for (var columnIndex = 0; columnIndex < this.ColumnCount; columnIndex++)
-                //{
-                //    elements[columnIndex] = this.array[rowIndex, columnIndex] + otherMatrix.array[rowIndex, columnIndex];
-                //}
-
-                //newRowVectors.Add(new Vector(elements));
                 for (var columnIndex = 0; columnIndex < this.ColumnCount; columnIndex++)
                 {
                     this.array[rowIndex, columnIndex] -= otherMatrix.array[rowIndex, columnIndex];
