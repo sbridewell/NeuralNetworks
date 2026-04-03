@@ -15,13 +15,15 @@ namespace Sde.NeuralNetworks.ActivationFunctionProviders
         /// <inheritdoc/>
         public double CalculateActivation(double input)
         {
-            return Math.Exp(Math.Pow(-input, 2));
+            ////return Math.Exp(Math.Pow(-input, 2)); // original - negative sign on input has no effect
+            return Math.Exp(Math.Pow(input, 2));
         }
 
         /// <inheritdoc/>
         public double CalculateGradient(double input)
         {
-            return 2 * input * Math.Exp(Math.Pow(-input, 2));
+            ////return 2 * input * Math.Exp(Math.Pow(-input, 2)); // Original - negative sign on input has no effect
+            return 2 * input * Math.Exp(Math.Pow(input, 2));
         }
     }
 }

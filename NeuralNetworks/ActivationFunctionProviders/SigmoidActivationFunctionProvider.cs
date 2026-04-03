@@ -2,26 +2,26 @@
 // Copyright (c) Simon Bridewell. All rights reserved.
 // </copyright>
 
-// TODO: uncomment once we know the implementation of the gradient function
-////namespace Sde.NeuralNetworks.ActivationProviders
-////{
-////    /// <summary>
-////    /// Sigmoid activation function provider.
-////    /// </summary>
-////    public class SigmoidActivationFunctionProvider : IActivationFunctionProvider
-////    {
-////        /// <inheritdoc/>
-////        public double CalculateActivation(double input)
-////        {
-////            return 1 / (1 + Math.Exp(-input));
-////        }
+namespace Sde.NeuralNetworks.ActivationFunctionProviders
+{
+    /// <summary>
+    /// Sigmoid activation function provider.
+    /// </summary>
+    public class SigmoidActivationFunctionProvider : IActivationFunctionProvider
+    {
+        /// <inheritdoc/>
+        public string DisplayName => "Sigmoid";
 
-////        /// <inheritdoc/>
-////        public double CalculateGradient(double input)
-////        {
-////            // TODO: how to express this in terms of input?
-////            ////return neuronOutput * (1 - neuronOutput);
-////            throw new NotImplementedException();
-////        }
-////    }
-////}
+        /// <inheritdoc/>
+        public double CalculateActivation(double input)
+        {
+            return 1 / (1 + Math.Exp(-input));
+        }
+
+        /// <inheritdoc/>
+        public double CalculateGradient(double input)
+        {
+            return Math.Exp(-input) / Math.Pow(1 + Math.Exp(-input), 2);
+        }
+    }
+}

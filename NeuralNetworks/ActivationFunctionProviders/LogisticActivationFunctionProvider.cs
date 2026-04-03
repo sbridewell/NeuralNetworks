@@ -21,7 +21,14 @@ namespace Sde.NeuralNetworks.ActivationFunctionProviders
         /// <inheritdoc/>
         public double CalculateGradient(double input)
         {
-            return this.CalculateActivation(input) * (1 - this.CalculateActivation(input));
+            //// The below is equivalent to:
+            ////return (1 / (1 + Math.Exp(-input))) * (1 - (1 / (1 + Math.Exp(-input))));
+            //// but is easier to read.
+            return this.CalculateActivation(input) * (1 - this.CalculateActivation(input)); // original
+
+            // Finding the derivative using the quotient rule gives the following,
+            // which also passes the unit tests but looks less efficient
+            ////return Math.Exp(-input) / Math.Pow(1 + Math.Exp(-input), 2);
         }
     }
 }

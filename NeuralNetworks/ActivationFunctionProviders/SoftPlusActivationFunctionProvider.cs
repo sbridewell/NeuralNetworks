@@ -21,7 +21,10 @@ namespace Sde.NeuralNetworks.ActivationFunctionProviders
         /// <inheritdoc/>
         public double CalculateGradient(double input)
         {
-            return 1 / (1 + Math.Exp(-input));
+            return 1 / (1 + Math.Exp(-input)); // original
+
+            // The following is equivalent but less efficient because it's calculating e^x twice
+            ////return Math.Exp(input) / (1 + Math.Exp(input));
         }
     }
 }
