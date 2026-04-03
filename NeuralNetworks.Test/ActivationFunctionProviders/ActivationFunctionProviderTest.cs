@@ -11,16 +11,24 @@ namespace Sde.NeuralNetworks.Test.ActivationFunctionProviders
     /// <summary>
     /// Unit tests for <see cref="IActivationFunctionProvider"/> implementations.
     /// </summary>
-    /// <typeparam name="T">The type of activation function provider being tested.</typeparam>
-    public abstract class ActivationFunctionProviderTest<T>(ITestOutputHelper output)
-        where T : IActivationFunctionProvider, new()
+    /// <typeparam name="TActivationFunctionProvider">
+    /// The type of activation function provider being tested.
+    /// </typeparam>
+    public abstract class ActivationFunctionProviderTest<TActivationFunctionProvider>(ITestOutputHelper output)
+        where TActivationFunctionProvider : IActivationFunctionProvider, new()
     {
         /// <summary>
         /// Gets some sample inputs to test the provider with.
         /// </summary>
+        /// <remarks>
+        /// We intentionally exclude zero from the sample inputs because some activation functions have a
+        /// non-differentiable point at zero, and we want to avoid testing the provider's gradient
+        /// calculation at such points. We also include a range of positive and negative values to test
+        /// the provider's behavior across different input ranges.
+        /// </remarks>
         public static TheoryData<double> SampleIputs =>
             [
-                -10.0, -5.0, -1.0, -0.1, -1e-6, 0.0, 1e-6, 0.1, 1.0, 5.0, 10.0,
+                -10.0, -5.0, -1.0, -0.1, -0.01, -0.001, -0.0001, -0.00001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1.0, 5.0, 10.0,
             ];
 
         /// <summary>
@@ -28,46 +36,52 @@ namespace Sde.NeuralNetworks.Test.ActivationFunctionProviders
         /// by comparing it to a numerical approximation of the gradient
         /// using the central difference formula.
         /// </summary>
-        /// <param name="input">The input to the CalculateGradient function.</param>
+        /// <param name="x">The input to the CalculateGradient function.</param>
         [Theory]
         [MemberData(nameof(SampleIputs))]
-        public void CalculateGradient_ReturnsCorrectValue(double input)
+        public void CalculateGradient_ReturnsCorrectValue(double x)
         {
             // Arrange
-            const double h = 1e-6;
+            const double deltaX = 1e-6;
             const double absoluteTolerance = 1e-6;
             const double relativeTolerance = 1e-3; // 0.1%
-            var provider = new T();
-            output.WriteLine($"Display name: '{provider.DisplayName}'");
-            var providerName = provider.GetType().Name;
-            var fPlus = provider.CalculateActivation(input + h);
-            var fMinus = provider.CalculateActivation(input - h);
-            var expectedGradient = (fPlus - fMinus) / (2.0 * h);
-            if (double.IsNaN(expectedGradient))
-            {
-                Assert.Skip($"Test setup error - {providerName} produced NaN at input={input}.");
-            }
-
-            if (double.IsInfinity(expectedGradient))
-            {
-                Assert.Skip($"Test setup error - {providerName} produced {expectedGradient} at input={input}.");
-            }
+            var provider = new TActivationFunctionProvider();
+            output.WriteLine($"Activation function provider display name: '{provider.DisplayName}'");
+            output.WriteLine($"Activation function provider type name: '{provider.GetType().Name}'");
+            var expectedGradient = CalculateExpectedGradient(provider, x, deltaX);
 
             // Act
-            var actualGradient = provider.CalculateGradient(input);
+            var actualGradient = provider.CalculateGradient(x);
 
             // Assert
             var error = Math.Abs(actualGradient - expectedGradient);
             var allowed = Math.Max(absoluteTolerance, relativeTolerance * Math.Max(1.0, Math.Abs(expectedGradient)));
             var sb = new StringBuilder();
             sb.AppendLine();
-            sb.AppendLine($"For input {input:G17} + {h:G17}, activation function returns {fPlus}.");
-            sb.AppendLine($"For input {input:G17} - {h:G17}, activation function returns {fMinus}.");
-            sb.AppendLine($"Expected gradient is {expectedGradient:G17}, actual gradient is {actualGradient:G17}.");
-            sb.AppendLine($"Difference between expected and actual gradient is {error:G17}, expected a difference of less than {allowed:G17}.");
+            sb.AppendLine($"Expected gradient for input {x} is {expectedGradient:G7}, actual gradient is {actualGradient:G7}.");
+            sb.AppendLine($"Difference between expected and actual gradient is {error:G7}, expected a difference of less than {allowed:G7}.");
+            output.WriteLine(sb.ToString());
             error.Should().BeLessThanOrEqualTo(
                 allowed,
-                sb.ToString());
+                " (see standard output for more detail)");
+        }
+
+        private static double CalculateExpectedGradient(TActivationFunctionProvider provider, double x, double deltaX)
+        {
+            var fPlus = provider.CalculateActivation(x + deltaX);
+            var fMinus = provider.CalculateActivation(x - deltaX);
+            var expectedGradient = (fPlus - fMinus) / (2.0 * deltaX);
+            if (double.IsNaN(expectedGradient))
+            {
+                Assert.Skip($"Test setup error - expected gradient produced NaN at x={x}.");
+            }
+
+            if (double.IsInfinity(expectedGradient))
+            {
+                Assert.Skip($"Test setup error - expected gradient produced {expectedGradient} at x={x}.");
+            }
+
+            return expectedGradient;
         }
     }
 
@@ -94,7 +108,8 @@ namespace Sde.NeuralNetworks.Test.ActivationFunctionProviders
         : ActivationFunctionProviderTest<LogisticActivationFunctionProvider>(helper) { }
     public class RectifiedLinearUnitActivationProviderTest(ITestOutputHelper helper)
         : ActivationFunctionProviderTest<RectifiedLinearUnitActivationFunctionProvider>(helper) { }
-    ////public class SigmoidActivationProviderTest : ActivationFunctionProviderTest<SigmoidActivationProvider> { }
+    public class SigmoidActivationProviderTest(ITestOutputHelper helper)
+        : ActivationFunctionProviderTest<SigmoidActivationFunctionProvider>(helper) { }
     public class SincActivationProviderTest(ITestOutputHelper helper)
         : ActivationFunctionProviderTest<SincActivationFunctionProvider>(helper) { }
     public class SinusoidalActivationProviderTest(ITestOutputHelper helper)
