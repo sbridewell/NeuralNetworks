@@ -7,6 +7,9 @@ namespace Sde.NeuralNetworks.ActivationFunctionProviders
     /// <summary>
     /// Arctangent activation function provider.
     /// </summary>
+    /// <remarks>
+    /// Adapted from <see href="https://stackoverflow.com/q/36384249/16563198"/>.
+    /// </remarks>
     public class ArctangentActivationFunctionProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
@@ -21,7 +24,12 @@ namespace Sde.NeuralNetworks.ActivationFunctionProviders
         /// <inheritdoc/>
         public double CalculateGradient(double input)
         {
-            return (1 / Math.Pow(input, 2)) + 1;
+            //return (1 / Math.Pow(input, 2)) + 1; // original implementation - this is way off
+
+            // copied from HyperbolicTangent - it's close at small x valus but diverges at
+            // large x values, which is what we expect since arctangent approaches pi/2 as
+            // x goes to infinity, while hyperbolic tangent approaches 1
+            return 1 - Math.Pow(Math.Tanh(input), 2);
         }
     }
 }

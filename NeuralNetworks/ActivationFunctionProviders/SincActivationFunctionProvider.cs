@@ -9,6 +9,9 @@ namespace Sde.NeuralNetworks.ActivationFunctionProviders
     /// <summary>
     /// Sinc activation function provider.
     /// </summary>
+    /// <remarks>
+    /// Adapted from <see href="https://stackoverflow.com/q/36384249/16563198"/>.
+    /// </remarks>
     public class SincActivationFunctionProvider : IActivationFunctionProvider
     {
         /// <inheritdoc/>
