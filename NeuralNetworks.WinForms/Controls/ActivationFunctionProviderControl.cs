@@ -19,7 +19,7 @@ namespace Sde.NeuralNetworks.WinForms
         {
             this.InitializeComponent();
             var assembly = typeof(IActivationFunctionProvider).Assembly;
-            foreach (var t in assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && typeof(IActivationFunctionProvider).IsAssignableFrom(t)))
+            foreach (var t in assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && typeof(IActivationFunctionProvider).IsAssignableFrom(t) && t.Name != nameof(VectorisingAdapter)))
             {
                 var item = new ClassListItem<IActivationFunctionProvider>((IActivationFunctionProvider)Activator.CreateInstance(t) !);
                 this.comboBox1.Items.Add(item);
