@@ -24,7 +24,7 @@ namespace Sde.NeuralNetworks.ActivationFunctionProviders
         /// <inheritdoc/>
         public double CalculateGradient(double input)
         {
-            //return (1 / Math.Pow(input, 2)) + 1; // original implementation - this is way off
+            ////return (1 / Math.Pow(input, 2)) + 1; // original implementation - this is way off
 
             // copied from HyperbolicTangent - it's close at small x valus but diverges at
             // large x values, which is what we expect since arctangent approaches pi/2 as
