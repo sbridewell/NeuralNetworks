@@ -244,7 +244,7 @@ Implementation guidance:
 
 ## Example implementation tasks (ordered)
 
-1.	- [ ] Create `IMultiLayerNetwork` interface and `TrainingProgressEventArgs`.
+1.	- [x] Create `IMultiLayerNetwork` interface and `TrainingProgressEventArgs`.
 2.	- [ ] Implement `MultiLayerNetwork` class (forward, backpropagate, events, async training, cancellation).
 3.	- [ ] Add `NeuralNetworkAdapter : INeuralNetwork` to wrap multi-layer into legacy UI contract.
 4.	- [ ] Add factory helpers to build `NeuralNetworkLayer` instances for common layer types and sizes.
