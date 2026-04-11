@@ -26,10 +26,9 @@ namespace Sde.NeuralNetworks.ActivationFunctionProviders
         {
             ////return (1 / Math.Pow(input, 2)) + 1; // original implementation - this is way off
 
-            // copied from HyperbolicTangent - it's close at small x valus but diverges at
-            // large x values, which is what we expect since arctangent approaches pi/2 as
-            // x goes to infinity, while hyperbolic tangent approaches 1
-            return 1 - Math.Pow(Math.Tanh(input), 2);
+            // Correct derivative of arctangent: d/dx atan(x) = 1 / (1 + x^2).
+            // This is always finite and decays as 1/x^2 for large |x|.
+            return 1.0 / (1.0 + (input * input));
         }
     }
 }
