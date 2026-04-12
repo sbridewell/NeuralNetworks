@@ -23,10 +23,21 @@ namespace Sde.NeuralNetworks.FeatureScaling
     /// <list type="bullet">
     /// <item>Normalisation.</item>
     /// <list type="bullet">
-    /// <item>Min-max normalisation (scales to a specified range, e.g. 0..1).</item>
-    /// <item>Log normalisation (scales to a specified range, e.g. 0..1, using a logarithmic transformation)</item>
-    /// <item>Decimal scaling normalisation (scales to a specified range, e.g. 0..1, by dividing by a power of 10).</item>
-    /// <item>Mean normalisation (scales to a specified range, e.g. -1..1, by subtracting the mean and dividing by the range).</item>
+    /// <item>
+    /// Min-max normalisation (scales to a specified range, e.g. 0..1).
+    /// </item>
+    /// <item>
+    /// Log normalisation (scales to a specified range, e.g. 0..1, using a
+    /// logarithmic transformation)
+    /// </item>
+    /// <item>
+    /// Decimal scaling normalisation (scales to a specified range, e.g. 0..1, by
+    /// dividing by a power of 10).
+    /// </item>
+    /// <item>
+    /// Mean normalisation (scales to a specified range, e.g. -1..1, by subtracting
+    /// the mean and dividing by the range).
+    /// </item>
     /// </list>
     /// <item>Standardisation (no sub techniques known so far).</item>
     /// </list>
@@ -41,6 +52,14 @@ namespace Sde.NeuralNetworks.FeatureScaling
         /// <returns>The scaled vector.</returns>
         Vector Scale(Vector unscaledVector);
 
-        // TODO: ScaleBack method, which is the inverse function of the Scale method.
+        /// <summary>
+        /// Reverses a previous <see cref="Scale"/> operation, returning the
+        /// original unscaled vector.
+        /// </summary>
+        /// <param name="scaledVector">
+        /// The scaled vector procudec yb <see cref="ScaleBack(Vector)"/>.
+        /// </param>
+        /// <returns>The vector in the original unscaled units.</returns>
+        Vector ScaleBack(Vector scaledVector);
     }
 }

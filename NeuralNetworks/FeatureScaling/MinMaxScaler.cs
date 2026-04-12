@@ -24,5 +24,11 @@ namespace Sde.NeuralNetworks.FeatureScaling
 
             return new Vector(scaledElements.ToArray());
         }
+
+        /// <inheritdoc/>
+        public Vector ScaleBack(Vector scaledVector)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
