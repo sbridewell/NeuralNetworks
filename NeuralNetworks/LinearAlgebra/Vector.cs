@@ -112,7 +112,6 @@ namespace Sde.NeuralNetworks.LinearAlgebra
         }
 
         // TODO: If the * operator is used on two vectors, should the result be the dot product or element-wise multiplication?
-
         #endregion
 
         #region equality
@@ -431,23 +430,24 @@ namespace Sde.NeuralNetworks.LinearAlgebra
             return euclidianScaler.Scale(this);
         }
 
-        /// <summary>
-        /// Normalises the current vector using Z-score normalisation and returns the resulting vector.
-        /// The current vector is not mutated by this method.
-        /// Also known as standardisation.
-        /// </summary>
-        /// <returns>
-        /// The vector, scaled so that it has a mean of zero and a standard deviation of 1.
-        /// </returns>
-        public Vector ScaleUsingZScores()
-        {
-            if (zScoreScaler == null)
-            {
-                zScoreScaler = new ZScoreScaler();
-            }
+        // TODO: restore or remove ScaleUsingZScores - is it even useful?
+        /////// <summary>
+        /////// Normalises the current vector using Z-score normalisation and returns the resulting vector.
+        /////// The current vector is not mutated by this method.
+        /////// Also known as standardisation.
+        /////// </summary>
+        /////// <returns>
+        /////// The vector, scaled so that it has a mean of zero and a standard deviation of 1.
+        /////// </returns>
+        ////public Vector ScaleUsingZScores()
+        ////{
+        ////    if (zScoreScaler == null)
+        ////    {
+        ////        zScoreScaler = new ZScoreScaler();
+        ////    }
 
-            return zScoreScaler.Scale(this);
-        }
+        ////    return zScoreScaler.Scale(this);
+        ////}
 
         #endregion
 
