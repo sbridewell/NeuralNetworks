@@ -42,10 +42,11 @@ namespace Sde.VectorDemo.Winforms.Forms
                 + $"{vector.ToString()}{Environment.NewLine}"
                 + $"is {minMaxScaled}";
 
-            var zScoresScaled = vector.ScaleUsingZScores();
-            this.labelZScoreResult.Text = "The result of z-scores scaling of "
-                + $"{vector.ToString()}{Environment.NewLine}"
-                + $"is {zScoresScaled}";
+            // TODO: restore or remove ScaleUsingZScores
+            ////var zScoresScaled = vector.ScaleUsingZScores();
+            ////this.labelZScoreResult.Text = "The result of z-scores scaling of "
+            ////    + $"{vector.ToString()}{Environment.NewLine}"
+            ////    + $"is {zScoresScaled}";
         }
     }
 }
