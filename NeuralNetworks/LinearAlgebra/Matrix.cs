@@ -75,8 +75,6 @@ namespace Sde.NeuralNetworks.LinearAlgebra
 
         #region constructor
 
-        // TODO: constructor which accepts a params array of arrays, e.g. new Matrix({ 1, 2 }, { 3, 4 });
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix"/> class.
         /// </summary>
