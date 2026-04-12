@@ -4,6 +4,8 @@
 
 namespace Sde.NeuralNetworks.WinForms
 {
+    using Sde.NeuralNetworks.WinForms.Forms;
+
     /// <summary>
     /// Class containing the main entry point.
     /// </summary>
@@ -18,7 +20,8 @@ namespace Sde.NeuralNetworks.WinForms
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            ////Application.Run(new Form1());
+            Application.Run(new MultiLayerNetworkVisualisationForm());
         }
     }
 }

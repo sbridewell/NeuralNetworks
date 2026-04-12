@@ -176,27 +176,6 @@ namespace Sde.NeuralNetworks.Networks
         TimeSpan EstimatedTrainingTimeLeft { get; set; }
 
         /// <summary>
-        /// Gets the mean squared error (MSE) for the network's hidden-layer
-        /// outputs.
-        /// </summary>
-        /// <value>
-        /// The arithmetic mean of the per-hidden-layer MSE values computed for
-        /// the most recent training sample or evaluation.
-        /// For networks with multiple hidden layers this value is an aggregate
-        /// (the mean across all hidden layers).
-        /// Implementations may return <c>double.NaN</c> if no error has yet been
-        /// computed.
-        /// </value>
-        /// <remarks>
-        /// Callers that require per-layer errors should use
-        /// <see cref="HiddenLayerMeanSquaredErrors"/>.
-        /// Reading this value from multiple threads is not guaranteed to be
-        /// thread-safe.
-        /// </remarks>
-        [Obsolete("Backwards compatibility with older implementations with a single hiddne layer")]
-        double HiddenLayerMeanSquaredError { get; }
-
-        /// <summary>
         /// Gets the mean squared error (MSE) for each hidden layer, in forward
         /// order.
         /// </summary>
@@ -257,21 +236,6 @@ namespace Sde.NeuralNetworks.Networks
         /// <see cref="NumberOfInputs"/>.
         /// </exception>
         Vector Predict(Vector input);
-
-        /// <summary>
-        /// Obsolete convenience overload that accepts a primitive array.
-        /// </summary>
-        /// <param name="input">
-        /// Input values for a single sample. Must not be null.
-        /// </param>
-        /// <returns>The network's output values.</returns>
-        /// <remarks>
-        /// Prefer the <see cref="Predict(Vector)"/> overload which avoids
-        /// unnecessary allocations.
-        /// This overload is retained for backwards compatibility.
-        /// </remarks>
-        [Obsolete("Backwards compatibility only? Use the overload that accepts a Vector instead.")]
-        double[] Predict(double[] input);
 
         /// <summary>
         /// Asynchronously trains the network using the provided samples.

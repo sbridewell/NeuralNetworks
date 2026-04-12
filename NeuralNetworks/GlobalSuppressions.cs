@@ -12,3 +12,7 @@ using System.Diagnostics.CodeAnalysis;
     "StyleCop.CSharp.ReadabilityRules",
     "SA1124:Do not use regions",
     Justification = "I like regions")]
+[assembly: SuppressMessage(
+    "Info Code Smell",
+    "S1135:Track uses of \"TODO\" tags",
+    Justification = "I can track these in the task list")]

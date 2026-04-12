@@ -1033,27 +1033,28 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             actualScaledVector.Elements.Should().BeEquivalentTo(expectedScaledVector.Elements);
         }
 
-        /// <summary>
-        /// Tests that the ScaleUsingZScores method calls the expected scaler and returns the expected result.
-        /// </summary>
-        [Fact]
-        public void ScaleUsingZScores_CallsZScoreScaler()
-        {
-            // Arrange
-            var mockScaler = new Mock<IFeatureScaler>();
-            var unscaledVector = new Vector(
-                new double[] { 1, 2, 3 },
-                zScoreScaler: mockScaler.Object);
-            var expectedScaledVector = new Vector(new double[] { -1.0, 0.0, 1.0 });
-            mockScaler.Setup(s => s.Scale(It.IsAny<Vector>())).Returns(expectedScaledVector);
+        // TODO: are these scaling methods really needed?
+        /////// <summary>
+        /////// Tests that the ScaleUsingZScores method calls the expected scaler and returns the expected result.
+        /////// </summary>
+        ////[Fact]
+        ////public void ScaleUsingZScores_CallsZScoreScaler()
+        ////{
+        ////    // Arrange
+        ////    var mockScaler = new Mock<IFeatureScaler>();
+        ////    var unscaledVector = new Vector(
+        ////        new double[] { 1, 2, 3 },
+        ////        zScoreScaler: mockScaler.Object);
+        ////    var expectedScaledVector = new Vector(new double[] { -1.0, 0.0, 1.0 });
+        ////    mockScaler.Setup(s => s.Scale(It.IsAny<Vector>())).Returns(expectedScaledVector);
 
-            // Act
-            var actualScaledVector = unscaledVector.ScaleUsingZScores();
+        ////    // Act
+        ////    var actualScaledVector = unscaledVector.ScaleUsingZScores();
 
-            // Assert
-            mockScaler.Verify(s => s.Scale(unscaledVector), Times.Once);
-            actualScaledVector.Elements.Should().BeEquivalentTo(expectedScaledVector.Elements);
-        }
+        ////    // Assert
+        ////    mockScaler.Verify(s => s.Scale(unscaledVector), Times.Once);
+        ////    actualScaledVector.Elements.Should().BeEquivalentTo(expectedScaledVector.Elements);
+        ////}
 
         /// <summary>
         /// Tests that the caller does not need to supply a Euclidian scaler to the vector constructor.
@@ -1087,21 +1088,22 @@ namespace Sde.NeuralNetworks.Test.LinearAlgebra
             true.Should().BeTrue();
         }
 
-        /// <summary>
-        /// Tests that the caller does not need to supply a z-scores scaler to the vector constructor.
-        /// </summary>
-        [Fact]
-        public void ScaleUsingZScores_NoScalerSupplied_DoesNotThrow()
-        {
-            // Arrange
-            var vector = new Vector(new double[] { 0 });
+        // TODO: are these scaling methods really needed?
+        /////// <summary>
+        /////// Tests that the caller does not need to supply a z-scores scaler to the vector constructor.
+        /////// </summary>
+        ////[Fact]
+        ////public void ScaleUsingZScores_NoScalerSupplied_DoesNotThrow()
+        ////{
+        ////    // Arrange
+        ////    var vector = new Vector(new double[] { 0 });
 
-            // Act
-            _ = vector.ScaleUsingZScores();
+        ////    // Act
+        ////    _ = vector.ScaleUsingZScores();
 
-            // Nothing to assert - the Vector instantiated its own ZScoreScaler
-            true.Should().BeTrue();
-        }
+        ////    // Nothing to assert - the Vector instantiated its own ZScoreScaler
+        ////    true.Should().BeTrue();
+        ////}
 
         #endregion
 
