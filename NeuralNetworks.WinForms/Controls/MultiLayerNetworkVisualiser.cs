@@ -38,6 +38,9 @@ namespace Sde.NeuralNetworks.WinForms.Controls
         private IMultiLayerNetwork? network;
         private int colWidth;
         private int cols;
+#pragma warning disable SA1011 // Closing square brackets should be spaced correctly
+        private PointF[][]? neuronPositions;
+#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiLayerNetworkVisualiser"/>
@@ -104,8 +107,8 @@ namespace Sde.NeuralNetworks.WinForms.Controls
             System.Diagnostics.Debug.WriteLine($"OnPaint called. Visible={this.Visible}, Size = {this.ClientSize}");
 #endif
 
-            var g = e.Graphics;
-            g.Clear(SystemColors.Window);
+            var graphics = e.Graphics;
+            graphics.Clear(SystemColors.Window);
 
             var net = this.network;
 #if VERBOSE
@@ -118,7 +121,7 @@ namespace Sde.NeuralNetworks.WinForms.Controls
                     Alignment = StringAlignment.Center,
                     LineAlignment = StringAlignment.Center,
                 };
-                g.DrawString(
+                graphics.DrawString(
                     "No network",
                     this.Font,
                     Brushes.Gray,
@@ -142,12 +145,8 @@ namespace Sde.NeuralNetworks.WinForms.Controls
                 neuronCounts[i + 1] = Math.Max(1, w.RowCount);
             }
 
-            this.cols = neuronCounts.Length;
-            this.colWidth = Math.Max(
-                80,
-                (this.ClientSize.Width - (this.margin * 2)) / Math.Max(1, this.cols));
-
-            this.DrawNeurons(neuronCounts, g);
+            this.ComputeNeuronPositions(neuronCounts);
+            this.DrawNeurons(graphics);
 
             // Draw connectors (simple lines) and optionally colour by weight magnitude (coarse).
             for (int layerIndex = 0; layerIndex < layerCount; layerIndex++)
@@ -174,7 +173,7 @@ namespace Sde.NeuralNetworks.WinForms.Controls
 #if VERBOSE
                 System.Diagnostics.Debug.WriteLine($"Layer {layerIndex} weight size={weightMatrix.RowCount}x{weightMatrix.ColumnCount}");
 #endif
-                this.DrawConnectors(layerIndex, srcCount, dstCount, rowVectors, g);
+                this.DrawConnectors(layerIndex, srcCount, dstCount, rowVectors, graphics);
             }
 
             // Draw MSE summary in top-left
@@ -187,7 +186,11 @@ namespace Sde.NeuralNetworks.WinForms.Controls
                 mseText += $"  Hidden MSEs: {mses}";
             }
 
-            g.DrawString(mseText, this.Font, Brushes.Black, new PointF(this.margin, 2));
+            graphics.DrawString(
+                mseText,
+                this.Font,
+                Brushes.Black,
+                new PointF(this.margin, 2));
         }
 
         #region event handlers
@@ -220,23 +223,20 @@ namespace Sde.NeuralNetworks.WinForms.Controls
             }
         }
 
-        private void DrawNeurons(int[] neuronCounts, Graphics graphics)
+        private void DrawNeurons(Graphics graphics)
         {
+            var positions = this.neuronPositions ?? Array.Empty<PointF[]>();
             for (var columnIndex = 0; columnIndex < this.cols; columnIndex++)
             {
-                int x = this.margin + (columnIndex * this.colWidth) + (this.colWidth / 2);
-                int rows = neuronCounts[columnIndex];
-                for (int row = 0; row < rows; row++)
+                var column = columnIndex < positions.Length
+                    ? positions[columnIndex]
+                    : Array.Empty<PointF>();
+                for (var row = 0; row < column.Length; row++)
                 {
-                    int y
-                        = this.margin
-                        + (
-                            (this.ClientSize.Height - (2 * this.margin))
-                            * (row + 1)
-                            / (rows + 1));
-                    var nodeRect = new Rectangle(
-                        x - this.nodeRadius,
-                        y - this.nodeRadius,
+                    var pos = column[row];
+                    var nodeRect = new RectangleF(
+                        pos.X - this.nodeRadius,
+                        pos.Y - this.nodeRadius,
                         this.nodeRadius * 2,
                         this.nodeRadius * 2);
                     graphics.FillEllipse(Brushes.White, nodeRect);
@@ -253,14 +253,23 @@ namespace Sde.NeuralNetworks.WinForms.Controls
             Graphics graphics)
         {
             // TODO: give the variables here meaningful names
+            var positions = this.neuronPositions ?? Array.Empty<PointF[]>();
+            var fromColumn = layerIndex < positions.Length
+                ? positions[layerIndex]
+                : Array.Empty<PointF>();
+            var toColumn = (layerIndex + 1) < positions.Length
+                ? positions[layerIndex + 1]
+                : Array.Empty<PointF>();
             for (var fromNeuron = 0; fromNeuron < srcCount; fromNeuron++)
             {
-                var fromX = this.margin + (layerIndex * this.colWidth) + (this.colWidth / 2);
-                var fromY = this.margin + ((this.ClientSize.Height - (2 * this.margin)) * (fromNeuron + 1) / (srcCount + 1));
+                var fromPosition = fromNeuron < fromColumn.Length
+                    ? fromColumn[fromNeuron]
+                    : PointF.Empty;
                 for (var toNeuron = 0; toNeuron < dstCount; toNeuron++)
                 {
-                    int toX = this.margin + ((layerIndex + 1) * this.colWidth) + (this.colWidth / 2);
-                    int toY = this.margin + ((this.ClientSize.Height - (2 * this.margin)) * (toNeuron + 1) / (dstCount + 1));
+                    var toPosition = toNeuron < toColumn.Length
+                        ? toColumn[toNeuron]
+                        : PointF.Empty;
 
                     // weight value at row=dst, col=src if dimensions match; guard access
                     var weight = rowVectors[toNeuron][fromNeuron];
@@ -269,10 +278,10 @@ namespace Sde.NeuralNetworks.WinForms.Controls
                     if (double.IsNaN(weight))
                     {
                         using var pen = new Pen(Color.Red, 2);
-                        graphics.DrawLine(pen, fromX, fromY, toX, toY);
+                        graphics.DrawLine(pen, fromPosition, toPosition);
 #if VERBOSE
                             System.Diagnostics.Debug.WriteLine(
-                                $"Warning: NaN weight detected at layer {layerIndex}, src {src} -> dst {dst}");
+                                $"Warning: NaN weight detected at layer {layerIndex}, src {fromNeuron} -> dst {toNeuron}");
 #endif
                     }
                     else
@@ -286,10 +295,40 @@ namespace Sde.NeuralNetworks.WinForms.Controls
                         {
                             Width = 1.5f,
                         };
-                        graphics.DrawLine(pen, fromX, fromY, toX, toY);
+                        graphics.DrawLine(pen, fromPosition, toPosition);
                     }
                 }
             }
+        }
+
+        private void ComputeNeuronPositions(int[] neuronCounts)
+        {
+            this.cols = neuronCounts.Length;
+            this.colWidth = Math.Max(
+                80,
+                (this.ClientSize.Width - (this.margin * 2)) / Math.Max(1, this.cols));
+
+            var positions = new PointF[this.cols][];
+            for (var columnIndex = 0; columnIndex < this.cols; columnIndex++)
+            {
+                var rows = Math.Max(0, neuronCounts[columnIndex]);
+                positions[columnIndex] = new PointF[rows];
+                var x = this.margin
+                    + (columnIndex * this.colWidth)
+                    + (this.colWidth / 2);
+                for (var row = 0; row < rows; row++)
+                {
+                    var y
+                        = this.margin
+                        + (
+                            (this.ClientSize.Height - (2 * this.margin))
+                            * (row + 1)
+                            / (rows + 1));
+                    positions[columnIndex][row] = new PointF(x, y);
+                }
+            }
+
+            this.neuronPositions = positions;
         }
     }
 }
