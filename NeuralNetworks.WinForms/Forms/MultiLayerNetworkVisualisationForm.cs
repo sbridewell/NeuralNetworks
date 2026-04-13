@@ -30,7 +30,7 @@ namespace Sde.NeuralNetworks.WinForms.Forms
             var provider = new QuadraticEquationTrainingDataProvider()
             {
                 InputsLowerBound = -10,
-                InputsUpperBound = 20,
+                InputsUpperBound = 10,
                 InputsIncrement = 1,
             };
             provider.GenerateData();
