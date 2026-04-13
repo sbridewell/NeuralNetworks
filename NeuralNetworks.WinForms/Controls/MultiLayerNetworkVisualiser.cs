@@ -275,34 +275,44 @@ namespace Sde.NeuralNetworks.WinForms.Controls
                     var toPosition = toNeuron < toColumn.Length
                         ? toColumn[toNeuron]
                         : PointF.Empty;
-
-                    // weight value at row=dst, col=src if dimensions match; guard access
                     var weight = rowVectors[toNeuron][fromNeuron];
+                    this.DrawConnector(
+                        fromPosition,
+                        toPosition,
+                        weight,
+                        graphics);
+                }
+            }
+        }
 
-                    // If weight is NaN, draw a bold red connector
-                    if (double.IsNaN(weight))
-                    {
-                        using var pen = new Pen(Color.Red, 2);
-                        graphics.DrawLine(pen, fromPosition, toPosition);
+        private void DrawConnector(
+            PointF fromPosition,
+            PointF toPosition,
+            double weight,
+            Graphics graphics)
+        {
+            // If weight is NaN, draw a bold red connector
+            if (double.IsNaN(weight))
+            {
+                using var pen = new Pen(Color.Red, 2);
+                graphics.DrawLine(pen, fromPosition, toPosition);
 #if VERBOSE
                             System.Diagnostics.Debug.WriteLine(
                                 $"Warning: NaN weight detected at layer {layerIndex}, src {fromNeuron} -> dst {toNeuron}");
 #endif
-                    }
-                    else
-                    {
-                        // Finite weight - draw with clearly visible colour / alpha so connectors are obvious
-                        // TODO: change the colour scheme so the differences in weights is more visible
-                        var intensity = Math.Min(1.0f, (float)(Math.Min(5.0, Math.Abs(weight)) / 5.0));
-                        using var pen = new Pen(Color.FromArgb(
-                            (int)(50 + (intensity * 205)),
-                            Color.DarkBlue))
-                        {
-                            Width = 1.5f,
-                        };
-                        graphics.DrawLine(pen, fromPosition, toPosition);
-                    }
-                }
+            }
+            else
+            {
+                // Finite weight - draw with clearly visible colour / alpha so connectors are obvious
+                // TODO: change the colour scheme so the differences in weights is more visible
+                var intensity = Math.Min(1.0f, (float)(Math.Min(5.0, Math.Abs(weight)) / 5.0));
+                using var pen = new Pen(Color.FromArgb(
+                    (int)(50 + (intensity * 205)),
+                    Color.DarkBlue))
+                {
+                    Width = 1.5f,
+                };
+                graphics.DrawLine(pen, fromPosition, toPosition);
             }
         }
 
