@@ -101,7 +101,6 @@ namespace Sde.NeuralNetworks.WinForms.Controls
         /// <inheritdoc/>
         protected override void OnPaint(PaintEventArgs e)
         {
-            // TODO: break down into smaller methods
             base.OnPaint(e);
 #if VERBOSE
             System.Diagnostics.Debug.WriteLine($"OnPaint called. Visible={this.Visible}, Size = {this.ClientSize}");
@@ -110,23 +109,12 @@ namespace Sde.NeuralNetworks.WinForms.Controls
             var graphics = e.Graphics;
             graphics.Clear(SystemColors.Window);
 
-            var net = this.network;
+            var net = this.network!;
 #if VERBOSE
             System.Diagnostics.Debug.WriteLine($"Network null? {net == null}");
 #endif
-            if (net == null)
+            if (this.IsNetworkNull(net, graphics))
             {
-                using var sf = new StringFormat
-                {
-                    Alignment = StringAlignment.Center,
-                    LineAlignment = StringAlignment.Center,
-                };
-                graphics.DrawString(
-                    "No network",
-                    this.Font,
-                    Brushes.Gray,
-                    this.ClientRectangle,
-                    sf);
                 return;
             }
 
@@ -147,25 +135,8 @@ namespace Sde.NeuralNetworks.WinForms.Controls
 
             this.ComputeNeuronPositions(neuronCounts);
             this.DrawNeurons(graphics);
-
-            // Draw connectors (simple lines) and optionally colour by weight magnitude (coarse).
             this.DrawAllConnectors(layerCount, neuronCounts, graphics);
-
-            // Draw MSE summary in top-left
-            var mseText = $"Output MSE: {net.OutputLayerMeanSquaredError:F4}";
-            if (net.HiddenLayerMeanSquaredErrors.Count > 0)
-            {
-                var mses = string.Join(
-                    ", ",
-                    net.HiddenLayerMeanSquaredErrors.Select(m => m.ToString("F3")));
-                mseText += $"  Hidden MSEs: {mses}";
-            }
-
-            graphics.DrawString(
-                mseText,
-                this.Font,
-                Brushes.Black,
-                new PointF(this.margin, 2));
+            this.DrawMeanSquaredErrorSummary(net, graphics);
         }
 
         #region event handlers
@@ -185,6 +156,27 @@ namespace Sde.NeuralNetworks.WinForms.Controls
             => this.RequestRedraw();
 
         #endregion
+
+        private bool IsNetworkNull(IMultiLayerNetwork network, Graphics graphics)
+        {
+            if (network == null)
+            {
+                using var sf = new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Center,
+                };
+                graphics.DrawString(
+                    "No network",
+                    this.Font,
+                    Brushes.Gray,
+                    this.ClientRectangle,
+                    sf);
+                return true;
+            }
+
+            return false;
+        }
 
         private void RequestRedraw()
         {
@@ -314,6 +306,26 @@ namespace Sde.NeuralNetworks.WinForms.Controls
                 };
                 graphics.DrawLine(pen, fromPosition, toPosition);
             }
+        }
+
+        private void DrawMeanSquaredErrorSummary(
+            IMultiLayerNetwork network,
+            Graphics graphics)
+        {
+            var mseText = $"Output MSE: {network.OutputLayerMeanSquaredError:F4}";
+            if (network.HiddenLayerMeanSquaredErrors.Count > 0)
+            {
+                var mses = string.Join(
+                    ", ",
+                    network.HiddenLayerMeanSquaredErrors.Select(m => m.ToString("F3")));
+                mseText += $"  Hidden MSEs: {mses}";
+            }
+
+            graphics.DrawString(
+                mseText,
+                this.Font,
+                Brushes.Black,
+                new PointF(this.margin, 2));
         }
 
         private void ComputeNeuronPositions(int[] neuronCounts)
