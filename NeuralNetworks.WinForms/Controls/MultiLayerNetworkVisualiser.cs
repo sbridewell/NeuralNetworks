@@ -9,6 +9,7 @@ namespace Sde.NeuralNetworks.WinForms.Controls
     using System.Data;
     using System.Drawing;
     using System.Windows.Forms;
+    using Sde.NeuralNetworks.LinearAlgebra;
     using Sde.NeuralNetworks.Networks;
 
     /// <summary>
@@ -32,7 +33,11 @@ namespace Sde.NeuralNetworks.WinForms.Controls
     /// </remarks>
     public partial class MultiLayerNetworkVisualiser : UserControl
     {
+        private readonly int margin = 12;
+        private readonly int nodeRadius = 8;
         private IMultiLayerNetwork? network;
+        private int colWidth;
+        private int cols;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiLayerNetworkVisualiser"/>
@@ -98,6 +103,7 @@ namespace Sde.NeuralNetworks.WinForms.Controls
 #if VERBOSE
             System.Diagnostics.Debug.WriteLine($"OnPaint called. Visible={this.Visible}, Size = {this.ClientSize}");
 #endif
+
             var g = e.Graphics;
             g.Clear(SystemColors.Window);
 
@@ -136,34 +142,12 @@ namespace Sde.NeuralNetworks.WinForms.Controls
                 neuronCounts[i + 1] = Math.Max(1, w.RowCount);
             }
 
-            int cols = neuronCounts.Length;
-            int margin = 12;
-            int colWidth = Math.Max(
+            this.cols = neuronCounts.Length;
+            this.colWidth = Math.Max(
                 80,
-                (this.ClientSize.Width - (margin * 2)) / Math.Max(1, cols));
-            int nodeRadius = 8;
+                (this.ClientSize.Width - (this.margin * 2)) / Math.Max(1, this.cols));
 
-            for (int col = 0; col < cols; col++)
-            {
-                int x = margin + (col * colWidth) + (colWidth / 2);
-                int rows = neuronCounts[col];
-                for (int row = 0; row < rows; row++)
-                {
-                    int y
-                        = margin
-                        + (
-                            (this.ClientSize.Height - (2 * margin))
-                            * (row + 1)
-                            / (rows + 1));
-                    var nodeRect = new Rectangle(
-                        x - nodeRadius,
-                        y - nodeRadius,
-                        nodeRadius * 2,
-                        nodeRadius * 2);
-                    g.FillEllipse(Brushes.White, nodeRect);
-                    g.DrawEllipse(Pens.Black, nodeRect);
-                }
-            }
+            this.DrawNeurons(neuronCounts, g);
 
             // Draw connectors (simple lines) and optionally colour by weight magnitude (coarse).
             for (int layerIndex = 0; layerIndex < layerCount; layerIndex++)
@@ -190,43 +174,7 @@ namespace Sde.NeuralNetworks.WinForms.Controls
 #if VERBOSE
                 System.Diagnostics.Debug.WriteLine($"Layer {layerIndex} weight size={weightMatrix.RowCount}x{weightMatrix.ColumnCount}");
 #endif
-                for (int src = 0; src < srcCount; src++)
-                {
-                    int sx = margin + (layerIndex * colWidth) + (colWidth / 2);
-                    int sy = margin + ((this.ClientSize.Height - (2 * margin)) * (src + 1) / (srcCount + 1));
-                    for (int dst = 0; dst < dstCount; dst++)
-                    {
-                        int dx = margin + ((layerIndex + 1) * colWidth) + (colWidth / 2);
-                        int dy = margin + ((this.ClientSize.Height - (2 * margin)) * (dst + 1) / (dstCount + 1));
-
-                        // weight value at row=dst, col=src if dimensions match; guard access
-                        var w = rowVectors[dst][src];
-
-                        // If weight is NaN, draw a bold red connector and log once
-                        if (double.IsNaN(w))
-                        {
-                            using var pen = new Pen(Color.Red, 2);
-                            g.DrawLine(pen, sx, sy, dx, dy);
-#if VERBOSE
-                            System.Diagnostics.Debug.WriteLine(
-                                $"Warning: NaN weight detected at layer {layerIndex}, src {src} -> dst {dst}");
-#endif
-                        }
-                        else
-                        {
-                            // Finite weight - draw with clearly visible colour / alpha so connectors are obvious
-                            // TODO: change the colour scheme so the differences in weights is more visible
-                            var intensity = Math.Min(1.0f, (float)(Math.Min(5.0, Math.Abs(w)) / 5.0));
-                            using var pen = new Pen(Color.FromArgb(
-                                (int)(50 + (intensity * 205)),
-                                Color.DarkBlue))
-                            {
-                                Width = 1.5f,
-                            };
-                            g.DrawLine(pen, sx, sy, dx, dy);
-                        }
-                    }
-                }
+                this.DrawConnectors(layerIndex, srcCount, dstCount, rowVectors, g);
             }
 
             // Draw MSE summary in top-left
@@ -239,8 +187,10 @@ namespace Sde.NeuralNetworks.WinForms.Controls
                 mseText += $"  Hidden MSEs: {mses}";
             }
 
-            g.DrawString(mseText, this.Font, Brushes.Black, new PointF(margin, 2));
+            g.DrawString(mseText, this.Font, Brushes.Black, new PointF(this.margin, 2));
         }
+
+        #region event handlers
 
         private void Network_TrainingStarted(object? sender, EventArgs e)
             => this.RequestRedraw();
@@ -256,6 +206,8 @@ namespace Sde.NeuralNetworks.WinForms.Controls
             TrainingProgressEventArgs e)
             => this.RequestRedraw();
 
+        #endregion
+
         private void RequestRedraw()
         {
             if (this.InvokeRequired)
@@ -265,6 +217,78 @@ namespace Sde.NeuralNetworks.WinForms.Controls
             else
             {
                 this.Invalidate();
+            }
+        }
+
+        private void DrawNeurons(int[] neuronCounts, Graphics graphics)
+        {
+            for (var columnIndex = 0; columnIndex < this.cols; columnIndex++)
+            {
+                int x = this.margin + (columnIndex * this.colWidth) + (this.colWidth / 2);
+                int rows = neuronCounts[columnIndex];
+                for (int row = 0; row < rows; row++)
+                {
+                    int y
+                        = this.margin
+                        + (
+                            (this.ClientSize.Height - (2 * this.margin))
+                            * (row + 1)
+                            / (rows + 1));
+                    var nodeRect = new Rectangle(
+                        x - this.nodeRadius,
+                        y - this.nodeRadius,
+                        this.nodeRadius * 2,
+                        this.nodeRadius * 2);
+                    graphics.FillEllipse(Brushes.White, nodeRect);
+                    graphics.DrawEllipse(Pens.Black, nodeRect);
+                }
+            }
+        }
+
+        private void DrawConnectors(
+            int layerIndex,
+            int srcCount,
+            int dstCount,
+            Vector[] rowVectors,
+            Graphics graphics)
+        {
+            // TODO: give the variables here meaningful names
+            for (var fromNeuron = 0; fromNeuron < srcCount; fromNeuron++)
+            {
+                var fromX = this.margin + (layerIndex * this.colWidth) + (this.colWidth / 2);
+                var fromY = this.margin + ((this.ClientSize.Height - (2 * this.margin)) * (fromNeuron + 1) / (srcCount + 1));
+                for (var toNeuron = 0; toNeuron < dstCount; toNeuron++)
+                {
+                    int toX = this.margin + ((layerIndex + 1) * this.colWidth) + (this.colWidth / 2);
+                    int toY = this.margin + ((this.ClientSize.Height - (2 * this.margin)) * (toNeuron + 1) / (dstCount + 1));
+
+                    // weight value at row=dst, col=src if dimensions match; guard access
+                    var weight = rowVectors[toNeuron][fromNeuron];
+
+                    // If weight is NaN, draw a bold red connector
+                    if (double.IsNaN(weight))
+                    {
+                        using var pen = new Pen(Color.Red, 2);
+                        graphics.DrawLine(pen, fromX, fromY, toX, toY);
+#if VERBOSE
+                            System.Diagnostics.Debug.WriteLine(
+                                $"Warning: NaN weight detected at layer {layerIndex}, src {src} -> dst {dst}");
+#endif
+                    }
+                    else
+                    {
+                        // Finite weight - draw with clearly visible colour / alpha so connectors are obvious
+                        // TODO: change the colour scheme so the differences in weights is more visible
+                        var intensity = Math.Min(1.0f, (float)(Math.Min(5.0, Math.Abs(weight)) / 5.0));
+                        using var pen = new Pen(Color.FromArgb(
+                            (int)(50 + (intensity * 205)),
+                            Color.DarkBlue))
+                        {
+                            Width = 1.5f,
+                        };
+                        graphics.DrawLine(pen, fromX, fromY, toX, toY);
+                    }
+                }
             }
         }
     }
