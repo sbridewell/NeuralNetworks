@@ -149,32 +149,7 @@ namespace Sde.NeuralNetworks.WinForms.Controls
             this.DrawNeurons(graphics);
 
             // Draw connectors (simple lines) and optionally colour by weight magnitude (coarse).
-            for (int layerIndex = 0; layerIndex < layerCount; layerIndex++)
-            {
-                // connectors from column layerIndex (sources) to column layerIndex+1 (destinations)
-                var weightMatrix = layers[layerIndex].Weights; // rows = dest neurons, cols = sources
-                int srcCount = neuronCounts[layerIndex];
-                int dstCount = neuronCounts[layerIndex + 1];
-
-#if DEBUG
-                // Validate matrix dimensions match the visualiser's expected topology.
-                // Treat mismatches as fatal to make issues obvious during development.
-                if (weightMatrix.RowCount != dstCount || weightMatrix.ColumnCount != srcCount)
-                {
-                    throw new InvalidOperationException(
-                        $"Layer {layerIndex}: weight matrix dimensions ({weightMatrix.RowCount}x{weightMatrix.ColumnCount}) " +
-                        $"do not match expected connector dimensions ({dstCount}x{srcCount}).");
-                }
-#endif
-
-                // Cache row vectors once per layer to avoid repeated allocations
-                // in the inner loop.
-                var rowVectors = weightMatrix.RowVectors;
-#if VERBOSE
-                System.Diagnostics.Debug.WriteLine($"Layer {layerIndex} weight size={weightMatrix.RowCount}x{weightMatrix.ColumnCount}");
-#endif
-                this.DrawConnectors(layerIndex, srcCount, dstCount, rowVectors, graphics);
-            }
+            this.DrawAllConnectors(layerCount, neuronCounts, graphics);
 
             // Draw MSE summary in top-left
             var mseText = $"Output MSE: {net.OutputLayerMeanSquaredError:F4}";
@@ -245,6 +220,37 @@ namespace Sde.NeuralNetworks.WinForms.Controls
             }
         }
 
+        private void DrawAllConnectors(int layerCount, int[] neuronCounts, Graphics graphics)
+        {
+            var layers = this.network!.Layers;
+            for (int layerIndex = 0; layerIndex < layerCount; layerIndex++)
+            {
+                // connectors from column layerIndex (sources) to column layerIndex+1 (destinations)
+                var weightMatrix = layers[layerIndex].Weights; // rows = dest neurons, cols = sources
+                int srcCount = neuronCounts[layerIndex];
+                int dstCount = neuronCounts[layerIndex + 1];
+
+#if DEBUG
+                // Validate matrix dimensions match the visualiser's expected topology.
+                // Treat mismatches as fatal to make issues obvious during development.
+                if (weightMatrix.RowCount != dstCount || weightMatrix.ColumnCount != srcCount)
+                {
+                    throw new InvalidOperationException(
+                        $"Layer {layerIndex}: weight matrix dimensions ({weightMatrix.RowCount}x{weightMatrix.ColumnCount}) " +
+                        $"do not match expected connector dimensions ({dstCount}x{srcCount}).");
+                }
+#endif
+
+                // Cache row vectors once per layer to avoid repeated allocations
+                // in the inner loop.
+                var rowVectors = weightMatrix.RowVectors;
+#if VERBOSE
+                System.Diagnostics.Debug.WriteLine($"Layer {layerIndex} weight size={weightMatrix.RowCount}x{weightMatrix.ColumnCount}");
+#endif
+                this.DrawConnectors(layerIndex, srcCount, dstCount, rowVectors, graphics);
+            }
+        }
+
         private void DrawConnectors(
             int layerIndex,
             int srcCount,
@@ -252,7 +258,6 @@ namespace Sde.NeuralNetworks.WinForms.Controls
             Vector[] rowVectors,
             Graphics graphics)
         {
-            // TODO: give the variables here meaningful names
             var positions = this.neuronPositions ?? Array.Empty<PointF[]>();
             var fromColumn = layerIndex < positions.Length
                 ? positions[layerIndex]
